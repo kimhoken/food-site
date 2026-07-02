@@ -25,56 +25,7 @@
         AND b.recipe_id IS NULL
     </select>
 
-    <!-- 레시피 등록 -->
-    <insert id="insertRecipe" parameterType="RecipeDTO" useGeneratedKeys="true" keyProperty="recipeId"> 
-        INSERT INTO recipe(
-        title,
-        member_id,
-        food_id,
-        cooking_time,
-        thumbnail
-    )
-    VALUES(
-        #{title},
-        #{memberId},
-        #{foodId},
-        #{cooking_time},
-        #{thumbnail}
-    )
-    </insert>
-
-    <!-- 재료 등록 -->
-    <insert id="insertIngredient" parameterType="ingredient">
-    INSERT INTO ingredient(
-        ingredient_name,
-        quantity,
-        unit,
-        recipe_id
-    )
-    VALUES(
-        #{ingredient_name},
-        #{quantity},
-        #{unit},
-        #{recipe_id}
-    )
-    </insert>
-
-    <!-- 조리 과정 -->
-    <insert id="insertCookOrder" parameterType="cook_order">
-    INSERT INTO cook_order(
-        cook_order,
-        description,
-        cook_image,
-        recipe_id
-    )
-    VALUES(
-        #{order},
-        #{description},
-        #{cook_image},
-        #{recipe_id}
-    )
-    </insert>
-
+    
     <!-- board 저장 -->
     <insert id="insertBoard" parameterType="board">
     INSERT INTO board(
@@ -204,5 +155,37 @@
         update board set status = #{status}
         where board_id = #{board_id}
     </update>
+
+
+    <!-- 레시피 등록 시 재료 추가, 조리과정 추가 -->
+    <insert id="insertIngredient" parameterType="ingredient">
+    INSERT INTO ingredient(
+        ingredient_name,
+        quantity,
+        unit,
+        recipe_id
+    )
+    VALUES(
+        #{ingredient_name},
+        #{quantity},
+        #{unit},
+        #{recipe_id}
+    )
+    </insert>
+
+    <insert id="insertCookOrder" parameterType="cookOrder">
+    INSERT INTO cook_order(
+        recipe_id,
+        `order`,
+        description,
+        cook_image
+    )
+    VALUES(
+        #{recipe_id},
+        #{order},
+        #{description},
+        #{cook_image}
+    )
+    </insert>
 
 </mapper>

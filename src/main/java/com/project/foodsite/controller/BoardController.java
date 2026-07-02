@@ -11,8 +11,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.project.foodsite.common.Fileupload;
 import com.project.foodsite.dao.BoardDAO;
-import com.project.foodsite.dao.CategoryDAO;
 import com.project.foodsite.dao.CommonCommentDAO;
+import com.project.foodsite.dao.RecipeDAO;
 import com.project.foodsite.dao.ReviewDAO;
 import com.project.foodsite.vo.BoardVO;
 import com.project.foodsite.vo.CategoryVO;
@@ -39,8 +39,7 @@ public class BoardController {
     private final HttpSession session;
     private final ReviewDAO reviewDao;
     private final Fileupload fileupload;
-    private final CommonCommentDAO commonCommentDAO; 
-    private final CategoryDAO categoryDAO;
+    private final CommonCommentDAO commonCommentDAO;
 
     // board list 조회
     @GetMapping("/list.do")
@@ -102,6 +101,42 @@ public class BoardController {
 
         dto.setThumbnail(filename);
 
+        // 등록 데이터 잘 들어오는지 확인용
+
+        System.out.println("대표이미지 : " + dto.getMainImg().getOriginalFilename());
+
+        System.out.println("선택한 foodId = " + dto.getFoodId());
+        System.out.println("생성된 recipeId = " + dto.getRecipeId());
+        System.out.println("insert 후 recipeId = " + dto.getRecipeId());
+        System.out.println("insert 후 foodId = " + dto.getFoodId());
+
+        System.out.println("제목 : " + dto.getTitle());
+
+        System.out.println("재료명 : " + dto.getIngredientName());
+        System.out.println("수량 : " + dto.getAmount());
+        System.out.println("단위 : " + dto.getUnit());
+
+        System.out.println("조리순서 : " + dto.getStep());
+
+        System.out.println(dto.getMemberId());
+        System.out.println(dto.getRecipeId());
+
+        // 조리시간 변환
+        switch (dto.getCooking_time()) {
+            case "10":
+                dto.setCooking_time("10분");
+                break;
+            case "20":
+                dto.setCooking_time("20분");
+                break;
+            case "30":
+                dto.setCooking_time("30분");
+                break;
+            case "60":
+                dto.setCooking_time("60분");
+                break;
+        }
+
         // 1. 레시피테이블에 레시피 등록
         boardDao.insertRecipe(dto);
 
@@ -132,7 +167,7 @@ public class BoardController {
             order.setDescription(dto.getStep().get(i));
             order.setRecipe_id(dto.getRecipeId().intValue());
 
-            //파일 저장
+            // 파일 저장
             MultipartFile img = dto.getStepImg().get(i);
 
             if (img != null && !img.isEmpty()) {
@@ -141,7 +176,8 @@ public class BoardController {
                 order.setCook_image(cookOrderImg);
             }
 
-            //조리시간 들어오는지 확인
+            // 조리시간 들어오는지 확인
+            System.out.println("조리시간 : " + dto.getCooking_time());
 
             boardDao.insertCookOrder(order);
         }
