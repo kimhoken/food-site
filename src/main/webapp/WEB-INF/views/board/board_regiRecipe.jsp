@@ -18,7 +18,6 @@
     <head>
         <title>오늘 뭐먹지? - 레시피 작성하기</title>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/regiRecipe.css" />
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
 
         <script>
             function send(f) {
@@ -291,7 +290,7 @@
     </head>
 
     <body>
-        <form action="/myrecipe.do" method="post" enctype="multipart/form-data">
+        <form class="register-form" action="/myrecipe.do" method="post" enctype="multipart/form-data">
             <input type="hidden" name="memberId" value="${sessionScope.user.member_id}" />
 
             <h1>제목</h1>
