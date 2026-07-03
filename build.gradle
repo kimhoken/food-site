@@ -51,11 +51,11 @@ dependencies {
 	implementation 'nl.martijndwars:web-push:5.1.1'
 	implementation 'org.bouncycastle:bcprov-jdk18on:1.78.1'
 
-	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:4.0.1'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat-runtime'
-	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-web-test'
 	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:4.0.1'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
@@ -87,7 +87,7 @@ publishing {
         maven {
             name = "GitHubPackages"
             // GitHub Actions가 실행될 때 리포지토리 주소를 자동으로 넣어줌 (예: https://maven.pkg.github.com/유저명/레포명)
-            url = uri("https://maven.pkg.github.com/${System.getenv('https://github.com/kimhoken/food-recipe-site')}")
+            url = uri("https://maven.pkg.github.com/kimhoken/food-recipe-site")
             
             // GitHub Actions에서 주입해 주는 토큰과 유저명을 사용해 인증
             credentials {
