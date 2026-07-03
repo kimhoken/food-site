@@ -42,6 +42,7 @@ public class BoardController {
     private final Fileupload fileupload;
     private final CommonCommentDAO commonCommentDAO;
     private final CategoryDAO categoryDAO;
+    private final RecipeDAO recipeDAO;
 
     // board list 조회
     @GetMapping("/list.do")
@@ -103,26 +104,6 @@ public class BoardController {
 
         dto.setThumbnail(filename);
 
-        // 등록 데이터 잘 들어오는지 확인용
-
-        System.out.println("대표이미지 : " + dto.getMainImg().getOriginalFilename());
-
-        System.out.println("선택한 foodId = " + dto.getFoodId());
-        System.out.println("생성된 recipeId = " + dto.getRecipeId());
-        System.out.println("insert 후 recipeId = " + dto.getRecipeId());
-        System.out.println("insert 후 foodId = " + dto.getFoodId());
-
-        System.out.println("제목 : " + dto.getTitle());
-
-        System.out.println("재료명 : " + dto.getIngredientName());
-        System.out.println("수량 : " + dto.getAmount());
-        System.out.println("단위 : " + dto.getUnit());
-
-        System.out.println("조리순서 : " + dto.getStep());
-
-        System.out.println(dto.getMemberId());
-        System.out.println(dto.getRecipeId());
-
         // 조리시간 변환
         switch (dto.getCooking_time()) {
             case "10":
@@ -140,7 +121,7 @@ public class BoardController {
         }
 
         // 1. 레시피테이블에 레시피 등록
-        boardDao.insertRecipe(dto);
+        recipeDAO.insertRecipe(dto);
 
         // 2. ingredient 저장
         for (int i = 0; i < dto.getIngredientName().size(); i++) {
@@ -157,7 +138,7 @@ public class BoardController {
 
             ingredient.setRecipe_id(dto.getRecipeId().intValue());
 
-            boardDao.insertIngredient(ingredient);
+            recipeDAO.insertIngredient(ingredient);
         }
 
         // 3. 조리과정 저장
@@ -178,62 +159,31 @@ public class BoardController {
                 order.setCook_image(cookOrderImg);
             }
 
-            // 조리시간 들어오는지 확인
-            System.out.println("조리시간 : " + dto.getCooking_time());
 
-            boardDao.insertCookOrder(order);
+            recipeDAO.insertCookOrder(order);
         }
 
         return "redirect:/recipe_list.do";
     }
 
-    /**
-     * 레시피테이블에 제목이랑 썸네일 이미지 등록 후 방금 등록한 레시피 ID가져오기
-     * 재료테이블에 재료를 넣고, 조리순서 테이블에 조리순서, 이미지를 넣어 아까 만든 레시피 ID와 연결
-     * 게시판 테이블에 레시피ID, member_id를 참조하게 하고 제목, 내용 넣기
-     */
-
     // 여기서 부터 커뮤니티 상세보기
-
     @GetMapping("/view.do")
     public String boardView(int board_id, Model model, HttpServletRequest req) {
-
+        //조회수 
         @SuppressWarnings("unchecked")
-        HashMap<String, LinkedList<Integer>> map = session.getAttribute("viewMap") == null ? new HashMap<>()
-                : (HashMap<String, LinkedList<Integer>>) session.getAttribute("viewMap");
-        /*
-         * // 세션에서 IP, 게시글 ID를 확인해 없을경우 조회수 증가
-         * if (map.get(req.getRemoteAddr()) == null &&
-         * !map.get(req.getRemoteAddr()).contains(board_id)) {
-         * // 조회수 증가
-         * boardDao.updateViewCount(board_id);
-         * map.computeIfAbsent(req.getRemoteAddr(), k -> new
-         * LinkedList<>()).add(board_id);
-         * session.setAttribute("viewMap", map);
-         * session.setMaxInactiveInterval(3600);
-         * }
-         */
+        HashMap<String, ArrayList<Integer>> map = session.getAttribute("boardMap") == null ? new HashMap<>()
+                : (HashMap<String, ArrayList<Integer>>) session.getAttribute("boardMap");
 
-        // 조회수 처리
-        String ip = req.getRemoteAddr();
-
-        LinkedList<Integer> viewedList = map.computeIfAbsent(ip, k -> new LinkedList<>());
-
-        if (!viewedList.contains(board_id)) {
-
+        if(!map.containsKey(req.getRemoteAddr()) || !map.get(req.getRemoteAddr()).contains(board_id)){
+            map.computeIfAbsent(req.getRemoteAddr(), k -> new ArrayList<>()).add(board_id);
             boardDao.updateViewCount(board_id);
-
-            viewedList.add(board_id);
-
-            session.setAttribute("viewMap", map);
+            session.setAttribute("boardMap", map);
+            session.setMaxInactiveInterval(3600);
         }
-
+        
         // 게시글 조회
         BoardVO board = boardDao.selectOne(board_id);
-
-
         model.addAttribute("board", board);
-
         // 커뮤니티 게시글에 달린 댓글 목록 조회
         model.addAttribute("commentList", commonCommentDAO.getBoardList(board_id));
 
