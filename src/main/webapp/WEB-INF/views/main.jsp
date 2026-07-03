@@ -18,124 +18,117 @@
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 
-            const track = document.getElementById('bannerTrack');
-            const slides = Array.from(track.children);
-            const dotsWrap = document.getElementById('bannerDots');
-            const prevBtn = document.getElementById('prevBtn');
-            const nextBtn = document.getElementById('nextBtn');
+                const track = document.getElementById('bannerTrack');
+                const slides = Array.from(track.children);
+                const dotsWrap = document.getElementById('bannerDots');
+                const prevBtn = document.getElementById('prevBtn');
+                const nextBtn = document.getElementById('nextBtn');
 
-            const slideWidthPercent = 100; 
-            let currentIndex = 1;         // 앞에 clone 1개 붙일 것이므로 실제 첫 슬라이드는 index 1
-            let autoSlideTimer = null;
+                const slideWidthPercent = 100; 
+                let currentIndex = 1;         // 앞에 clone 1개 붙일 것이므로 실제 첫 슬라이드는 index 1
+                let autoSlideTimer = null;
 
-            // 1) 앞뒤에 클론 슬라이드 추가 (무한 루프용)
-            const firstClone = slides[0].cloneNode(true);
-            const lastClone = slides[slides.length - 1].cloneNode(true);
-            track.appendChild(firstClone);
-            track.insertBefore(lastClone, slides[0]);
+                // 1) 앞뒤에 클론 슬라이드 추가 (무한 루프용)
+                const firstClone = slides[0].cloneNode(true);
+                const lastClone = slides[slides.length - 1].cloneNode(true);
+                track.appendChild(firstClone);
+                track.insertBefore(lastClone, slides[0]);
 
-            const allSlides = Array.from(track.children);
+                const allSlides = Array.from(track.children);
 
-            // 2) 점(dot) 인디케이터 생성 (원본 개수만큼)
-            slides.forEach((_, i) => {
-                const dot = document.createElement('span');
-                if (i === 0) dot.classList.add('active');
-                dot.addEventListener('click', () => goToSlide(i + 1));
-                dotsWrap.appendChild(dot);
-            });
-            const dots = Array.from(dotsWrap.children);
+                // 2) 점(dot) 인디케이터 생성 (원본 개수만큼)
+                slides.forEach((_, i) => {
+                    const dot = document.createElement('span');
+                    if (i === 0) dot.classList.add('active');
+                    dot.addEventListener('click', () => goToSlide(i + 1));
+                    dotsWrap.appendChild(dot);
+                });
+                const dots = Array.from(dotsWrap.children);
 
-            // 3) 트랙 위치 이동 함수
-            function updateTrackPosition(withTransition = true) {
-                track.style.transition = withTransition ? 'transform 0.5s ease-in-out' : 'none';
-                const offset = -(currentIndex * slideWidthPercent);
-                track.style.transform = `translateX(${offset}%)`;
+                // 3) 트랙 위치 이동 함수
+                function updateTrackPosition(withTransition = true) {
+                    track.style.transition = withTransition ? 'transform 0.5s ease-in-out' : 'none';
+                    const offset = -(currentIndex * slideWidthPercent);
+                    track.style.transform = `translateX(${offset}%)`;
 
-                // 활성 슬라이드 표시
-                allSlides.forEach(s => s.classList.remove('active'));
-                allSlides[currentIndex].classList.add('active');
+                    // 활성 슬라이드 표시
+                    allSlides.forEach(s => s.classList.remove('active'));
+                    allSlides[currentIndex].classList.add('active');
 
-                // 도트 갱신
-                const realIndex = getRealIndex();
-                dots.forEach(d => d.classList.remove('active'));
-                dots[realIndex].classList.add('active');
-            }
-
-            function getRealIndex() {
-                if (currentIndex === 0) return slides.length - 1;
-                if (currentIndex === allSlides.length - 1) return 0;
-                return currentIndex - 1;
-            }
-
-            function goToSlide(index) {
-                currentIndex = index;
-                updateTrackPosition();
-            }
-
-            function nextSlide() {
-                currentIndex++;
-                updateTrackPosition();
-            }
-
-            function prevSlide() {
-                currentIndex--;
-                updateTrackPosition();
-            }
-
-            // 4) 클론으로 넘어갔을 때 transition 끝나면 순간이동으로 슬라이드처럼 보이게
-            track.addEventListener('transitionend', () => {
-                if (currentIndex === 0) {
-                    currentIndex = slides.length;
-                    updateTrackPosition(false);
-                } else if (currentIndex === allSlides.length - 1) {
-                    currentIndex = 1;
-                    updateTrackPosition(false);
+                    // 도트 갱신
+                    const realIndex = getRealIndex();
+                    dots.forEach(d => d.classList.remove('active'));
+                    dots[realIndex].classList.add('active');
                 }
-            });
 
-            // 5) 자동 슬라이드 (3초)
-            function startAutoSlide() {
-                autoSlideTimer = setInterval(nextSlide, 3000);
-            }
-            function stopAutoSlide() {
-                clearInterval(autoSlideTimer);
-            }
+                function getRealIndex() {
+                    if (currentIndex === 0) return slides.length - 1;
+                    if (currentIndex === allSlides.length - 1) return 0;
+                    return currentIndex - 1;
+                }
 
-            // 버튼 클릭 시 수동 이동 + 타이머 리셋
-            nextBtn.addEventListener('click', () => { nextSlide(); stopAutoSlide(); startAutoSlide(); });
-            prevBtn.addEventListener('click', () => { prevSlide(); stopAutoSlide(); startAutoSlide(); });
+                function goToSlide(index) {
+                    currentIndex = index;
+                    updateTrackPosition();
+                }
 
-            // 마우스 올리면 잠깐 멈추기 
-            track.addEventListener('mouseenter', stopAutoSlide);
-            track.addEventListener('mouseleave', startAutoSlide);
+                function nextSlide() {
+                    currentIndex++;
+                    updateTrackPosition();
+                }
 
-            // 초기화
-            updateTrackPosition(false);
-            startAutoSlide();
-        });
-            /*============================ 여기까지 메인배너 슬라이드 관련 함수 =============================*/
+                function prevSlide() {
+                    currentIndex--;
+                    updateTrackPosition();
+                }
 
-
-            /*============================ 추천 레시피 슬라이더 형식 관련 함수 ============================= */
-                document.addEventListener("DOMContentLoaded",function() {
-                    let current = 0;
-                    const slides = document.querySelectorAll(".recommend-slide");
-
-                    if (slides.length === 0) {
-                        return;
+                // 4) 클론으로 넘어갔을 때 transition 끝나면 순간이동으로 슬라이드처럼 보이게
+                track.addEventListener('transitionend', () => {
+                    if (currentIndex === 0) {
+                        currentIndex = slides.length;
+                        updateTrackPosition(false);
+                    } else if (currentIndex === allSlides.length - 1) {
+                        currentIndex = 1;
+                        updateTrackPosition(false);
                     }
+                });
 
-                    setInterval(() => {
-                        slides[current].classList.remove('active');
+                // 5) 자동 슬라이드 (3초)
+                function startAutoSlide() {
+                    autoSlideTimer = setInterval(nextSlide, 3000);
+                }
+                function stopAutoSlide() {
+                    clearInterval(autoSlideTimer);
+                }
+
+                // 버튼 클릭 시 수동 이동 + 타이머 리셋
+                nextBtn.addEventListener('click', () => { nextSlide(); stopAutoSlide(); startAutoSlide(); });
+                prevBtn.addEventListener('click', () => { prevSlide(); stopAutoSlide(); startAutoSlide(); });
+
+                // 마우스 올리면 잠깐 멈추기 
+                track.addEventListener('mouseenter', stopAutoSlide);
+                track.addEventListener('mouseleave', startAutoSlide);
+
+                // 초기화
+                updateTrackPosition(false);
+                startAutoSlide();
+                let current = 0;
+                const slides = document.querySelectorAll(".recommend-slide");
+
+                if (slides.length === 0) {
+                    return;
+                }
+
+                setInterval(() => {
+                    slides[current].classList.remove('active');
             
-                        current = (current + 1) % slides.length;
+                    current = (current + 1) % slides.length;
             
-                        slides[current].classList.add('active');
-                    }, 3000);
-                    changeSeason('봄', document.querySelector('.season-tab-item.active'));
-                })
-
-
+                    slides[current].classList.add('active');
+                }, 3000);
+                changeSeason('봄', document.querySelector('.season-tab-item.active'));
+            });
+            /*============================ 여기까지 메인배너 슬라이드 관련 함수 =============================*/
             /* ============================ 여기부터 카테고리 모달창 관련 함수들 ============================ */
             /* ============================  카테고리 키워드 클릭 시 기존 검색 기능처럼 검색되게 하는 함수 ============================ */
                 function escapeHtml(value) {
@@ -539,7 +532,7 @@
                 <div class="recipe-grid">
                     <c:forEach var="recipe" items="${view_recipes}" varStatus="status">
                         <div class="recipe-card">
-                            <a href="/recipe_detail.do?recipeId=${recipe.recipe_id}">
+                            <a href="/recipe_detail.do?recipe_id=${recipe.recipe_id}">
                                 <div class="recipe-img">
                                     <img src="${pageContext.request.contextPath}/images/${recipe.thumbnail}"/>
                                 </div>

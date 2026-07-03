@@ -2,7 +2,6 @@ package com.project.foodsite.controller;
 
 import java.util.*;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -60,12 +59,6 @@ public class RecipeController {
         model.addAttribute("totalPage", (totalCount + 8) / 9);
 
         List<RecipeVO> recipeList = recipeDao.selectRecipeList(searchDTO);
-
-        // 조리시간 출력 확인용
-        for (RecipeVO recipe : recipeList) {
-            System.out.println(recipe.getTitle());
-            System.out.println(recipe.getCooking_time());
-        }
 
         String sort = searchDTO.getSort();
 

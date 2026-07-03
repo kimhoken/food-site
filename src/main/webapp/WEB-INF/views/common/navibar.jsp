@@ -153,13 +153,14 @@
                         </a>
                     </c:if>
                     <%-- ------------------------------------------ --%>
-
-                    <a href="/register_form.do" class="menu-item">
-                        <span class="menu-icon">
-                            <img src="${pageContext.request.contextPath}/images/login.png">
-                        </span>
-                        <div>회원가입</div>
-                    </a>
+                    <c:if test="${empty sessionScope.user}">
+                        <a href="/register_form.do" class="menu-item">
+                            <span class="menu-icon">
+                                <img src="${pageContext.request.contextPath}/images/login.png">
+                            </span>
+                            <div>회원가입</div>
+                        </a>
+                    </c:if>
                     <c:choose>
                         <c:when test="${user.role eq 'ADMIN'}">
                             <a href="${pageContext.request.contextPath}/admin" class="menu-item">
