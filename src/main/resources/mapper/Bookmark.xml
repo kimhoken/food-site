@@ -47,4 +47,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         LIMIT #{size} OFFSET #{offset}
     </select>
 
+<!-- 북마크 조회/ 등록/ 삭제 -->
+    <select id="selectbookmark" resultType="bookmark">
+        select *
+        from bookmark 
+        where recipe_id = #{recipe_id} 
+        and member_id = #{member_id}
+    </select>
+
+    <insert id="insertbookmark" parameterType="bookmark">
+        insert into bookmark( member_id, recipe_id, created_date )
+        values( #{member_id}, #{recipe_id}, now() )
+    </insert>
+
+    <delete id="deletebookmark">
+        delete from bookmark
+        where bookmark_id = #{bookmark_id}
+    </delete>
+
 </mapper>

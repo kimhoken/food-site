@@ -7,6 +7,8 @@ import com.project.foodsite.dto.AdminRecipeDTO;
 import com.project.foodsite.dto.RecipeDTO;
 import com.project.foodsite.dto.RecipeDetailDTO;
 import com.project.foodsite.dto.RecipeSearchDTO;
+import com.project.foodsite.vo.CookOrderVO;
+import com.project.foodsite.vo.IngredientVO;
 import com.project.foodsite.vo.RecipeVO;
 
 public interface RecipeDAO {
@@ -72,6 +74,8 @@ public interface RecipeDAO {
     //레시피 추가 
     int insertRecipe(RecipeDTO dto);
     int updateViewCount(int recipe_id);
+    int insertIngredient(IngredientVO vo);
+    int insertCookOrder(CookOrderVO vo);
 
 
 

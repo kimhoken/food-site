@@ -36,7 +36,6 @@
         status,
         board_type
     )
-
     VALUES(
         #{member_id},
         #{title},

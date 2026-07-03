@@ -43,7 +43,7 @@
             const quantity = prompt("수량:");
             if(quantity === null) return; // 취소 클릭 시
             
-            const url = "/modify.do";
+            const url = "/api/fridge/modify";
             const data = { fridge_id: fridge_id, quantity: quantity };
 
             fetch(url, {
