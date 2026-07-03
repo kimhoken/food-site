@@ -500,3 +500,7 @@
 
 /* 신고, 삭제, 수정 버튼 */ 
 
+.thumbnail{
+    max-width: 100%;
+    max-height:100%;
+}
