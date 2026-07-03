@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
     <link rel="stylesheet" href="/css/chatbot.css" />
     <meta charset="UTF-8">
-
+    <script src="js/bookmark.js"></script>
 
     <script>
         const del = (commentId)=>{
@@ -149,7 +149,7 @@
     <%-- 레시피의 조리순서, 재료, 사진 등을 보여주기 --%>
     <div class="title-wrap">
         <h1>${dto.recipeTitle}</h1>
-        <div class="recipe-author">작성자: ${dto.nickName}</div>
+        <div class="recipe-author" onclick="location.href='/user/${dto.memberId}'">작성자: ${dto.nickName}</div>
     </div>
 
     <div class="recipe-detail-wrap">
@@ -216,7 +216,8 @@
 
     <div class="recipe-bookmark-wrap">
         <a href="#"
-           class="recipe-bookmark-btn">
+           class="recipe-bookmark-btn"
+           onclick="bookmarkSet('${recipe_id}')">
             북마크
         </a>
     </div>
