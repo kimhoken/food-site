@@ -53,11 +53,11 @@ public class memberController {
             boolean pwdcheck = pwdSecurity.pwdDecoding(vo.getPassword(),user.getPassword()); 
 
             if (pwdcheck) {
-                if("suspend".equals(user.getStatus())){
+                if("SUSPEND".equals(user.getStatus())){
                     login_res = "suspend";
 
-                    map.put("res",login_res);
-                    map.put("day", user.getSuspend_start());
+                    map.put("res", login_res);
+                    map.put("day", user.getSuspend_end().toString());
 
                     return map;
 

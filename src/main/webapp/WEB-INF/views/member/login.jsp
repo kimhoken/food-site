@@ -32,8 +32,10 @@
                     } else if (data.res == "login") {
                         alert("환영합니다 " + data.nick + "님!");
                         location.href = "/main_list.do";
+                    } else if (data.res == "suspend") {
+                        alert("정지 당하셌습니다.\n정지 해제일: "+data.day);
                     } else {
-                        alert("esteregg");
+                        alert("이스터 에그");
                     }
                 })
         }
