@@ -9,7 +9,9 @@
         location.href = "/login.do";
     </script>
 </c:if>
-
+<jsp:include page="/WEB-INF/views/common/navibar.jsp">
+    <jsp:param name="currentMenu" value="recipe" />
+</jsp:include>
 <!DOCTYPE html>
 <html>
 
