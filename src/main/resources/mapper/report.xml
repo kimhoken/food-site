@@ -120,7 +120,7 @@
         UPDATE member
         SET report_count = IFNULL(report_count, 0) + 1,
             status = CASE
-                        WHEN IFNULL(report_count, 0) + 1 >=3 THEN 'suspend'
+                        WHEN IFNULL(report_count, 0) + 1 >=3 THEN 'SUSPEND'
                         ELSE status
                      END,
             suspend_start = CASE

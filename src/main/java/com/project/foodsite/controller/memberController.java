@@ -1,6 +1,7 @@
 package com.project.foodsite.controller;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,6 +26,8 @@ import lombok.RequiredArgsConstructor;
 @Controller
 public class memberController {
 
+    private final AdminBoardController adminBoardController;
+
     private final HttpSession httpSession;
 
     private final MemberDAO memberDAO;
@@ -32,6 +35,7 @@ public class memberController {
     private final pwdSecurity pwdSecurity;
     private final NicknameGenerater nicknameGenerater;
     private final TokenDAO tokenDAO;
+  
 
     
     // 로그인 페이지
@@ -54,12 +58,19 @@ public class memberController {
 
             if (pwdcheck) {
                 if("SUSPEND".equals(user.getStatus())){
-                    login_res = "suspend";
+                
+                    if (user.getSuspend_end().after(new Date())){
+                        map.put("res", "suspend");
+                        map.put("day", user.getSuspend_end().toString());
 
-                    map.put("res", login_res);
-                    map.put("day", user.getSuspend_end().toString());
+                        return map;
+                    }
 
-                    return map;
+                    memberDAO.relaseSuspend(user.getMember_id());
+
+                    user.setStatus("ACTIVE");
+                    user.setSuspend_end(null);
+                    user.setSuspend_start(null);
 
                 }
 
