@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Alias("RecipeDTO")
-public class RecipeDTO {
+public class RecipeDTO {    
     // 제목
     private String title;
 

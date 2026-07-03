@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 public class RecipeDetailDTO {
     //레시피 테이블의 정보들
     private int recipeId;
+    private Integer foodId;
     private String recipeTitle;
     private String thumbnail;
     private String cookingTime;
@@ -37,4 +38,6 @@ public class RecipeDetailDTO {
 
     //작성자의 memberId
     private Long memberId;
+
+    
 }
