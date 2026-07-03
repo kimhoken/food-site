@@ -154,4 +154,26 @@
           AND IFNULL(review_id, 0) = IFNULL(#{review_id}, 0)
     </update>
 
+    <select id="reportCount" resultType="int">
+        select count(*)
+        from report
+    </select>
+
+    <select id="reportListPage" parameterType="map" resultType="report">
+        select
+            r.*,
+            m.name,
+            m.nickname,
+            m.email,
+            m.profile_img
+        from report r
+        join member m on r.member_id = m.member_id
+        order by r.report_id desc
+        limit #{offset}, #{size}
+    </select>
+    
+    <delete id="reportDelete" parameterType="int">
+        delete from report
+        where report_id = #{report_id}
+    </delete>
 </mapper>

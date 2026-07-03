@@ -153,4 +153,35 @@
         where review_id = #{review_id}
     </update>
    
+    <select id="reviewCount" parameterType="map" resultType="int">
+        select count(*)
+        from review r
+        join member m on r.member_id = m.member_id
+        where 1=1
+    </select>
+
+    <select id="reviewPage" parameterType="map" resultType="review">
+        select
+            r.*,
+            m.nickname
+        from review r
+        join member m on r.member_id = m.member_id
+        where 1=1
+
+        <choose>
+            <when test="sort == 'rating'">
+                order by r.rating desc
+            </when>
+
+            <when test="sort == 'popular'">
+                order by r.view_count desc
+            </when>
+
+            <otherwise>
+                order by r.review_id desc
+            </otherwise>
+        </choose>
+
+        limit #{offset}, #{size}
+    </select>
 </mapper>
