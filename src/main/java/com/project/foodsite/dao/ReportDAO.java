@@ -1,6 +1,7 @@
 package com.project.foodsite.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.project.foodsite.vo.BoardVO;
 import com.project.foodsite.vo.ReportVO;
@@ -30,4 +31,10 @@ public interface ReportDAO {
     int sameMemberSameTargetPendingReportCount(ReportVO vo);
 
     int updateSameMemberSameTargetReportStatusWarning(ReportVO vo);
+
+    int reportCount();
+
+    List<ReportVO> reportListPage(Map<String, Object> map);
+
+    int reportDelete(int report_id);
 }
