@@ -15,7 +15,6 @@
     <link rel="stylesheet" href="/css/chatbot.css" />
     <meta charset="UTF-8">
 
-
     <script>
         const del = (commentId)=>{
             if(confirm("삭제하시겠습니까?")){
