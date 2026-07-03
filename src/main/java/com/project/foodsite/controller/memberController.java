@@ -43,9 +43,9 @@ public class memberController {
     // 로그인
     @PostMapping("/login.do")
     @ResponseBody
-    public Map<String, String> loginCheck(MemberVO vo) {
+    public Map<String, Object> loginCheck(MemberVO vo) {
         MemberVO user = memberDAO.getUserById(vo.getLogin_id());
-        Map<String, String> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         String login_res = "no_id";
 
         if (user != null) {
@@ -53,6 +53,16 @@ public class memberController {
             boolean pwdcheck = pwdSecurity.pwdDecoding(vo.getPassword(),user.getPassword()); 
 
             if (pwdcheck) {
+                if("suspend".equals(user.getStatus())){
+                    login_res = "suspend";
+
+                    map.put("res",login_res);
+                    map.put("day", user.getSuspend_start());
+
+                    return map;
+
+                }
+
                 httpSession.setAttribute("user", user);
                 httpSession.setMaxInactiveInterval(3600);
                 map.put("nick", user.getNickname());
