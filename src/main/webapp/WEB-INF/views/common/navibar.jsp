@@ -72,9 +72,15 @@
                     }
                 });
             });
+
             const send_search = (f, btn) => {
                 document.getElementById("mainSearch").value = btn.value;
                 f.submit();
+            }
+
+            const sendRank = (val) => {
+                document.getElementById("mainSearch").value = val.trim();
+                document.searchForm.submit();
             }
         </script>
     </head>
@@ -125,7 +131,7 @@
                                     <c:forEach var="vo" items="${sessionScope.searchList}" varStatus="status">
                                         <div class="trending-item">
                                             <!-- 상세보기 만들면 거기에 맞는 상세보기로 바로 이동 -->
-                                            <button type="submit"><span class="rank-num">${status.index + 1}</span> ${vo}</button>
+                                            <button type="button" onClick="sendRank('${vo}')"><span class="rank-num">${status.index + 1}</span> ${vo}</button>
                                         </div>
                                     </c:forEach>
                                 </div>
@@ -161,24 +167,26 @@
                             <div>회원가입</div>
                         </a>
                     </c:if>
-                    <c:choose>
-                        <c:when test="${user.role eq 'ADMIN'}">
-                            <a href="${pageContext.request.contextPath}/admin" class="menu-item">
-                                <span class="menu-icon">
-                                    <img src="${pageContext.request.contextPath}/images/mypage.png">
-                                </span>
-                                <div>마이페이지</div>
-                            </a>
-                        </c:when>
-                        <c:otherwise>
-                            <a href="${pageContext.request.contextPath}/mypage.do" class="menu-item">
-                                <span class="menu-icon">
-                                    <img src="${pageContext.request.contextPath}/images/mypage.png">
-                                </span>
-                                <div>마이페이지</div>
-                            </a>
-                        </c:otherwise>
-                    </c:choose>
+                    <c:if test="${!empty sessionScope.user}">
+                        <c:choose>
+                            <c:when test="${user.role eq 'ADMIN'}">
+                                <a href="${pageContext.request.contextPath}/admin" class="menu-item">
+                                    <span class="menu-icon">
+                                        <img src="${pageContext.request.contextPath}/images/mypage.png">
+                                    </span>
+                                    <div>마이페이지</div>
+                                </a>
+                            </c:when>
+                            <c:otherwise>
+                                <a href="${pageContext.request.contextPath}/mypage.do" class="menu-item">
+                                    <span class="menu-icon">
+                                        <img src="${pageContext.request.contextPath}/images/mypage.png">
+                                    </span>
+                                    <div>마이페이지</div>
+                                </a>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:if>
                 </div>
             </div>
 
