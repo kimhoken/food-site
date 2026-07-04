@@ -15,6 +15,7 @@ import com.project.foodsite.common.Paging;
 import com.project.foodsite.dao.BoardDAO;
 import com.project.foodsite.dao.CategoryDAO;
 import com.project.foodsite.dao.CommonCommentDAO;
+import com.project.foodsite.dao.RecipeDAO;
 import com.project.foodsite.dao.ReviewDAO;
 import com.project.foodsite.vo.BoardVO;
 import com.project.foodsite.vo.CategoryVO;
@@ -216,7 +217,7 @@ public class BoardController {
             session.setAttribute("boardMap", map);
             session.setMaxInactiveInterval(3600);
         }
-        
+    }
         // 게시글 조회
         BoardVO board = boardDao.selectOne(board_id);
 
