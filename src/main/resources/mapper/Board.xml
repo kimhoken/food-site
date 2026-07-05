@@ -157,6 +157,28 @@
     </update>
 
 
+    <!-- 레시피 -->
+
+    <!-- 레시피 등록 -->
+    <insert id="insertRecipe" parameterType="RecipeDTO" useGeneratedKeys="true" keyProperty="recipeId"> 
+        INSERT INTO recipe(
+        title,
+        member_id,
+        food_id,
+        cooking_time,
+        thumbnail
+    )
+    VALUES(
+        #{title},
+        #{memberId},
+        #{foodId},
+        #{cooking_time},
+        #{thumbnail}
+    )
+    </insert>
+
+    
+
     <!-- 레시피 등록 시 재료 추가, 조리과정 추가 -->
     <insert id="insertIngredient" parameterType="ingredient">
     INSERT INTO ingredient(
@@ -173,10 +195,10 @@
     )
     </insert>
 
-    <insert id="insertCookOrder" parameterType="cookOrder">
+    <insert id="insertCookOrder" parameterType="cook_order">
     INSERT INTO cook_order(
         recipe_id,
-        `order`,
+        cook_order,
         description,
         cook_image
     )
@@ -188,4 +210,5 @@
     )
     </insert>
 
+   
 </mapper>

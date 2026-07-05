@@ -69,4 +69,7 @@ public interface RecipeDAO {
     void deleteIngredient(int recipeId);
     void deleteCookOrder(int recipeId);
 
+    //조회수 증가
+    void updateViewCount(int recipeId);
+
 }
