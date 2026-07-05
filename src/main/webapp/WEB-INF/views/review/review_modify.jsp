@@ -1,204 +1,195 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-        <jsp:include page="/WEB-INF/views/common/navibar.jsp" />
-        <jsp:include page="/WEB-INF/views/common/is_login.jsp" />
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<jsp:include page="/WEB-INF/views/common/navibar.jsp" />
+<jsp:include page="/WEB-INF/views/common/is_login.jsp" />
 
-        <html>
+<html>
 
-        <head>
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
-            <script>
-                const deleteImages=[];
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+    <link rel="stylesheet" href="/css/review.css" />
+    <script>
+        const deleteImages = [];
 
-                document.addEventListener("DOMContentLoaded", () => {
+        document.addEventListener("DOMContentLoaded", () => {
+            const fileInput = document.getElementById("reviewPhotos");
+            const previewBox = document.getElementById("previewBox");
 
-                    console.log('${review.rating}');
-                    const fileInput = document.getElementById("reviewPhotos");
-                    const previewBox = document.getElementById("previewBox");
-                    
+            if (fileInput && previewBox) {
+                fileInput.addEventListener("change", function () {
+                    Array.from(this.files).forEach(file => {
+                        const item = document.createElement("div");
+                        item.className = "preview-item";
 
-                    fileInput.addEventListener("change", function () {
-                        
-                        Array.from(this.files).forEach(file => {
-                            const img = document.createElement("img");
-                            img.src = URL.createObjectURL(file);
-                            img.className = "preview-img";
-                            previewBox.appendChild(img);
-                        })
+                        const img = document.createElement("img");
+                        img.src = URL.createObjectURL(file);
+                        img.className = "preview-img";
 
-
+                        item.appendChild(img);
+                        previewBox.appendChild(item);
                     });
-                })
+                });
+            }
+        });
 
-                function deleteImage() {
-                    document.querySelectorAll(".delete-check:checked")
-                        .forEach(check => {
+        function deleteImage(btn, imageName) {
+            deleteImages.push(imageName);
+            btn.closest(".preview-item").remove();
+        }
 
-                            deleteImages.push(check.value);
+        function review_modify(f) {
+            const formdata = new FormData(f);
 
-                            check.closest(".preview-item").remove();
+            formdata.set("deleteImages", deleteImages.join(","));
 
-                        });
-                    
-                    console.log(deleteImages);    
-                }
+            fetch("/review/modify", {
+                method: 'post',
+                body: formdata
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.img_res > 0) {
+                        alert("이미지 수정이 완료되었습니다.");
+                    } else {
+                        alert("이미지는 변경되지 않았습니다.");
+                    }
 
-                function review_modify(f){
-                    const formdata = new FormData(f);
+                    if (data.review_res > 0) {
+                        alert("후기 수정이 완료되었습니다.");
+                        location.href = "/list.do?btn=review";
+                    } else {
+                        alert("후기 수정에 실패했습니다.");
+                        alert(data.text);
+                    }
+                });
+        }
+    </script>
+</head>
 
-                    formdata.set("deleteImages", deleteImages.join(","));
+<body>
+    <main class="review-write-page">
+        <div class="review-write-head">
+            <span class="review-write-kicker">레시피 후기</span>
+            <h3>레시피 후기 수정</h3>
+            <small>작성한 후기를 다시 정리하고 사진을 관리해보세요.</small>
+        </div>
 
-                    fetch("/review/modify",{
-                        method: 'post',
-                        body:formdata
-                    })
-                    .then(res => res.json())
-                    .then( data => {
-                        if (data.img_res > 0) {
-                            alert("이미지 삭제 완료");
-                        } else {
-                            alert("이미지 변경 X");
-                        }
-                        if(data.review_res > 0 ){
-                            alert("수정이 완료 되었습니다.");
-                            location.href="/list.do";
-                        } else {
-                            alert("수정 실패");
-                            alert(data.text);
+        <form class="review-write-form" enctype="multipart/form-data" method="post">
+            <input type="hidden" name="review_id" value="${review.review_id}" />
+            <input type="hidden" name="img_id" value="${review.img_id}" />
+            <input type="hidden" name="deleteImages" id="deleteImages" />
 
-                        }
-                    })
+            <div class="review-write-layout">
+                <aside class="review-recipe-card">
+                    <c:choose>
+                        <c:when test="${not empty review.recipe_thumbnail}">
+                            <img src="/upload/review/${review.recipe_thumbnail}" alt="${review.recipe_title}" />
+                        </c:when>
+                        <c:otherwise>
+                            <img src="/images/no_file.png" alt="이미지 없음" />
+                        </c:otherwise>
+                    </c:choose>
 
-                }
-            </script>
-        </head>
+                    <div class="review-recipe-info">
+                        <span class="review-recipe-label">수정 중인 후기</span>
+                        <h4>${review.recipe_title}</h4>
+                        <div class="review-recipe-meta">
+                            <span>내가 작성한 레시피 후기</span>
+                        </div>
+                    </div>
+                </aside>
 
-        <body>
-            <div>
+                <div class="review-field review-rating-field">
+                    <label>평점 <span>*</span></label>
+                    <input type="hidden" name="rating" id="rating" value="${review.rating}">
 
-                <div>
-                    <h3>레시피 후기 수정 페이지</h3>
-                    <small>직접 만들어본 후기를 남겨 다른 사람들과 공유해보세요!! 제발 지옥같은 여기서 날꺼내줘</small>
+                    <div class="rating">
+                        <span class="rating__result">0</span>
+                        <i class="rating__star far fa-star"></i>
+                        <i class="rating__star far fa-star"></i>
+                        <i class="rating__star far fa-star"></i>
+                        <i class="rating__star far fa-star"></i>
+                        <i class="rating__star far fa-star"></i>
+                    </div>
                 </div>
 
-                <form enctype="multipart/form-data" method="post">
-                    <input type="hidden" name="review_id" value="${review.review_id}" />
-                    <input type="hidden" name="img_id" value="${review.img_id}" />
-                    <input type="hidden" name="deleteImages" id="deleteImages"/>
+                <div class="review-field">
+                    <label>후기 제목 <span>*</span></label>
+                    <input type="text" name="title" value="${review.title}" />
+                </div>
 
+                <div class="review-field">
+                    <label>후기 내용 <span>*</span></label>
+                    <textarea name="content">${review.content}</textarea>
+                </div>
 
-                    <div>
+                <div class="review-field">
+                    <label>후기 사진</label>
+                    <label class="review-file-label" for="reviewPhotos">사진 추가</label>
+                    <input class="review-file-input" type="file" id="reviewPhotos" name="photo" multiple />
 
-                        <div>
-
-                            <img src="#" />
-                            <div>${recipe.title}</div>
-                            <div>카테고리</div>
-                            <div>${recipe.cooking_time}</div>                            
-                            <div>레시피 소개글</div>
-
-                        </div>
-
-                        <div>
-                            평점 <span>*</span>
-                            <input type="hidden" name="rating" id="rating" value="${review.rating}">
-
-                            <div class="rating">
-                                <span class="rating__result">0</span>
-
-                                <i class="rating__star far fa-star"></i>
-                                <i class="rating__star far fa-star"></i>
-                                <i class="rating__star far fa-star"></i>
-                                <i class="rating__star far fa-star"></i>
-                                <i class="rating__star far fa-star"></i>
-                            </div>
-                        </div>
-
-                        <div>
-                            후기 제목 <span>*</span>
-                            <input type="text" name="title" value="${review.title}" />
-                        </div>
-
-                        <div>
-                            후기 내용 <span>*</span>
-                            <textarea name="content">${review.content}</textarea>
-                        </div>
-
-                        <div>
-                            후기 사진
-                            <input type="file" id="reviewPhotos" name="photo" multiple />
-                            <div id="previewBox" class="preview-box">
+                    <div id="previewBox" class="preview-box">
+                        <c:forEach var="img" items="${review.imgList}">
+                            <div class="preview-item">
+                                <img src="/upload/review/${img}" class="preview-img" alt="후기 사진" />
                                 
-                                <c:forEach var="img" items="${review.imgList}">
-                                    <div class="preview-item">
-
-                                        <input type="checkbox"
-                                               class="delete-check"
-                                               value="${img}"/>
-
-                                        <img src="/upload/review/${img}" class="preview-img"/>
-
-                                    </div>
-                                </c:forEach>
-
-                                <input type="button" 
-                                       value="선택 삭제"
-                                       onclick="deleteImage()"/>
-
+                                    <input type="button"
+                                           class="preview-delete-btn" 
+                                           value="x"
+                                           onclick="deleteImage(this, '${img}')"  />
+                                    삭제
+                                
                             </div>
-                        </div>
+                        </c:forEach>
                     </div>
 
-                    <div>
-                        <input type="button" value="취소" onclick="history.back()" />
-                        <input type="button" value="후기 수정" onclick="review_modify(this.form)" />
-                    </div>
-
-                </form>
-
+                    
+                </div>
             </div>
-        </body>
 
-        <script>
-            const ratingStars = [...document.getElementsByClassName("rating__star")];
-            const ratingResult = document.querySelector(".rating__result");
-            const ratingInput = document.getElementById("rating");
+            <div class="review-write-actions">
+                <input class="review-btn review-btn-sub" type="button" value="취소" onclick="history.back()" />
+                <input class="review-btn review-btn-main" type="button" value="후기 수정" onclick="review_modify(this.form)" />
+            </div>
+        </form>
+    </main>
+</body>
 
+<script>
+    const ratingStars = [...document.getElementsByClassName("rating__star")];
+    const ratingResult = document.querySelector(".rating__result");
+    const ratingInput = document.getElementById("rating");
 
-            function printRatingResult(result, num = 0) {
-                result.textContent = num
-                ratingInput.value = num;
-            }
+    function printRatingResult(result, num = 0) {
+        result.textContent = num;
+        ratingInput.value = num;
+    }
 
-            function paintStars(num) {
-                ratingStars.forEach((star, index) => {
-                    star.className = index < num
-                        ? "rating__star fas fa-star"
-                        : "rating__star far fa-star";
-                });
-            }
+    function paintStars(num) {
+        ratingStars.forEach((star, index) => {
+            star.className = index < num
+                ? "rating__star fas fa-star"
+                : "rating__star far fa-star";
+        });
+    }
 
-            const initialRating = Number(ratingInput.value || 0);
-            printRatingResult(ratingResult, initialRating);
-            paintStars(initialRating);
+    const initialRating = Number(ratingInput.value || 0);
+    printRatingResult(ratingResult, initialRating);
+    paintStars(initialRating);
 
-            function executeRating(stars, result) {
-                const starsLength = stars.length;
+    function executeRating(stars, result) {
+        stars.forEach((star, index) => {
+            star.onclick = () => {
+                const currentRating = Number(ratingInput.value || 0);
+                const nextRating = currentRating === index + 1 ? index : index + 1;
 
-                stars.forEach((star, index) => {
-                    star.onclick = () => {
-                        const currentRating = Number(ratingInput.value || 0);
-                        const nextRating = currentRating === index + 1 ? index : index + 1;
+                printRatingResult(result, nextRating);
+                paintStars(nextRating);
+            };
+        });
+    }
 
-                        printRatingResult(result, nextRating);
-                        paintStars(nextRating);
-                    };
-                });
-            }
+    executeRating(ratingStars, ratingResult);
+</script>
 
-
-            executeRating(ratingStars, ratingResult);
-
-        </script>
-
-        </html>
+</html>

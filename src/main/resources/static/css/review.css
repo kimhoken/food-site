@@ -242,12 +242,47 @@
     margin-top: 12px;
 }
 
+.preview-item {
+    position: relative;
+    overflow: hidden;
+    width: 90px;
+    height: 90px;
+    border-radius: 8px;
+}
+
 .preview-img {
     width: 90px;
     height: 90px;
     object-fit: cover;
     border: 1px solid #ddd;
     border-radius: 8px;
+}
+
+.preview-delete-btn {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 24px;
+    height: 24px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(32, 40, 32, 0.78);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+}
+
+.preview-delete-btn:hover {
+    background: #d8583f;
+}
+
+.review-delete-selected {
+    width: fit-content;
+    min-width: 92px;
+    margin-top: 4px;
 }
 
 /* Filter */
@@ -635,7 +670,7 @@
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,.8);
+    background: rgba(0, 0, 0, .8);
     z-index: 9999;
 
     justify-content: center;
@@ -650,7 +685,7 @@
     max-width: 90%;
     max-height: 90%;
     border-radius: 10px;
-    box-shadow: 0 10px 30px rgba(0,0,0,.4);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .4);
     cursor: zoom-out;
 }
 
