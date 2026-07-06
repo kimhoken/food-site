@@ -134,7 +134,7 @@ function pwdchange() {
 
 function agree() {
     let agree_box = document.getElementById("agree_box");
-    let deletebtn = document.getElementById(".delete-btn");
+    let deletebtn = document.querySelector(".delete-btn");
     agree_box.checked = !agree_box.checked;
     
     deletebtn.disabled = !agree_box.checked;
@@ -161,9 +161,9 @@ function setDeleteButtonState(f) {
 function deletecheck(input) {
     input = input || (typeof event != "undefined" ? event.target : null) || document.activeElement;
 
-    if (!input || !input.form) {
-        return;
-    }
+    // if (!input || !input.form) {
+    //     return;
+    // }
 
     let f = input.form;
     let pwd_msg = document.getElementById("delete_pwd_msg");
@@ -199,11 +199,7 @@ function deletecheck(input) {
     }
 }
 
-document.addEventListener("input", function(e) {
-    if (e.target && e.target.classList.contains("delete-input")) {
-        deletecheck(e.target);
-    }
-})
+
 
 document.addEventListener("change", function(e) {
     if (e.target && e.target.id == "agree_box") {

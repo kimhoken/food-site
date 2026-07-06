@@ -58,6 +58,20 @@
                 unvisual.style.display = "none";
             }
         }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelectorAll( "#login_id, #pwd").forEach(input => {
+                
+                input.addEventListener("keydown", function (event) {
+
+                    if (event.key === "Enter") {
+                        send(this.form);
+                    }
+                }
+) 
+            });
+        })
+        
         </script>
 </head>
 
@@ -80,7 +94,7 @@
                     
                     <div class="form-group">
                         <label for="login_id">아이디</label>
-                        <input id="login_id" name="login_id" placeholder="아이디를 입력하세요" />
+                        <input id="login_id" name="login_id" placeholder="아이디를 입력하세요"  />
                     </div>
 
                     <div class="form-group">
@@ -88,11 +102,11 @@
                         <div class="pwd-wrap">
                             <input type="password" name="password" id="pwd" placeholder="비밀번호를 입력하세요" />
 
-                            <button type="button" id="visual" class="toggle" onclick="viewpwd()">
+                            <button type="button" id="visual" class="toggle" onclick="viewpwd(this.form)">
                                 <img src="/images/visibility.png" />
                             </button>
 
-                            <button type="button" id="unvisual" class="toggle" onclick="viewpwd()">
+                            <button type="button" id="unvisual" class="toggle" onclick="viewpwd(this.form)">
                                 <img src="/images/unvisibility.png" />
                             </button>
                         </div>
