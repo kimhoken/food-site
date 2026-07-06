@@ -51,33 +51,37 @@ public class RecipeController {
             return "recipe/recipe_list";
         }
 
+        // 2. 선택된 대분류에 속하는 소분류 음식 데이터들을 조회하여 Model에 저장
+        List<Map<String, Object>> foodList = recipeDao.selectFoodListByCategory(category);
+        model.addAttribute("foodList", foodList);
+
+        // 2. 정렬 값 기본값 설정 (파라미터가 없으면 기본값 세팅)
         if (searchDTO.getSort() == null || searchDTO.getSort().isEmpty()) {
             searchDTO.setSort("latest");
         }
 
+        // 3. 페이징 처리 및 데이터 조회
         int totalCount = recipeDao.selectRecipeCount(searchDTO);
         model.addAttribute("totalPage", (totalCount + 8) / 9);
 
+        // 레시피 전체를 불러와서 여기서 가공 후 프런트로 전송
         List<RecipeVO> recipeList = recipeDao.selectRecipeList(searchDTO);
 
         String sort = searchDTO.getSort();
-
+        // 카테고리 미선택시 최신순으로 정렬됨
         if (sort.equals("name")) {
             Collections.sort(recipeList, (e1, e2) -> {
                 return e1.getTitle().compareTo(e2.getTitle());
             });
-
-        }else if (sort.equals("view")) {
+        } else if (sort.equals("view")) {
             Collections.sort(recipeList, (e1, e2) -> {
                 return e2.getView_count() - e1.getView_count();
             });
-
-        }else if (sort.equals("like")) {
+        } else if (sort.equals("like")) {
             Collections.sort(recipeList, (e1, e2) -> {
                 return e2.getLike_count() - e1.getLike_count();
             });
-
-        }else {
+        } else {
             // 등록일자가 같을 경우 이름순으로 정렬
             Collections.sort(recipeList, (e1, e2) -> {
                 if (e1.getCreated_date().compareTo(e2.getCreated_date()) == 0) {
@@ -374,7 +378,7 @@ public class RecipeController {
             }
 
             boardDAO.insertCookOrder(order);
-        }
+        } 
 
         return "redirect:/recipe_detail.do?recipe_id=" + dto.getRecipeId();
     }

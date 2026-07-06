@@ -71,9 +71,11 @@ public interface RecipeDAO {
     void deleteIngredient(int recipeId);
     void deleteCookOrder(int recipeId);
 
+    //조회수 증가
+    void updateViewCount(int recipeId);
     //레시피 추가 
     int insertRecipe(RecipeDTO dto);
-    int updateViewCount(int recipe_id);
+    
     int insertIngredient(IngredientVO vo);
     int insertCookOrder(CookOrderVO vo);
 

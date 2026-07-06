@@ -15,7 +15,6 @@ import com.project.foodsite.common.Paging;
 import com.project.foodsite.dao.BoardDAO;
 import com.project.foodsite.dao.CategoryDAO;
 import com.project.foodsite.dao.CommonCommentDAO;
-import com.project.foodsite.dao.RecipeDAO;
 import com.project.foodsite.dao.ReviewDAO;
 import com.project.foodsite.vo.BoardVO;
 import com.project.foodsite.vo.CategoryVO;
@@ -167,7 +166,7 @@ public class BoardController {
             order.setDescription(dto.getStep().get(i));
             order.setRecipe_id(dto.getRecipeId().intValue());
 
-            // 파일 저장
+            //파일 저장
             MultipartFile img = dto.getStepImg().get(i);
 
             if (img != null && !img.isEmpty()) {
@@ -176,6 +175,7 @@ public class BoardController {
                 order.setCook_image(cookOrderImg);
             }
 
+            //조리시간 들어오는지 확인
 
             recipeDAO.insertCookOrder(order);
         }
