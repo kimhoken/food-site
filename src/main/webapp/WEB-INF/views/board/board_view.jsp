@@ -142,7 +142,7 @@
             }
         });
     </script>
-</head>
+</head> 
 
 <body>
 
@@ -207,8 +207,8 @@
                                     <button type="button" class="comment-toggle-btn" onclick="toggleCommentMenu('${vo.comment_id}')">⋮</button>
 
                                     <div id="commentMenu${vo.comment_id}"
-                                         class="comment-dropdown"
-                                         style="display:none; position:absolute; right:0; background:white; border:1px solid #ccc;">
+                                        class="comment-dropdown"
+                                        style="display:none; position:absolute; right:0; background:white; border:1px solid #ccc;">
                                         <ul>
                                             <li>
                                                 <a href="/report/form.do?target_type=댓글&board_id=${board.board_id}&comment_id=${vo.comment_id}">
