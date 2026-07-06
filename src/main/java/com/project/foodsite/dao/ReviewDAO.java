@@ -33,4 +33,8 @@ public interface ReviewDAO {
 
     int reviewUpdate( ReviewVO review );
 
+    int reviewCount(Map<String, Object> map);
+    
+    List<ReviewVO> reviewPage(Map<String, Object> map);
+
 }

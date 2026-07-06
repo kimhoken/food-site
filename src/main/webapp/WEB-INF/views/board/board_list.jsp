@@ -295,6 +295,24 @@
                             <input type="button" value="나도 끄적끄적 ✍️" onclick="location.href='/community_form.do'" />
                         </div>
                     </c:if>
+                    <!-- 페이징 처리 -->
+                    <div class="board-page-box">
+                        <c:if test="${paging.prev}">
+                            <a href="/list.do?page=${paging.startpage - 1}&btn=board">◀</a>
+                        </c:if>
+
+                        <c:forEach var="p" begin="${paging.startpage}" end="${paging.endpage}">
+                            <a href="/list.do?page=${p}&btn=board"
+                            class="${paging.page eq p ? 'active' : ''}">
+                                ${p}
+                            </a>
+                        </c:forEach>
+
+                        <c:if test="${paging.next}">
+                            <a href="/list.do?page=${paging.endpage + 1}&btn=board">▶</a>
+                        </c:if>
+
+                    </div>
             </div>
             <!-- 9. 승연추가-->
             <!-- 최근 레시피 후기 -->
@@ -389,8 +407,23 @@
                     </div>
                 </c:forEach>
                 
-                <div>
-                    페이징 예정
+                <div class="review-page-box">
+
+                    <c:if test="${reviewPaging.prev}">
+                        <a href="/list.do?page=${reviewPaging.startpage - 1}&btn=review&sort=${sort}&period=${period}">◀</a>
+                    </c:if>
+
+                    <c:forEach var="p" begin="${reviewPaging.startpage}" end="${reviewPaging.endpage}">
+                        <a href="/list.do?page=${p}&btn=review&sort=${sort}&period=${period}"
+                        class="${reviewPaging.page eq p ? 'active' : ''}">
+                            ${p}
+                        </a>
+                    </c:forEach>
+
+                    <c:if test="${reviewPaging.next}">
+                        <a href="/list.do?page=${reviewPaging.endpage + 1}&btn=review&sort=${sort}&period=${period}">▶</a>
+                    </c:if>
+
                 </div>
             </div>
             <jsp:include page="/WEB-INF/views/common/footer.jsp" />

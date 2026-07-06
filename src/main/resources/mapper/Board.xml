@@ -36,7 +36,6 @@
         status,
         board_type
     )
-
     VALUES(
         #{member_id},
         #{title},
@@ -210,5 +209,21 @@
     )
     </insert>
 
-   
+    <select id="communityBoardCount" resultType="int">
+        select count(*)
+        from board
+        where board_type = 'COMMUNITY'
+    </select>
+
+    <select id="selectBoardPage" parameterType="map" resultType="board">
+        select
+            b.*,
+            m.nickname
+        from board b
+        join member m on b.member_id = m.member_id
+        where b.board_type = 'COMMUNITY'
+        order by b.board_id desc
+        limit #{offset}, #{size}
+    </select>
+
 </mapper>

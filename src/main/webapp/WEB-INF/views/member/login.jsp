@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,42 +8,46 @@
     <link rel="stylesheet" href="/css/modal.css" />
 
     <script>
+
+        
         function send(f) {
             let login_id = f.login_id.value;
             let password = f.password.value;
-
+            
             if (login_id == "") {
                 alert("아이디를 입력하세요!");
                 return;
             }
-
+            
             if (password == "") {
                 alert("비밀번호를 입력하세요!");
                 return;
             }
-
+            
             let formdata = new FormData(f);
             fetch("/login.do", { method: "post", body: formdata })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.res == "no_id") {
-                        alert("아이디가 없거나 틀렸습니다.");
-                    } else if (data.res == "no_pwd") {
-                        alert("비밀번호가 틀렸습니다.");
-                    } else if (data.res == "login") {
-                        alert("환영합니다 " + data.nick + "님!");
-                        location.href = "/main_list.do";
-                    } else {
-                        alert("esteregg");
-                    }
-                })
+            .then(res => res.json())
+            .then(data => {
+                if (data.res == "no_id") {
+                    alert("아이디가 없거나 틀렸습니다.");
+                } else if (data.res == "no_pwd") {
+                    alert("비밀번호가 틀렸습니다.");
+                } else if (data.res == "login") {
+                    alert("환영합니다 " + data.nick + "님!");
+                    location.href = "/main_list.do";
+                } else if (data.res == "suspend") {
+                    alert("정지 당하셌습니다.\n정지 해제일: "+data.day);
+                } else {
+                    alert("이스터 에그");
+                }
+            })
         }
-
+        
         function viewpwd() {
             let pwd = document.getElementById("pwd");
             let visual = document.getElementById("visual");
             let unvisual = document.getElementById("unvisual");
-
+            
             if (pwd.type === "password") {
                 pwd.type = "text";
                 visual.style.display = "none";
@@ -53,20 +58,26 @@
                 unvisual.style.display = "none";
             }
         }
-    </script>
+        </script>
 </head>
 
+
 <body>
+    <c:if test="${param.error eq 'SUSPEND'}">
+    <script>
+        alert('정지된 계정입니다. \n정지해제 날짜는 ${param.day}입니다.');
+        </script>
+    </c:if>
     <form>
         <div class="login-wrap">
             <div class="login-left">
                 <img src="/images/login_bg.png" class="login-img" />
             </div>
-
+            
             <div class="login-right">
                 <div class="login-table">
                     <h1 class="login-title">로그인</h1>
-
+                    
                     <div class="form-group">
                         <label for="login_id">아이디</label>
                         <input id="login_id" name="login_id" placeholder="아이디를 입력하세요" />

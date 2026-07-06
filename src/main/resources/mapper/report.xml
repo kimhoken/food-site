@@ -118,7 +118,19 @@
 
     <update id="updateMemberReportCount" parameterType="int">
         UPDATE member
-        SET report_count = IFNULL(report_count, 0) + 1
+        SET report_count = IFNULL(report_count, 0) + 1,
+            status = CASE
+                        WHEN IFNULL(report_count, 0) + 1 >=3 THEN 'SUSPEND'
+                        ELSE status
+                     END,
+            suspend_start = CASE
+                        WHEN IFNULL(report_count, 0) + 1 >=3 THEN NOW()
+                        ELSE suspend_start
+                     END,
+            suspend_end = CASE
+                        WHEN IFNULL(report_count, 0) + 1 >=3 THEN DATE_ADD(NOW(), INTERVAL 2 MINUTE)
+                        ELSE suspend_end
+                     END
         WHERE member_id = #{member_id}
     </update>
 
@@ -154,4 +166,26 @@
           AND IFNULL(review_id, 0) = IFNULL(#{review_id}, 0)
     </update>
 
+    <select id="reportCount" resultType="int">
+        select count(*)
+        from report
+    </select>
+
+    <select id="reportListPage" parameterType="map" resultType="report">
+        select
+            r.*,
+            m.name,
+            m.nickname,
+            m.email,
+            m.profile_img
+        from report r
+        join member m on r.member_id = m.member_id
+        order by r.report_id desc
+        limit #{offset}, #{size}
+    </select>
+    
+    <delete id="reportDelete" parameterType="int">
+        delete from report
+        where report_id = #{report_id}
+    </delete>
 </mapper>

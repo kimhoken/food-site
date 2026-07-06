@@ -30,4 +30,7 @@ public interface MemberDAO {
     List<MemberVO> MemberSearch( AdminMemberDTO admin );
 
     AdminMemberDTO memberDetail( int member_id );
+
+    int relaseSuspend( int member_id );
+    
 } 
