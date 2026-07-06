@@ -255,84 +255,182 @@ header {
     }
 }
 
+
 /* ==========================================================================
     3. 메인 배너 영역 
    ========================================================================== */
 .banner-wrap {
     position: relative;
+    max-width: 1200px;   /* ← 원하는 너비로 조절 (예: 1000px, 1200px, 1400px) */
     width: 100%;
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 30px 0;
-}
-
-.banner-viewport {
-    width: 100%;
+    height: 500px;
+    margin: 0 auto;       /* ← 가운데 정렬 핵심 */
     overflow: hidden;
-    padding: 20px 15%;
     box-sizing: border-box;
-}
-
-.banner-track {
-    display: flex;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    transition: transform 0.5s ease-in-out;
 }
 
 .banner-slide {
+    display: flex;
+    height: 100%;
+    width: 500%; /* 슬라이드 아이템 5개 * 100% (이 값이 없으면 레이아웃 계산이 어긋나서 버튼 클릭 영역이 밀릴 수 있어요) */
+    /* transition은 자바스크립트에서 상황에 따라 켜고 끕니다 */
+}
+
+.slide-item {
+    flex: 0 0 20%; /* 5개 중 하나 = 100% / 5 = 20% (부모 width 500% 기준) */
     box-sizing: border-box;
-    min-width: 100%;
-    padding: 0 16px;
-    transition: transform 0.5s ease, opacity 0.5s ease;
-    transform: scale(0.82);
-    opacity: 0.45;
+    padding: 0; /* margin 대신 padding 사용 (계산 오차 방지) */
 }
 
-/* 현재 가운데(active) 슬라이드만 크고 선명하게 - 흐리지 않 */
-.banner-slide.active {
-    transform: scale(1);
-    opacity: 1;
-}
-
-.banner-slide img {
+/* 이미지와 캡션을 겹치게 하기 위한 기준 박스 */
+.slide-inner {
+    position: relative;
     width: 100%;
-    height: 30vw;
-    max-height: 450px;
-    min-height: 320px;
+    height: 500px;
+}
+
+.slide-item img {
+    width: 100%;
+    height: 500px;
     object-fit: cover;
-    border-radius: 20px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
     display: block;
+}
+
+/* 슬라이드 위에 올라가는 텍스트+버튼 캡션 박스 */
+.slide-caption {
+    position: absolute;
+    left: 100px;   /* 40px → 80px로 안쪽으로 이동 */
+    top: 50%;
+    transform: translateY(-50%);
+    color: #fff;
+    max-width: 45%;
+    z-index: 5;
+}
+
+.slide-caption h2 {
+    font-size: 32px;
+    margin-bottom: 12px;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+}
+
+.slide-caption p {
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+.slide-btn {
+    display: inline-block;
+    padding: 10px 24px;
+    background: #fff;
+    color: #222;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.2s ease;
+}
+
+.slide-btn:hover {
+    background: #6D5F45;
+    color: #fff;
+}
+
+/* 뱃지 - 메인 */
+.slide-badge {
+    display: inline-block;
+    background: #5E6449;
+    border: none;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+}
+
+/* 뱃지 - 추천 */
+.slide-badge2 {
+    display: inline-block;
+    background: #C37B2F;
+    border: none;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+}
+
+/* 뱃지 - 키친가이드 */
+.slide-badge3 {
+    display: inline-block;
+    background: #C4364C;
+    border: none;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 14px;
 }
 
 .banner-btn {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    z-index: 30;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    border: 1px solid rgba(255, 255, 255, 0.3);
     background: rgba(0, 0, 0, 0.4);
-    color: #ffffff;
-    font-size: 22px;
-    cursor: pointer;
-    transition: background 0.3s;
-    display: flex;
+    color: #fff;
+    border: none;
+    font-size: 20px;
+    width: 44px;           /* 너비 고정 */
+    height: 44px;          /* 높이 고정 (너비와 동일해야 완전한 원) */
+    display: flex;         /* 화살표 아이콘 가운데 정렬용 */
     align-items: center;
     justify-content: center;
+    border-radius: 50%;    /* 원형으로 변경 */
+    cursor: pointer;
+    z-index: 10;
+    transition: background 0.2s ease;
 }
 
-.banner-btn:hover {
-    background: rgba(0, 0, 0, 0.6);
+.prev-btn {
+    left: 20px;
 }
 
-.banner-btn.prev { left: 5%; }
-.banner-btn.next { right: 5%; }
+.next-btn {
+    right: 20px;
+}
 
+.banner-indicator {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+}
+
+.dot.active {
+    background: #fff;
+}
+/* 화면이 좁아지면 캡션을 더 안쪽으로 */
+@media (max-width: 768px) {
+    .slide-caption {
+        left: 60px;
+        max-width: 60%; /* 좁은 화면에서 텍스트 잘리지 않게 */
+    }
+}
 /* ==========================================================================
    4. 카테고리 아이콘 메뉴 
    ========================================================================== */
