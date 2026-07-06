@@ -15,6 +15,7 @@ import com.project.foodsite.common.Paging;
 import com.project.foodsite.dao.BoardDAO;
 import com.project.foodsite.dao.CategoryDAO;
 import com.project.foodsite.dao.CommonCommentDAO;
+import com.project.foodsite.dao.RecipeDAO;
 import com.project.foodsite.dao.ReviewDAO;
 import com.project.foodsite.vo.BoardVO;
 import com.project.foodsite.vo.CategoryVO;
