@@ -2,6 +2,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <c:if test="${not empty sessionScope.user and sessionScope.user.member_id == board.member_id}"></c:if>
+<jsp:include page="/WEB-INF/views/common/navibar.jsp">
+    <jsp:param name="currentMenu" value="community" />
+</jsp:include>
 
 <!DOCTYPE html>
 <html>
@@ -276,7 +279,7 @@
         <%-- 댓글 영역 끝 --%>
 
     </div>
-
+    <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 </body>
 
 </html>
