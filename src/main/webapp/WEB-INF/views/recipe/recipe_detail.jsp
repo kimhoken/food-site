@@ -202,33 +202,39 @@
 
     <!-- 작성자만 삭제 가능 -->
     <c:if test="${not empty sessionScope.user && sessionScope.user.member_id == dto.memberId}">
-        <a href="/recipe_delete.do?recipeId=${dto.recipeId}" class="recipe-delete-btn"
-           onclick="return confirm('삭제하시겠습니까?');">
+        <div class="recipe-manage-wrap">
+            <a href="/recipe_delete.do?recipeId=${dto.recipeId}" class="recipe-delete-btn"
+            onclick="return confirm('삭제하시겠습니까?');">
             삭제
         </a>
-    </c:if>
-
-    <div class="recipe-report-wrapx">
-        <a href="/report/form.do?recipe_id=${recipe_id}"
-           class="recipe-report-btn">
-            신고하기
-        </a>
     </div>
+</c:if>
 
-    <div class="recipe-bookmark-wrap">
-        <a href="#"
-           class="recipe-bookmark-btn"
-           onclick="bookmarkSet('${recipe_id}')">
-            북마크
-        </a>
-    </div>
 
-    <div class="recipe-review-wrap">
+    <div class="recipe-action-wrap">
+        <div class="recipe-sub-action">
+            <a href="/report/form.do?recipe_id=${recipe_id}"
+               class="recipe-report-btn">
+               신고하기
+            </a>
+            
+            <a href="#"
+               class="recipe-bookmark-btn"
+               onclick="bookmarkSet('${recipe_id}')">
+                북마크
+            </a>
+        </div>
         <a href="/review/insert?recipe_id=${recipe_id}"
            class="recipe-review-btn">
             레시피 후기 작성하기
         </a>
     </div>
+
+    <!-- <div class="recipe-bookmark-wrap">
+    </div>
+
+    <div class="recipe-review-wrap">
+    </div> -->
 
     <c:if test="${not empty commentList}">
         <div class="comment-main-title">레시피 댓글</div>
