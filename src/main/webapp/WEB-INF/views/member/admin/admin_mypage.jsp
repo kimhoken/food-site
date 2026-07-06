@@ -1,29 +1,33 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-        <head>
-            <script>
-                console.log('${profileuser}');
-            </script>
-        </head>
-
         <section class="info-page">
             <div class="info-card">
-                <h3 class="info-title">회원 정보</h3>
+                <div class="info-header">
+                    <div>
+                        <h3 class="info-title">관리자 정보</h3>
+                        <p class="info-desc">현재 로그인한 관리자 계정 정보를 확인할 수 있습니다.</p>
+                    </div>
+                    <a class="info-edit-link" href="/admin/update">정보 수정</a>
+                </div>
 
                 <div class="info-list">
-                    <div class="info-row">
+                    <div class="info-profile">
                         <c:choose>
 
                             <c:when test="${profileuser.profile_img eq 'no_file.png'}">
-                                <img src="/images/no_file.png" width="85px" height="85px" />
+                                <img src="/images/no_file.png" />
                             </c:when>
 
                             <c:when test="${profileuser.profile_img ne 'no_file.png'}">
-                                <img src="/upload/profile/${profileuser.profile_img}" width="85px" height="85px" />
+                                <img src="/upload/profile/${profileuser.profile_img}" />
                             </c:when>
 
                         </c:choose>
+                        <div>
+                            <strong>${profileuser.nickname}</strong>
+                            <span>관리자</span>
+                        </div>
                     </div>
 
                     <div class="info-row">
@@ -61,9 +65,6 @@
                         <div class="info-value">${profileuser.created_date}</div>
                     </div>
 
-                    <div class="info-btn-box">
-                        <a href="/admin/update">회원 정보 수정</a>
-                    </div>
                 </div>
             </div>
         </section>

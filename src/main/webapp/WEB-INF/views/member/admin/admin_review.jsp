@@ -37,6 +37,7 @@
                             // 신고 내역 보려 가는 함수 추가할 예정
                             document.querySelector(".re-btn-delete").onclick =
                                 () => reviewdelete(dto.review_id);
+                            document.querySelector(".ma-detail-panel").classList.add("active");
                         })
                 }
 
@@ -97,13 +98,17 @@
                             }
                         })
                 }
+
+                function closeReviewDetail() {
+                    document.querySelector(".ma-detail-panel").classList.remove("active");
+                }
                 
 
             </script>
 
         </head>
 
-        <section>
+        <section class="admin-list-page admin-review-page">
 
             <div>
 
@@ -184,6 +189,7 @@
 
                 <div class="ma-detail-panel">
                     <div class="ma-detail-header">
+                        <button type="button" class="ra-close" onclick="closeReviewDetail()">x</button>
                         <h3>후기 상세</h3>
                     </div>
 

@@ -10,7 +10,7 @@
             <div class="activity-box">
                 <div class="activity-header">
                     <h3>내가 쓴 레시피</h3>
-                    <select onchange="loaction.href='mypage.do?menu=recipe&sort='+ this.value">
+                    <select onchange="location.href='/mypage.do?menu=recipe&sort='+ this.value">
                         <option value="recently" ${sort eq 'recently' ? 'selected' : ''}>최신순</option>
                         <option value="asc" ${sort eq 'asc' ? 'selected' : ''}>오름차순</option>
                         <option value="desc" ${sort eq 'desc' ? 'selected' : ''}>내림차순</option>
@@ -33,11 +33,11 @@
                         </div>
 
                         <div class="activity-date">
-                            <small> ${recipe.created_date.substring(0,10).replace('-','.')}</small>
+                            <small> 등록일: ${recipe.created_date.substring(0,10).replace('-','.')}</small>
                         </div>
 
                         <div class="activity-extra">
-                            ${recipe.view_count}
+                           조회: ${recipe.view_count}
                         </div>
 
                     </div>
@@ -45,7 +45,7 @@
 
 
 
-                <c:set var="pageUrl" value="/mypage.do?menu=recipe?sort=${sort}" scope="request" />
+                <c:set var="pageUrl" value="/mypage.do?menu=recipe&sort=${sort}" scope="request" />
                 <jsp:include page="/WEB-INF/views/common/paging.jsp" />
             </div>
         </section>

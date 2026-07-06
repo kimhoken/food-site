@@ -2,7 +2,7 @@
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
         <head>
-            <link rel="stylesheet" href="${pageContent.request.contentPath}/css/admin_recipe.css" />
+            <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin_recipe.css" />
         </head>
         <section class="ra-wrap">
             <div class="ra-main">

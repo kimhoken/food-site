@@ -96,6 +96,7 @@ a {
     font-size: 15px;
     font-weight: 600;
     transition: 0.2s;
+    margin: 8px;
 }
 
 .menu-item:hover,
@@ -159,7 +160,7 @@ a {
     background: #fff;
     border-radius: 18px;
     padding: 36px;
-    margin-bottom: 24px;
+    margin: 24px 0px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -287,6 +288,7 @@ a {
     grid-template-columns: 1.1fr 1fr;
     gap: 28px;
     margin-top: 28px;
+    align-items: start;
 }
 
 /* 공통 박스 */

@@ -24,6 +24,7 @@ import com.project.foodsite.dao.ImgDAO;
 import com.project.foodsite.dao.InquiryDAO;
 import com.project.foodsite.dao.MemberDAO;
 import com.project.foodsite.dao.RecipeDAO;
+import com.project.foodsite.dto.MypageDTO;
 import com.project.foodsite.vo.BookmarkVO;
 import com.project.foodsite.vo.CommentVO;
 import com.project.foodsite.vo.ImgVO;
@@ -52,59 +53,58 @@ public class MypageController {
     private final BookmarkDAO bookmarkDAO;
     private final InquiryDAO inquiryDAO; 
     private final ImgDAO imgDAO;
+    
 
-    private void userRecipePaging(int page, Model model, MemberVO user){
-        
-        int totalcount = recipeDAO.countUserRecipe(user.getMember_id());
+    private Paging applyPaging(MypageDTO mypageDTO, int totalcount, Model model){
+        if(mypageDTO.getPage() == 0){
+            mypageDTO.setPage(1);
+        }
 
-        Paging paging = new Paging(page, 5, totalcount);
+        if(mypageDTO.getSize() == 0){
+            mypageDTO.setSize(5);
+        }
 
-        Map<String,Object> map = new HashMap<>();
+        if(mypageDTO.getSort() == null || mypageDTO.getSort().isBlank()){
+            mypageDTO.setSort("recently");
+        }
 
-        map.put("member_id", user.getMember_id());
-        map.put("offest", paging.getOffset());
-        map.put("size", paging.getSize());
+        Paging paging = new Paging(mypageDTO.getPage(), mypageDTO.getSize(), totalcount);
+        mypageDTO.setOffset(paging.getOffset());
 
-        List<RecipeVO> list = recipeDAO.getUserRecipeList(map);
-
-        model.addAttribute("list", list);
         model.addAttribute("paging", paging);
+        model.addAttribute("sort", mypageDTO.getSort());
+
+        return paging;
     }
 
-    private void userCommentPaging(int page, Model model, MemberVO user){
+    private void userRecipePaging( MypageDTO mypageDTO , Model model){
         
-        int totalcount = commentDAO.countUserComment(user.getMember_id());
+        int totalcount = recipeDAO.countUserRecipe( mypageDTO );
+        applyPaging(mypageDTO, totalcount, model);
 
-        Paging paging = new Paging(page, 5, totalcount);
-
-        Map<String,Object> map = new HashMap<>();
-
-        map.put("member_id", user.getMember_id());
-        map.put("offest", paging.getOffset());
-        map.put("size", paging.getSize());
-
-        List<CommentVO> list = commentDAO.getUserCommentList(map);
+        List<RecipeVO> list = recipeDAO.getUserRecipeList(mypageDTO);
 
         model.addAttribute("list", list);
-        model.addAttribute("paging", paging);
     }
 
-    private void userBookmarkPaging(int page, Model model, MemberVO user){
+    private void userCommentPaging( MypageDTO mypageDTO, Model model){
         
-        int totalcount = bookmarkDAO.countUserBookmark(user.getMember_id());
+        int totalcount = commentDAO.countUserComment(mypageDTO);
+        applyPaging(mypageDTO, totalcount, model);
 
-        Paging paging = new Paging(page, 5, totalcount);
-
-        Map<String,Object> map = new HashMap<>();
-
-        map.put("member_id", user.getMember_id());
-        map.put("offset", paging.getOffset());
-        map.put("size", paging.getSize());
-
-        List<BookmarkVO> list = bookmarkDAO.getUserBookmarkList(map);
+        List<CommentVO> list = commentDAO.getUserCommentList(mypageDTO);
 
         model.addAttribute("list", list);
-        model.addAttribute("paging", paging);
+    }
+
+    private void userBookmarkPaging(MypageDTO mypageDTO, Model model){
+        
+        int totalcount = bookmarkDAO.countUserBookmark(mypageDTO);
+        applyPaging(mypageDTO, totalcount, model);
+
+        List<BookmarkVO> list = bookmarkDAO.getUserBookmarkList(mypageDTO);
+
+        model.addAttribute("list", list);
     }
 
     public void userHomePage(Model model, int member_id){
@@ -193,22 +193,25 @@ public class MypageController {
     }
 
     private void setTotalCount(int member_id, Model model){
-        model.addAttribute("recipeCount", recipeDAO.countUserRecipe(member_id));
-        model.addAttribute("commentCount", commentDAO.countUserComment(member_id));
-        model.addAttribute("bookmarkCount", bookmarkDAO.countUserBookmark(member_id));
+        MypageDTO mypageDTO = new MypageDTO();
+        mypageDTO.setMember_id(member_id);
+
+        model.addAttribute("recipeCount", recipeDAO.countUserRecipe(mypageDTO));
+        model.addAttribute("commentCount", commentDAO.countUserComment(mypageDTO));
+        model.addAttribute("bookmarkCount", bookmarkDAO.countUserBookmark(mypageDTO));
     }
     
     @GetMapping("/user/{member_id}")
-    public String viewUser(@PathVariable int member_id, Model model, String menu, Integer page){
+    public String viewUser(@PathVariable int member_id, Model model, MypageDTO mypageDTO ){
 
         MemberVO profileUser = memberDAO.getUserByMemberId(member_id);
 
-        if(page == null){
-            page = 1;
+        if(mypageDTO.getPage() == 0){
+            mypageDTO.setPage(1) ;
         }
         
-        if(menu == null){
-            menu = "home";
+        if(mypageDTO.getMenu() == null){
+            mypageDTO.setMenu("home");
         }
         
         if(profileUser == null){
@@ -218,16 +221,18 @@ public class MypageController {
         }                      
         
         model.addAttribute("profileUser", profileUser);
-        model.addAttribute(menu, "menu"); 
+        model.addAttribute("member_id", member_id);
+        model.addAttribute("menu", mypageDTO.getMenu()); 
+        mypageDTO.setMember_id(member_id);
         
         String contentPage = "/WEB-INF/views/member/mypage/mypage_profile_home.jsp";
         userHomePage(model, member_id);
         
-        if (menu.equals("recipe")){
-            userRecipePaging(page, model, profileUser);
+        if (mypageDTO.getMenu().equals("recipe")){
+            userRecipePaging(mypageDTO, model);
             contentPage = "/WEB-INF/views/member/mypage/mypage_profile_recipe.jsp";
-        } else if(menu.equals("comment")){
-            userCommentPaging(page, model, profileUser);
+        } else if(mypageDTO.getMenu().equals("comment")){
+            userCommentPaging(mypageDTO, model);
             contentPage = "/WEB-INF/views/member/mypage/mypage_profile_comment.jsp";
         } 
 
@@ -241,43 +246,44 @@ public class MypageController {
     @GetMapping("/mypage.do")
     public String gomypage(
             Model model,
-            String menu,
-            Integer page,
+            MypageDTO mypageDTO,
             @RequestParam(required = false) String status 
     ) {        
 
-        if(page == null){
-            page = 1;
+        if(mypageDTO.getPage() == 0){
+            mypageDTO.setPage(1);
         }
 
-        if(menu == null){
-            menu = "home";
+        if(mypageDTO.getMenu() == null){
+            mypageDTO.setMenu("home");
         }
         
         MemberVO user = (MemberVO) httpSession.getAttribute("user");
 
         if(user == null){
-            setContentPage(model, menu);
+            setContentPage(model, mypageDTO.getMenu());
             return "member/mypage";
         }
         
-        model.addAttribute("profileuser", user);                
+        mypageDTO.setMember_id(user.getMember_id());
+        model.addAttribute("profileuser", user);
+        model.addAttribute("menu", mypageDTO.getMenu());
         
-        if(menu.equals("home")){
+        if(mypageDTO.getMenu().equals("home")){
             userHomePage(model, user.getMember_id());
-        } else if(menu.equals("recipe")){
-            userRecipePaging(page, model, user);
-        } else if(menu.equals("comment")){
-            userCommentPaging(page, model, user);
-        } else if(menu.equals("bookmark")){
-            userBookmarkPaging(page, model, user);
-        } else if(menu.equals("inquiry")){
-            userInquiry(page, model, user, status);
+        } else if(mypageDTO.getMenu().equals("recipe")){
+            userRecipePaging(mypageDTO, model);
+        } else if(mypageDTO.getMenu().equals("comment")){
+            userCommentPaging(mypageDTO, model);
+        } else if(mypageDTO.getMenu().equals("bookmark")){
+            userBookmarkPaging(mypageDTO, model);
+        } else if(mypageDTO.getMenu().equals("inquiry")){
+            userInquiry(mypageDTO.getPage(), model, user, status);
         }
 
         setTotalCount(user.getMember_id(), model);
 
-        setContentPage(model, menu);
+        setContentPage(model, mypageDTO.getMenu());
         
         return "member/mypage";
     }

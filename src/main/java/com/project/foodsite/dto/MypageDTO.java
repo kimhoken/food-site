@@ -14,4 +14,5 @@ import lombok.NoArgsConstructor;
 @Alias("mypage")
 public class MypageDTO extends SearchDTO {
     private int member_id;
+    private String menu;
 }

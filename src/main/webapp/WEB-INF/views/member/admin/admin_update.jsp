@@ -1,8 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
  <head>
-            <link rel="stylesheet" href="css/mypage_account.css" />
-
             <script>
 
                 //파일 선택 유무
@@ -47,7 +45,13 @@
         <section class="update-page">
             <div class="update-card">
 
-                <h2 class="update-title">회원 정보 수정</h2>
+                <div class="update-header">
+                    <div>
+                        <h2 class="update-title">관리자 정보 수정</h2>
+                        <p class="update-desc">프로필 이미지와 기본 정보를 수정할 수 있습니다.</p>
+                    </div>
+                    <a class="update-back-link" href="/admin/mypage">내 정보</a>
+                </div>
 
                 <form action="/admin/updatefin" method="post" enctype="multipart/form-data">
                     <input type="hidden" id="filechange" value="no" name="filechange" />

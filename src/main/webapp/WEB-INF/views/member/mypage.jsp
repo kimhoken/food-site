@@ -59,7 +59,7 @@
 
 
                     <div class="menu-section">
-                        <div class="sub-title"><a href="/mypage.do?menu=activity">내활동</a></div>
+                        <div class="sub-title"><a href="/mypage.do?menu=home">내활동</a></div>
                         <div><a href="/mypage.do?menu=recipe" class="menu-item ${param.menu eq 'recipe' ? 'active' : ''}">
                                 <!-- <img src="images/document2.png" /> -->
                                 작성한 레시피</a></div>
@@ -79,20 +79,14 @@
                                 문의 내역</a></div>
                     </div>
 
-                    <button type="button" onclick="logout()">
+                    <button class="logout-btn" type="button" onclick="logout()">
                         <img src="/images/logout.png" />
                         로그아웃</button>
                 </aside>
 
                 <!-- 마이페이지 오른쪽 부분 -->
                 <main class="mypage-right">
-
-                    <div class="page-header">
-                        <a href="/mypage.do?menu=home">
-                            <h2>마이페이지</h2>
-                        </a>
-                        <p>내활동 내역을 한 눈에 확인하세요!</p>
-                    </div>
+                   
 
                     <c:if test="${ not mainshow }">
 
