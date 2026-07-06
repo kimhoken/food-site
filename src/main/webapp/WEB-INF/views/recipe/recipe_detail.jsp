@@ -198,33 +198,31 @@
         </div>
     </div>
 
-    <!-- 작성자만 삭제 가능 -->
-    <c:if test="${not empty sessionScope.user && sessionScope.user.member_id == dto.memberId}">
-        <a href="/recipe_delete.do?recipeId=${dto.recipeId}" class="recipe-delete-btn"
-           onclick="return confirm('삭제하시겠습니까?');">
-            삭제
-        </a>
-    </c:if>
+    <div class="recipe-action-wrap">
 
-    <div class="recipe-report-wrapx">
-        <a href="/report/form.do?recipe_id=${recipe_id}"
-           class="recipe-report-btn">
+        <!-- 작성자만 -->
+        <c:if test="${not empty sessionScope.user && sessionScope.user.member_id == dto.memberId}">
+            <a href="/recipe_update.do?recipeId=${dto.recipeId}" class="recipe-update-btn">
+                수정
+            </a>
+
+            <a href="/recipe_delete.do?recipeId=${dto.recipeId}" class="recipe-delete-btn" onclick="return confirm('삭제하시겠습니까?');">
+                삭제
+            </a>
+        </c:if>
+
+        <a href="/report/form.do?target_type=레시피&recipe_id=${param.recipe_id}" class="recipe-report-btn">
             신고하기
         </a>
-    </div>
 
-    <div class="recipe-bookmark-wrap">
-        <a href="#"
-           class="recipe-bookmark-btn">
+        <a href="#" class="recipe-bookmark-btn">
             북마크
         </a>
-    </div>
 
-    <div class="recipe-review-wrap">
-        <a href="/review/insert?recipe_id=${recipe_id}"
-           class="recipe-review-btn">
+        <a href="/review/insert?recipe_id=${param.recipe_id}" class="recipe-review-btn">
             레시피 후기 작성하기
         </a>
+
     </div>
 
     <c:if test="${not empty commentList}">
