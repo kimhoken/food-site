@@ -2,7 +2,7 @@ name: Deploy to EC2 with SCP
 
 on:
   push:
-    branches: [ "main" ] # main 브랜치에 코드가 푸시되면 자동 실행
+    branches: [ "master" ] # master 브랜치에 코드가 푸시되면 자동 실행
 
 jobs:
   build-and-deploy:
@@ -20,11 +20,15 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
     
-    # 3. Secrets를 이용해 application.properties 파일 생성하기 (여기가 추가된 부분!)
+    # 3. Secrets를 이용해 application.properties 파일 생성하기 
     - name: Make application.properties
+      env:
+        # Secret 값을 환경 변수로 먼저 안전하게 빼둠
+        PROPERTIES_CONTENT: ${{ secrets.APPLICATION_PROPERTIES }}
       run: |
         mkdir -p src/main/resources
-        echo "${{ secrets.APPLICATION_PROPERTIES }}" > src/main/resources/application.properties
+        # 환경 변수를 호출해서 파일로 저장
+        echo "$PROPERTIES_CONTENT" > src/main/resources/application.properties
 
     # 4. Gradle 권한 부여 및 빌드 (WAR 파일 생성)
     - name: Build with Gradle
@@ -55,6 +59,8 @@ jobs:
           cd ~/deploy/build/libs
           # 실행 중인 기존 스프링 부트 서버 강제 종료 (8080 포트 기준)
           sudo fuser -k -n tcp 8080 || true
+          
+          rm /home/ubuntu/deploy/build/libs/foodsite-0.0.1-SNAPSHOT-plain.war
           
           # 백그라운드에서 새 WAR 파일 실행 (로그는 app.log에 저장)
           nohup java -jar *.war > app.log 2>&1 &

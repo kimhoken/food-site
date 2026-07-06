@@ -36,7 +36,11 @@
                         <div class="delete-check-box">
                             <h3>본인 확인</h3>
                             <p>회원 탈퇴를 원하시면 비밀번호 입력하세요</p>
-                            <input class="delete-input" name="password" type="password" placeholder="비밀번호 입력하세요" oninput="deletecheck()" />
+                            <input class="delete-input" 
+                                   name="password" 
+                                   type="password" 
+                                   placeholder="비밀번호 입력하세요" 
+                                   oninput="deletecheck(this)" />
                         </div>
                     </c:if>
 
@@ -44,7 +48,10 @@
                         <div class="delete-check-box">
                             <h3>본인 확인</h3>
                             <p>회원 탈퇴를 원하시면 아래의 문구를 입력하세요</p>
-                            <input class="delete-input" name="str" placeholder="오늘 뭐먹지?를 탈퇴합니다." oninput="deletecheck()" />
+                            <input class="delete-input" 
+                                   name="str" 
+                                   placeholder="오늘 뭐먹지?를 탈퇴합니다." 
+                                   oninput="deletecheck(this)" />
                         </div>
                     </c:if>
 

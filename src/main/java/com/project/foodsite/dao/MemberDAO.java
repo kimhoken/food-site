@@ -6,10 +6,10 @@ import com.project.foodsite.dto.AdminMemberDTO;
 import com.project.foodsite.vo.MemberVO;
 
 public interface MemberDAO {
-           
-    MemberVO getUserById(String id);    
     
     int userInsert(MemberVO vo);
+    
+    MemberVO getUserById(String id);    
 
     MemberVO getUserNickname(String nickname);
     
@@ -30,4 +30,7 @@ public interface MemberDAO {
     List<MemberVO> MemberSearch( AdminMemberDTO admin );
 
     AdminMemberDTO memberDetail( int member_id );
+
+    int relaseSuspend( int member_id );
+    
 } 

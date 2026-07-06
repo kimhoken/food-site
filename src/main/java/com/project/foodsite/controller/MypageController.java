@@ -261,8 +261,8 @@ public class MypageController {
             return "member/mypage";
         }
         
-        model.addAttribute("profileuser", user);
-               
+        model.addAttribute("profileuser", user);                
+        
         if(menu.equals("home")){
             userHomePage(model, user.getMember_id());
         } else if(menu.equals("recipe")){
@@ -364,7 +364,7 @@ public class MypageController {
 
         fileupload.deleteFile(savePath, vo.getProfile_img());
 
-        vo.setStatus("no");
+        vo.setStatus("WITHDRAW");
         vo.setLogin_id(null);
         vo.setPassword(null);
         vo.setNickname("탈퇴회원_" + vo.getMember_id());

@@ -20,7 +20,7 @@
                             </c:when>
 
                             <c:when test="${profileuser.profile_img ne 'no_file.png'}">
-                                <img src="/upload/profile/${profileUser.profile_img}" width="85px" height="85px" />
+                                <img src="/upload/profile/${profileuser.profile_img}" width="85px" height="85px" />
                             </c:when>
 
                         </c:choose>
@@ -62,7 +62,7 @@
                     </div>
 
                     <div class="info-btn-box">
-                        <a href="/mypage.do?menu=update">회원 정보 수정</a>
+                        <a href="/admin/update">회원 정보 수정</a>
                     </div>
                 </div>
             </div>

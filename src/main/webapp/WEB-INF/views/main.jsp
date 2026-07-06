@@ -91,300 +91,151 @@
                     if (slides.length === 0) {
                         return;
                     }
+                }
+                location.href = "${pageContext.request.contextPath}/recipe_list.do?search_text=" + encodeURIComponent(searchKeyword);
+            }
 
-                    setInterval(() => {
-                        slides[current].classList.remove('active');
-            
-                        current = (current + 1) % slides.length;
-            
-                        slides[current].classList.add('active');
-                    }, 3000);
-                    changeSeason('봄', document.querySelector('.season-tab-item.active'));
+            function selectCategory(category) {
+                document.getElementById("categoryModal").style.display = 'flex';
+                sideTabCategory(category);
+            }
+
+            function openModal() {
+                document.getElementById("categoryModal").style.display = 'flex';
+                sideTabCategory('상황별추천');
+            }
+
+            function closeModal() {
+                document.getElementById("categoryModal").style.display = 'none';
+                document.getElementById("category-detail").style.display = 'none';
+            }
+
+            function closeModalOnOutside(event) {
+                const modal = document.getElementById("categoryModal");
+                if (event.target === modal) {
+                    closeModal();
+                }
+            }
+
+            function handleSidebarClick(event) {
+                document.getElementById("category-detail").style.display = 'none';
+                document.getElementById("categoryModal").style.display = 'flex';
+                
+                const item = event.target.closest('.sidebar-item'); 
+                if (!item) return; 
+                
+                sideTabCategory(item.dataset.cat);
+            }
+
+            function handleSubSidebarClick(event) {
+                document.getElementById("category-detail").style.display = 'flex';
+                
+                const item = event.target.closest('.sidebar-item'); 
+                if (!item) return; 
+                
+                openDetailCategory(item.dataset.cat);
+            }
+
+            function sideTabCategory(category) {
+                const sidebarItems = document.querySelectorAll('.modal-sidebar > div');
+                ctg = category;
+                sidebarItems.forEach(item => {
+                    if(item.dataset.cat === category) {
+                        item.className = "sidebar-item-active"; 
+                    } else {
+                        item.className = "sidebar-item"; 
+                    }
+                });
+                
+                fetch('/category.do?category=' + category)
+                .then(res => res.json())
+                .then(data => {
+                    let html = "";
+                    for(const[subCategoryName, foodList] of Object.entries(data)){
+                        html += "<div class='menu-group'>";
+                        html += "<h3>" + subCategoryName + "</h3>";
+                        html += "<ul>";
+                        
+                        let limit = Math.min(foodList.length, 4);
+                        for(let i=0 ; i<limit ; i++){
+                            html += "<li><button type='button' class='category-search-btn' data-keyword='" 
+                                + escapeHtml(foodList[i]) 
+                                + "' onclick='goRecipeSearch(this.dataset.keyword)'>" 
+                                + escapeHtml(foodList[i]) 
+                                + "</button></li>";
+                        }
+                        html += "<li><input type='button' value='더보기 -&gt' onClick='openDetailCategory( \"" + subCategoryName + "\")'></li>";
+                        html += "</ul>";
+                        html += "</div>";
+                    }
+                    
+                    document.getElementById("modalCategoryBody").innerHTML = html;
+                    
+                    document.querySelector(".modal-banner-side").innerHTML =
+                    "<div class='banner-img-box'>" +
+                    "    <img src='/images/main.png' alt='추천 요리' style='width:100%; height:100%; object-fit:cover; border-radius:12px;'> gap" +
+                    "</div>" +
+                    "<div class='banner-text-box'>" +
+                    "    <h3>오늘 뭐 먹지?</h3>" +
+                    "    <p>다양한 레시피로<br>매일 새로운 한 끼를 만나보세요.</p>" +
+                    "    <button type='button' class='banner-go-btn' onclick='location.href=\"/recipe_list.do\"'>레시피 둘러보기 &gt;</button>" +
+                    "</div>";
                 })
+                .catch(err => {
+                    console.error("데이터를 가져오는 도중 에러 발생:", err);
+                    document.getElementById("modalCategoryBody").innerHTML = "<div style='grid-column: 1/-1; text-align:center; padding:40px; color:#999;'>카테고리 데이터를 불러오지 못했습니다.</div>";
+                });
+            }
 
-
-            /* ============================ 여기부터 카테고리 모달창 관련 함수들 ============================ */
-            /* ============================  카테고리 키워드 클릭 시 기존 검색 기능처럼 검색되게 하는 함수 ============================ */
-                function escapeHtml(value) {
-                    return String(value)
-                        .replaceAll("&", "&amp;")
-                        .replaceAll("<", "&lt;")
-                        .replaceAll(">", "&gt;")
-                        .replaceAll('"', "&quot;")
-                        .replaceAll("'", "&#039;");
-                }
-
-                function goRecipeSearch(keyword) {
-                    //  모달에서 누른 음식명을 검색창 검색어처럼 사용
-                    const searchKeyword = keyword ? keyword.trim() : "";
-
-                    if (searchKeyword === "") {
-                        return;
+            const openDetailCategory = (subName) => {
+                document.getElementById("categoryModal").style.display = 'none';
+                document.getElementById("category-detail").style.display = "flex";
+                
+                const sidebarItems = document.querySelectorAll('.modal-sidebar > div');
+                sidebarItems.forEach(item => {
+                    if(item.dataset.cat === ctg) {
+                        item.className = "sidebar-item-active"; 
+                    } else {
+                        item.className = "sidebar-item"; 
                     }
-
-                    //  navibar.jsp 안에 있는 검색 input을 찾아서 기존 검색 form을 그대로 submit
-                    // input name이 search_text / keyword / search 중 하나여도 동작하게 처리
-                    const searchInput =
-                        document.querySelector("input[name='search_text']") ||
-                        document.querySelector("input[name='keyword']") ||
-                        document.querySelector("input[name='search']");
-
-                    if (searchInput) {
-                        const searchForm = searchInput.closest("form");
-
-                        searchInput.value = searchKeyword;
-
-                        if (searchForm) {
-                            searchForm.submit();
-                            return;
+                });
+                
+                fetch("/category.do?category=" + ctg)
+                .then(res => res.json())
+                .then(data => {
+                    let html = "";
+                    let mainHtml = "<ul class='main-list'>";
+                    for(const[subCategoryName, foodList] of Object.entries(data)){
+                        if(subName == subCategoryName){
+                            html += "<div class='sidebar-item-active' data-cat='" + subCategoryName + "'>";
+                        }else{
+                            html += "<div class='sidebar-item' data-cat='" + subCategoryName + "'>";
                         }
-                    }
-
-                    //  혹시 검색 form을 못 찾았을 때만 사용하는 예비 이동 코드
-                    // 검색창 form이 정상적으로 있으면 위에서 submit되므로 이 부분은 거의 실행되지 않음
-                    location.href = "${pageContext.request.contextPath}/recipe_list.do?search_text=" + encodeURIComponent(searchKeyword);
-                }
-
-                // 선택한 카테고리들 열기
-                function selectCategory(category){
-                    document.getElementById("categoryModal").style.display = 'flex';
-                    sideTabCategory(category);
-                }
-                
-                // 전체보기 모달 열기 (열릴 때 자동으로 첫 번째 카테고리 '상황별추천')
-                function openModal(){
-                    document.getElementById("categoryModal").style.display = 'flex';
-                    sideTabCategory('상황별추천');
-                }
-                
-                // 전체보기 모달 닫기
-                function closeModal(){
-                    document.getElementById("categoryModal").style.display = 'none';
-                    document.getElementById("category-detail").style.display = 'none';
-                }
-                
-                // 메뉴창 바깥 영역 클릭 시 닫히게 하기
-                function closeModalOnOutside(event) {
-                    const modal = document.getElementById("categoryModal");
-                    if (event.target === modal) {
-                        closeModal();
-                    }
-                }
-                
-                //왼쪽 중분류 사이드바 클릭 감지
-                function handleSidebarClick(event) {
-                    document.getElementById("category-detail").style.display = 'none';
-                    document.getElementById("categoryModal").style.display = 'flex';
-                    
-                    const item = event.target.closest('.sidebar-item'); // item = 클릭된 <div> 태그 자체
-                    if (!item) return; // sidebar-item을 클릭한 게 아니면 무시
-                    
-                    // 카테고리명(data-cat 값) 전달
-                    sideTabCategory(item.dataset.cat);
-                }
-                
-                function handleSubSidebarClick(event) {
-                    document.getElementById("category-detail").style.display = 'flex';
-                    
-                    const item = event.target.closest('.sidebar-item'); // item = 클릭된 <div> 태그 자체
-                    if (!item) return; // sidebar-item을 클릭한 게 아니면 무시
-                    
-                    // 카테고리명(data-cat 값) 전달
-                    openDetailCategory(item.dataset.cat);
-                }
-                
-                let ctg = "none";
-                
-                // 카테고리 변경 및 스타일 적용 함수
-                function sideTabCategory(category) {
-                    const sidebarItems = document.querySelectorAll('.modal-sidebar > div');
-                    ctg = category;
-                    sidebarItems.forEach(item => {
-                        if(item.dataset.cat === category) {
-                            item.className = "sidebar-item-active"; // 누른 것만 활성화
-                        } else {
-                            item.className = "sidebar-item"; // 나머지는 기본 스타일
-                        }
-                    });
-                    
-                    fetch('/category.do?category=' + category)
-                    .then(res => res.json())
-                    .then(data => {
-                        let html = "";
+                        html += subCategoryName;
+                        html += "</div>";
                         
-                        for(const[subCategoryName, foodList] of Object.entries(data)){
-                            html += "<div class='menu-group'>";
-                            html += "<h3>" + subCategoryName + "</h3>";
-                            html += "<ul>";
-                            
-                            let limit = Math.min(foodList.length, 4);
-                            
-                            for(let i=0 ; i<limit ; i++){
-                                // 기존처럼 URL을 직접 박는 방식이 아니라, 검색창 검색 기능을 재사용하도록 변경
-                                html += "<li><button type='button' class='category-search-btn' data-keyword='" 
-                                    + escapeHtml(foodList[i]) 
-                                    + "' onclick='goRecipeSearch(this.dataset.keyword)'>" 
-                                    + escapeHtml(foodList[i]) 
-                                    + "</button></li>";
-                            }
-                            html += "<li><input type='button' value='더보기 -&gt' onClick='openDetailCategory( \"" + subCategoryName + "\")'></li>";
-                            
-                            html += "</ul>";
-                            html += "</div>";
-                        }
-                        
-                        document.getElementById("modalCategoryBody").innerHTML = html;
-                        
-                        // 우측 배너 영역
-                        document.querySelector(".modal-banner-side").innerHTML =
-                        "<div class='banner-img-box'>" +
-                        "    <img src='/images/main.png' alt='추천 요리' style='width:100%; height:100%; object-fit:cover; border-radius:12px;'> gap" +
-                        "</div>" +
-                        "<div class='banner-text-box'>" +
-                        "    <h3>오늘 뭐 먹지?</h3>" +
-                        "    <p>다양한 레시피로<br>매일 새로운 한 끼를 만나보세요.</p>" +
-                        "    <button type='button' class='banner-go-btn' onclick='location.href=\"/recipe_list.do\"'>레시피 둘러보기 &gt;</button>" +
-                        "</div>";
-                    })
-                    .catch(err => {
-                        console.error("데이터를 가져오는 도중 에러 발생:", err);
-                        
-                        document.getElementById("modalCategoryBody").innerHTML = "<div style='grid-column: 1/-1; text-align:center; padding:40px; color:#999;'>카테고리 데이터를 불러오지 못했습니다.</div>";
-                    });
-                }
-                
-                const openDetailCategory = (subName) => {
-                    document.getElementById("categoryModal").style.display = 'none';
-                    document.getElementById("category-detail").style.display = "flex";
-                    
-                    const sidebarItems = document.querySelectorAll('.modal-sidebar > div');
-                    
-                    sidebarItems.forEach(item => {
-                        if(item.dataset.cat === ctg) {
-                            item.className = "sidebar-item-active"; // 누른 것만 활성화
-                        } else {
-                            item.className = "sidebar-item"; // 나머지는 기본 스타일
-                        }
-                    });
-                    
-                    fetch("/category.do?category=" + ctg)
-                    .then(res => res.json())
-                    .then(data => {
-                        let html = "";
-                        let mainHtml = "<ul class='main-list'>";
-                        for(const[subCategoryName, foodList] of Object.entries(data)){
+                        for(let i=0 ; i<foodList.length ; i++){
                             if(subName == subCategoryName){
-                                html += "<div class='sidebar-item-active' data-cat='" + subCategoryName + "'>";
-                            }else{
-                                html += "<div class='sidebar-item' data-cat='" + subCategoryName + "'>";
+                                mainHtml += "<li><button type='button' class='category-search-btn' data-keyword='" 
+                                        + escapeHtml(foodList[i]) 
+                                        + "' onclick='goRecipeSearch(this.dataset.keyword)'>" 
+                                        + escapeHtml(foodList[i]) 
+                                        + "</button></li>";
                             }
-                            
-                            html += subCategoryName;
-                            html += "</div>";
-                            
-                            for(let i=0 ; i<foodList.length ; i++){
-                                if(subName == subCategoryName){
-                                    // 상세보기 모달의 음식명도 클릭하면 검색 기능처럼 동작하도록 변경
-                                    mainHtml += "<li><button type='button' class='category-search-btn' data-keyword='" 
-                                            + escapeHtml(foodList[i]) 
-                                            + "' onclick='goRecipeSearch(this.dataset.keyword)'>" 
-                                            + escapeHtml(foodList[i]) 
-                                            + "</button></li>";
-                                }
-                            }
-                            
                         }
-                        mainHtml += "</ul>";
-                        
-                        document.getElementById("modal-sidebar2").innerHTML = html;
-                        document.getElementById("modal-main-banner").innerHTML = mainHtml;
-                        
-                    })
-                    .catch(err => {
-                        console.log("Error: " + err);
-                    })
-                }
-                
-            /* ============================ 여기까지 카테고리 모달창 관련 함수들 ============================ */
-                const applicationServerKey = "BDbjVtJHaSNMMaypEcx2MeXmHvfoWISYWzTCj6Ycc7SoaucH53CzsDGAen6O4ENI9eZMmnilVr9r0F-q3OSbsiM";
-                // base64 URL 소스를 Uint8Array로 변환하는 함수 (푸시 서버 인증용 필수 함수)
-                function urlB64ToUint8Array(base64String) {
-                    const padding = '='.repeat((4 - base64String.length % 4) % 4);
-                    const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
-                    const rawData = window.atob(base64);
-                    const outputArray = new Uint8Array(rawData.length);
-                    for (let i = 0; i < rawData.length; ++i) {
-                        outputArray[i] = rawData.charCodeAt(i);
                     }
-                    return outputArray;
-                }
-                
-                const member_id = '${sessionScope.user.member_id}';
-                // 2. 브라우저가 서비스 워커와 푸시를 지원하는지 확인 후 등록
-                if ('serviceWorker' in navigator && 'PushManager' in window && member_id != null && member_id != '') {
-                    window.addEventListener('load', function() {
-                        navigator.serviceWorker.register('/js/alarm.js')
-                        .then(function(registration) {
-                            console.log('서비스 워커 등록 성공:', registration);
-                            
-                            // 등록 성공 후 사용자에게 권한 요청 및 구독 진행
-                            requestNotificationPermission(registration);
-                        })
-                        .catch(function(error) {
-                            console.error('서비스 워커 등록 실패:', error);
-                        });
-                    });
-                }
-                
-                // 3. 알림 권한 요청 및 구독 처리
-                function requestNotificationPermission(registration) {
-                    Notification.requestPermission().then(function(permission) {
-                        if (permission === 'granted') {
-                            console.log('알림 권한 허용됨');
-                            subscribeUser(registration);
-                        } else {
-                            console.warn('알림 권한 거부됨');
-                        }
-                    });
-                }
-                
-                // 4. 푸시 서버(FCM 등)로부터 구독 정보 받아오기
-                function subscribeUser(registration) {
-                    const subscribeOptions = {
-                        userVisibleOnly: true,
-                        applicationServerKey: urlB64ToUint8Array(applicationServerKey)
-                    };
+                    mainHtml += "</ul>";
                     
-                    registration.pushManager.subscribe(subscribeOptions)
-                    .then(function(subscription) {
-                        console.log('푸시 구독 성공:', JSON.stringify(subscription));
-                        
-                        // 5. 이 subscription 객체를 DB에 저장하기 위해 백엔드로 전송해야 해!
-                        sendSubscriptionToServer(subscription);
-                    })
-                    .catch(function(error) {
-                        console.error('푸시 구독 실패:', error);
-                    });
-                }
-                
-                // 6. 백엔드(Spring Boot)로 구독 정보 전송 (Ajax)
-                function sendSubscriptionToServer(subscription) {
-                    // 여기에 Fetch API나 jQuery Ajax를 써서 Spring Boot 컨트롤러로 던져주면 돼.
-                    fetch('/api/push/register', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(subscription)
-                    })
-                    .then(res => {
-                        if(res.ok) console.log('서버에 구독 정보 저장 완료');
-                    })
-                    .catch(err => console.error('서버 전송 실패:', err));
-                }
-            /* ============================ 여기까지 알림 관련 함수들 ============================ */
+                    document.getElementById("modal-sidebar2").innerHTML = html;
+                    document.getElementById("modal-main-banner").innerHTML = mainHtml;
+                })
+                .catch(err => {
+                    console.log("Error: " + err);
+                })
+            }
+
+            // 1-2. 계절별 메뉴 추천
             function changeSeason(season, el) {
-                // 탭 active 변경
                 document.querySelectorAll('.season-tab-item').forEach(function(btn) {
                     btn.classList.remove('active');
                 });
@@ -392,7 +243,6 @@
                     el.classList.add('active');
                 }
 
-                // 배너 정보 변경
                 fetch('/seasons_banner.do?season=' + encodeURIComponent(season))
                     .then(function(res) { return res.json(); })
                     .then(function(data) {
@@ -403,7 +253,6 @@
                         }
                     });
 
-                // 음식 카드 목록 
                 fetch('/seasons_data.do?season=' + encodeURIComponent(season))
                     .then(function(res) { return res.json(); })
                     .then(function(list) {
@@ -433,7 +282,184 @@
                         });
                     });
             }
-            /* ============================ 여기까지 계절별 메뉴 추천 관련 함수들 ============================ */
+
+            // 1-3. 알림(Push) 권한 및 구독 관련
+            const applicationServerKey = "BDbjVtJHaSNMMaypEcx2MeXmHvfoWISYWzTCj6Ycc7SoaucH53CzsDGAen6O4ENI9eZMmnilVr9r0F-q3OSbsiM";
+            
+            function urlB64ToUint8Array(base64String) {
+                const padding = '='.repeat((4 - base64String.length % 4) % 4);
+                const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
+                const rawData = window.atob(base64);
+                const outputArray = new Uint8Array(rawData.length);
+                for (let i = 0; i < rawData.length; ++i) {
+                    outputArray[i] = rawData.charCodeAt(i);
+                }
+                return outputArray;
+            }
+
+            function requestNotificationPermission(registration) {
+                Notification.requestPermission().then(function(permission) {
+                    if (permission === 'granted') {
+                        console.log('알림 권한 허용됨');
+                        subscribeUser(registration);
+                    } else {
+                        console.warn('알림 권한 거부됨');
+                    }
+                });
+            }
+
+            function subscribeUser(registration) {
+                const subscribeOptions = {
+                    userVisibleOnly: true,
+                    applicationServerKey: urlB64ToUint8Array(applicationServerKey)
+                };
+                
+                registration.pushManager.subscribe(subscribeOptions)
+                .then(function(subscription) {
+                    console.log('푸시 구독 성공:', JSON.stringify(subscription));
+                    sendSubscriptionToServer(subscription);
+                })
+                .catch(function(error) {
+                    console.error('푸시 구독 실패:', error);
+                });
+            }
+
+            function sendSubscriptionToServer(subscription) {
+                fetch('/api/push/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(subscription)
+                })
+                .then(res => {
+                    if(res.ok) console.log('서버에 구독 정보 저장 완료');
+                })
+                .catch(err => console.error('서버 전송 실패:', err));
+            }
+
+
+            // =========================================================
+            // 2. DOMContentLoaded 이벤트 (페이지 로딩 시 한 번만 실행될 초기화 코드)
+            // =========================================================
+            
+            const member_id = '${sessionScope.user.member_id}';
+            if ('serviceWorker' in navigator && 'PushManager' in window && member_id != null && member_id != '') {
+                window.addEventListener('load', function() {
+                    navigator.serviceWorker.register('/js/alarm.js')
+                    .then(function(registration) {
+                        console.log('서비스 워커 등록 성공:', registration);
+                        requestNotificationPermission(registration);
+                    })
+                    .catch(function(error) {
+                        console.error('서비스 워커 등록 실패:', error);
+                    });
+                });
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                // 메인배너 슬라이드 설정
+                const track = document.getElementById('bannerTrack');
+                const slides = Array.from(track.children);
+                const dotsWrap = document.getElementById('bannerDots');
+                const prevBtn = document.getElementById('prevBtn');
+                const nextBtn = document.getElementById('nextBtn');
+
+                const slideWidthPercent = 100; 
+                let currentIndex = 1; 
+                let autoSlideTimer = null;
+
+                const firstClone = slides[0].cloneNode(true);
+                const lastClone = slides[slides.length - 1].cloneNode(true);
+                track.appendChild(firstClone);
+                track.insertBefore(lastClone, slides[0]);
+
+                const allSlides = Array.from(track.children);
+
+                slides.forEach((_, i) => {
+                    const dot = document.createElement('span');
+                    if (i === 0) dot.classList.add('active');
+                    dot.addEventListener('click', () => goToSlide(i + 1));
+                    dotsWrap.appendChild(dot);
+                });
+                const dots = Array.from(dotsWrap.children);
+
+                function updateTrackPosition(withTransition = true) {
+                    track.style.transition = withTransition ? 'transform 0.5s ease-in-out' : 'none';
+                    const offset = -(currentIndex * slideWidthPercent);
+                    track.style.transform = `translateX(${offset}%)`;
+
+                    allSlides.forEach(s => s.classList.remove('active'));
+                    allSlides[currentIndex].classList.add('active');
+
+                    const realIndex = getRealIndex();
+                    dots.forEach(d => d.classList.remove('active'));
+                    dots[realIndex].classList.add('active');
+                }
+
+                function getRealIndex() {
+                    if (currentIndex === 0) return slides.length - 1;
+                    if (currentIndex === allSlides.length - 1) return 0;
+                    return currentIndex - 1;
+                }
+
+                function goToSlide(index) {
+                    currentIndex = index;
+                    updateTrackPosition();
+                }
+
+                function nextSlide() {
+                    currentIndex++;
+                    updateTrackPosition();
+                }
+
+                function prevSlide() {
+                    currentIndex--;
+                    updateTrackPosition();
+                }
+
+                track.addEventListener('transitionend', () => {
+                    if (currentIndex === 0) {
+                        currentIndex = slides.length;
+                        updateTrackPosition(false);
+                    } else if (currentIndex === allSlides.length - 1) {
+                        currentIndex = 1;
+                        updateTrackPosition(false);
+                    }
+                });
+
+                function startAutoSlide() {
+                    autoSlideTimer = setInterval(nextSlide, 3000);
+                }
+                function stopAutoSlide() {
+                    clearInterval(autoSlideTimer);
+                }
+
+                nextBtn.addEventListener('click', () => { nextSlide(); stopAutoSlide(); startAutoSlide(); });
+                prevBtn.addEventListener('click', () => { prevSlide(); stopAutoSlide(); startAutoSlide(); });
+
+                track.addEventListener('mouseenter', stopAutoSlide);
+                track.addEventListener('mouseleave', startAutoSlide);
+
+                updateTrackPosition(false);
+                startAutoSlide();
+
+                // 오늘의 추천 레시피 자동 변경
+                let current = 0;
+                const recSlides = document.querySelectorAll(".recommend-slide"); // 변수명 중복 방지를 위해 recSlides로 변경
+
+                if (recSlides.length !== 0) {
+                    setInterval(() => {
+                        recSlides[current].classList.remove('active');
+                        current = (current + 1) % recSlides.length;
+                        recSlides[current].classList.add('active');
+                    }, 3000);
+                }
+                
+                // 페이지 로드 시 첫 번째 시즌 탭 초기 세팅
+                const initialTab = document.querySelector('.season-tab-item.active');
+                changeSeason('봄', initialTab);
+            });
         </script>
     </head>
     <body>
@@ -509,7 +535,7 @@
                 <div class="recipe-grid">
                     <c:forEach var="recipe" items="${view_recipes}" varStatus="status">
                         <div class="recipe-card">
-                            <a href="/recipe_detail.do?recipeId=${recipe.recipe_id}">
+                            <a href="/recipe_detail.do?recipe_id=${recipe.recipe_id}">
                                 <div class="recipe-img">
                                     <img src="${pageContext.request.contextPath}/images/${recipe.thumbnail}"/>
                                 </div>

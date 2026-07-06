@@ -5,6 +5,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Date;
 import java.util.Map;
 
 import org.springframework.security.core.Authentication;
@@ -61,12 +62,30 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         // DB 조회
         MemberVO member = memberDAO.getSocialUser(socialUser.getProvider(), socialUser.getProvider_id());
 
+        
         // 회원가입 여부 판단
         if (member == null) {
             request.getSession().setAttribute("socialUser", socialUser);
-
+                       
             response.sendRedirect("/register_form.do");
             return;
+        }
+
+        if("SUSPEND".equals(member.getStatus())){
+            if(member.getSuspend_end() != null && member.getSuspend_end().after(new Date())){
+                
+                String day = member.getSuspend_end().toString();
+
+                response.sendRedirect("/login.do?error=SUSPEND&day=" + day);
+                return ;
+            }
+
+            memberDAO.relaseSuspend(member.getMember_id());
+
+            member.setStatus("ACTIVE");
+            member.setSuspend_start(null);
+            member.setSuspend_end(null);
+            
         }
 
         request.getSession().setAttribute("user", member);

@@ -36,7 +36,6 @@
         status,
         board_type
     )
-
     VALUES(
         #{member_id},
         #{title},
@@ -157,6 +156,28 @@
     </update>
 
 
+    <!-- 레시피 -->
+
+    <!-- 레시피 등록 -->
+    <insert id="insertRecipe" parameterType="RecipeDTO" useGeneratedKeys="true" keyProperty="recipeId"> 
+        INSERT INTO recipe(
+        title,
+        member_id,
+        food_id,
+        cooking_time,
+        thumbnail
+    )
+    VALUES(
+        #{title},
+        #{memberId},
+        #{foodId},
+        #{cooking_time},
+        #{thumbnail}
+    )
+    </insert>
+
+    
+
     <!-- 레시피 등록 시 재료 추가, 조리과정 추가 -->
     <insert id="insertIngredient" parameterType="ingredient">
     INSERT INTO ingredient(
@@ -176,7 +197,7 @@
     <insert id="insertCookOrder" parameterType="cook_order">
     INSERT INTO cook_order(
         recipe_id,
-        `order`,
+        cook_order,
         description,
         cook_image
     )
@@ -187,5 +208,22 @@
         #{cook_image}
     )
     </insert>
+
+    <select id="communityBoardCount" resultType="int">
+        select count(*)
+        from board
+        where board_type = 'COMMUNITY'
+    </select>
+
+    <select id="selectBoardPage" parameterType="map" resultType="board">
+        select
+            b.*,
+            m.nickname
+        from board b
+        join member m on b.member_id = m.member_id
+        where b.board_type = 'COMMUNITY'
+        order by b.board_id desc
+        limit #{offset}, #{size}
+    </select>
 
 </mapper>

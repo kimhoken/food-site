@@ -1,6 +1,7 @@
 package com.project.foodsite.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.project.foodsite.vo.BoardVO;
 import com.project.foodsite.vo.CookOrderVO;
@@ -37,5 +38,11 @@ public interface BoardDAO {
     AdminBoardDTO adminBoardDetail(int board_id);
 
     int boardStatus(AdminBoardDTO Board);
+
+    int communityBoardCount();
+
+    List<BoardVO> selectBoardPage(Map<String, Object> map);
+
+    
 
 }
