@@ -41,16 +41,6 @@ public class FoodSiteController {
         return map;
     }
 
-    //테스트용 매핑
-    @GetMapping("/login_test.do")
-    public String test(){
-        MemberVO vo = new MemberVO();
-        vo.setNickname("test");
-        vo.setMember_id(1);
-        session.setAttribute("user", vo);
-        return "redirect:/main_list.do";
-    }
-
     @GetMapping("/hidden.do")
     public String hidden(){
         return "fridge/hidden";
