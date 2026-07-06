@@ -58,6 +58,31 @@
                 unvisual.style.display = "none";
             }
         }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelector( "#login_id", "#password").forEach(input => {
+                
+                input.addEventListener("keydown", function (event))
+
+            });
+        })
+        function login_btn(f) {
+
+            let login_id = f.login_id.value;
+            let password = f.password.value;
+
+            // if (login_id === ""){
+            //     alert("아이디를 입력하세요");
+                
+                
+            // } 
+
+            // if (password === "") {
+            //     alert("비밀번호을 입력하세요");
+            // }
+            
+            send(f);
+        }
         </script>
 </head>
 
@@ -80,19 +105,19 @@
                     
                     <div class="form-group">
                         <label for="login_id">아이디</label>
-                        <input id="login_id" name="login_id" placeholder="아이디를 입력하세요" />
+                        <input id="login_id" name="login_id" placeholder="아이디를 입력하세요" onkeydown="login_btn(this.form)" />
                     </div>
 
                     <div class="form-group">
                         <label for="pwd">비밀번호</label>
                         <div class="pwd-wrap">
-                            <input type="password" name="password" id="pwd" placeholder="비밀번호를 입력하세요" />
+                            <input type="password" name="password" id="pwd" placeholder="비밀번호를 입력하세요" onkeydown="login_btn(this.form)" />
 
-                            <button type="button" id="visual" class="toggle" onclick="viewpwd()">
+                            <button type="button" id="visual" class="toggle" onclick="viewpwd(this.form)">
                                 <img src="/images/visibility.png" />
                             </button>
 
-                            <button type="button" id="unvisual" class="toggle" onclick="viewpwd()">
+                            <button type="button" id="unvisual" class="toggle" onclick="viewpwd(this.form)">
                                 <img src="/images/unvisibility.png" />
                             </button>
                         </div>
