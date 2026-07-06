@@ -60,5 +60,7 @@ jobs:
           # 실행 중인 기존 스프링 부트 서버 강제 종료 (8080 포트 기준)
           sudo fuser -k -n tcp 8080 || true
           
+          rm /home/ubuntu/deploy/build/libs/foodsite-0.0.1-SNAPSHOT-plain.war
+          
           # 백그라운드에서 새 WAR 파일 실행 (로그는 app.log에 저장)
           nohup java -jar *.war > app.log 2>&1 &

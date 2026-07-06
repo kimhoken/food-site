@@ -15,8 +15,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
     <link rel="stylesheet" href="/css/chatbot.css" />
     <meta charset="UTF-8">
-    <script src="js/bookmark.js"></script>
-
+    <title>오늘 뭐 먹지? - 레시피 상세 페이지</title>
     <script>
         const del = (commentId)=>{
             if(confirm("삭제하시겠습니까?")){
@@ -200,34 +199,31 @@
         </div>
     </div>
 
-    <!-- 작성자만 삭제 가능 -->
-    <c:if test="${not empty sessionScope.user && sessionScope.user.member_id == dto.memberId}">
-        <div class="recipe-manage-wrap">
-            <a href="/recipe_delete.do?recipeId=${dto.recipeId}" class="recipe-delete-btn"
-            onclick="return confirm('삭제하시겠습니까?');">
-            삭제
-        </a>
-    </div>
-</c:if>
-
-
     <div class="recipe-action-wrap">
-        <div class="recipe-sub-action">
-            <a href="/report/form.do?recipe_id=${recipe_id}"
-               class="recipe-report-btn">
-               신고하기
+
+        <!-- 작성자만 -->
+        <c:if test="${not empty sessionScope.user && sessionScope.user.member_id == dto.memberId}">
+            <a href="/recipe_update.do?recipeId=${dto.recipeId}" class="recipe-update-btn">
+                수정
             </a>
-            
-            <a href="#"
-               class="recipe-bookmark-btn"
-               onclick="bookmarkSet('${recipe_id}')">
-                북마크
+
+            <a href="/recipe_delete.do?recipeId=${dto.recipeId}" class="recipe-delete-btn" onclick="return confirm('삭제하시겠습니까?');">
+                삭제
             </a>
-        </div>
-        <a href="/review/insert?recipe_id=${recipe_id}"
-           class="recipe-review-btn">
+        </c:if>
+
+        <a href="/report/form.do?target_type=레시피&recipe_id=${param.recipe_id}" class="recipe-report-btn">
+            신고하기
+        </a>
+
+        <a href="#" class="recipe-bookmark-btn">
+            북마크
+        </a>
+
+        <a href="/review/insert?recipe_id=${param.recipe_id}" class="recipe-review-btn">
             레시피 후기 작성하기
         </a>
+
     </div>
 
     <!-- <div class="recipe-bookmark-wrap">
