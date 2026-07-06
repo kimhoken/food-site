@@ -21,7 +21,7 @@ public class AdminUtil {
     private final InquiryDAO inquiryDAO;
     // private final ReportDAO reportDAO;
 
-
+    
     // 카테고리 매핑 함수
     public String categorymapping(String category) {
 
@@ -70,8 +70,6 @@ public class AdminUtil {
             contentPage = "/WEB-INF/views/member/admin/admin_member.jsp";
         } else if (menu.equals("recipe")) {
             contentPage = "/WEB-INF/views/member/admin/admin_recipe.jsp";
-        } else if (menu.equals("status")) {
-            contentPage = "/WEB-INF/views/member/admin/admin_stats.jsp";
         } else if (menu.equals("inquiry")) {
             contentPage = "/WEB-INF/views/member/admin/admin_inquiry.jsp";
         } else if (menu.equals("report")) {
@@ -88,6 +86,8 @@ public class AdminUtil {
             contentPage = "/WEB-INF/views/member/admin/admin_board.jsp";            
         } else if(menu.equals("mypage")){
             contentPage = "/WEB-INF/views/member/admin/admin_mypage.jsp";
+        } else if(menu.equals("update")){
+            contentPage = "/WEB-INF/views/member/admin/admin_update.jsp";
         }
 
         model.addAttribute("contentPage", contentPage);
