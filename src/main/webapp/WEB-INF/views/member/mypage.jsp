@@ -18,7 +18,7 @@
 
                     <div class="logo-box">
                         <a href="/main_list.do">
-                            <img src="/images/logo.png" width="200px" height="50px" />
+                            <img src="/images/Logo.png" width="200px" height="50px" />
                         </a>
                     </div>
 
@@ -80,7 +80,7 @@
                     </div>
 
                     <button type="button" onclick="logout()">
-                        <img src="/images/logout.png" />
+                        <img src="/images/Logout.png" />
                         로그아웃</button>
                 </aside>
 

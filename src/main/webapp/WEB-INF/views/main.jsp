@@ -21,7 +21,6 @@
             // =========================================================
             
             let ctg = "none";
-
             // 1-1. 카테고리 모달 및 검색 관련
             function escapeHtml(value) {
                 return String(value)
