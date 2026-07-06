@@ -1,12 +1,16 @@
 package com.project.foodsite.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.project.foodsite.common.Paging;
 import com.project.foodsite.dao.ReportDAO;
 import com.project.foodsite.vo.BoardVO;
 import com.project.foodsite.vo.MemberVO;
@@ -80,7 +84,6 @@ public class ReportController {
 
         if (count >= 3) {
             reportDao.updateMemberReportCount(vo.getMember_id());
-
             reportDao.updateSameMemberSameTargetReportStatusWarning(vo);
         }
 
@@ -88,7 +91,9 @@ public class ReportController {
     }
 
     @GetMapping("/report/admin/list.do")
-    public String reportAdminList(Model model) {
+    public String reportAdminList(
+            Model model,
+            @RequestParam(value = "page", defaultValue = "1") int page) {
 
         MemberVO user = (MemberVO) session.getAttribute("user");
 
@@ -96,10 +101,25 @@ public class ReportController {
             return "redirect:/main_list.do";
         }
 
-        List<ReportVO> list = reportDao.reportList();
-        model.addAttribute("list", list);
+        model.addAttribute("profileuser", user);
 
-        return "report/report_adminList";
+        int totalcount = reportDao.reportCount();
+
+        Paging paging = new Paging(page, 10, totalcount);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("offset", paging.getOffset());
+        map.put("size", paging.getSize());
+
+        List<ReportVO> list = reportDao.reportListPage(map);
+
+        model.addAttribute("list", list);
+        model.addAttribute("paging", paging);
+
+        model.addAttribute("menu", "report");
+        model.addAttribute("contentPage", "/WEB-INF/views/report/report_adminList.jsp");
+
+        return "member/adminpage";
     }
 
     @PostMapping("/report/admin/warning.do")
@@ -123,6 +143,20 @@ public class ReportController {
             reportDao.updateMemberReportCount(reportedMemberId);
             reportDao.updateReportStatusWarning(vo.getReport_id());
         }
+
+        return "redirect:/report/admin/list.do";
+    }
+
+    @PostMapping("/report/admin/delete.do")
+    public String reportDelete(ReportVO vo) {
+
+        MemberVO user = (MemberVO) session.getAttribute("user");
+
+        if (user == null || !"ADMIN".equals(user.getRole())) {
+            return "redirect:/main_list.do";
+        }
+
+        reportDao.reportDelete(vo.getReport_id());
 
         return "redirect:/report/admin/list.do";
     }

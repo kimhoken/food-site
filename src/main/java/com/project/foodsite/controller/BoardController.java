@@ -7,9 +7,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.project.foodsite.common.Fileupload;
+import com.project.foodsite.common.Paging;
 import com.project.foodsite.dao.BoardDAO;
 import com.project.foodsite.dao.CategoryDAO;
 import com.project.foodsite.dao.CommonCommentDAO;
@@ -31,7 +33,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-
 @Controller
 @RequiredArgsConstructor
 public class BoardController {
@@ -46,26 +47,42 @@ public class BoardController {
 
     // board list 조회
     @GetMapping("/list.do")
-    public String boardList(Model model, String sort, String period, String btn) {
+    public String boardList(
+            Model model,
+            String sort,
+            String period,
+            String btn,
+            @RequestParam(value = "page", defaultValue = "1") int page) {
 
         // 레시피 후기 탭의 조회
-        List<ReviewVO> reviewList = reviewDao.reviewLatest();
-        model.addAttribute("reviewList", reviewList);
-        // 정렬조건이 없을경우
         if (sort == null || sort.isEmpty()) {
             sort = "all";
         }
 
-        if (sort.equals("rating")) {
-            reviewList = reviewDao.reviewRating();
-        } else if (sort.equals("popular")) {
-            reviewList = reviewDao.reviewPopular(period);
-        } else {
-            reviewList = reviewDao.reviewLatest();
-        }
+        Map<String, Object> reviewMap = new HashMap<>();
+        reviewMap.put("sort", sort);
+        reviewMap.put("period", period);
 
-        model.addAttribute("list", boardDao.selectAll());
+        int reviewTotalcount = reviewDao.reviewCount(reviewMap);
+        Paging reviewPaging = new Paging(page, 6, reviewTotalcount);
+
+        reviewMap.put("offset", reviewPaging.getOffset());
+        reviewMap.put("size", reviewPaging.getSize());
+
+        List<ReviewVO> reviewList = reviewDao.reviewPage(reviewMap);
+
+        int totalcount = boardDao.communityBoardCount();
+        Paging paging = new Paging(page, 10, totalcount);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("offset", paging.getOffset());
+        map.put("size", paging.getSize());
+
+        model.addAttribute("list", boardDao.selectBoardPage(map));
+        model.addAttribute("paging", paging);
+
         model.addAttribute("reviewList", reviewList);
+        model.addAttribute("reviewPaging", reviewPaging);
 
         model.addAttribute("sort", sort);
         model.addAttribute("period", period);
@@ -150,7 +167,7 @@ public class BoardController {
             order.setDescription(dto.getStep().get(i));
             order.setRecipe_id(dto.getRecipeId().intValue());
 
-            // 파일 저장
+            //파일 저장
             MultipartFile img = dto.getStepImg().get(i);
 
             if (img != null && !img.isEmpty()) {
@@ -159,6 +176,7 @@ public class BoardController {
                 order.setCook_image(cookOrderImg);
             }
 
+            //조리시간 들어오는지 확인
 
             recipeDAO.insertCookOrder(order);
         }
@@ -171,8 +189,28 @@ public class BoardController {
     public String boardView(int board_id, Model model, HttpServletRequest req) {
         //조회수 
         @SuppressWarnings("unchecked")
-        HashMap<String, ArrayList<Integer>> map = session.getAttribute("boardMap") == null ? new HashMap<>()
-                : (HashMap<String, ArrayList<Integer>>) session.getAttribute("boardMap");
+        HashMap<String, List<Integer>> map = session.getAttribute("viewMap") == null ? new HashMap<>()
+            : (HashMap<String, List<Integer>>) session.getAttribute("viewMap");
+
+        /*
+         * // 세션에서 IP, 게시글 ID를 확인해 없을경우 조회수 증가
+         * if (map.get(req.getRemoteAddr()) == null &&
+         * !map.get(req.getRemoteAddr()).contains(board_id)) {
+         * // 조회수 증가
+         * boardDao.updateViewCount(board_id);
+         * map.computeIfAbsent(req.getRemoteAddr(), k -> new
+         * LinkedList<>()).add(board_id);
+         * session.setAttribute("viewMap", map);
+         * session.setMaxInactiveInterval(3600);
+         * }
+         */
+
+        // 조회수 처리
+        String ip = req.getRemoteAddr();
+
+        List<Integer> viewedList = map.computeIfAbsent(ip, k -> new ArrayList<>());
+
+        if (!viewedList.contains(board_id)) {
 
         if(!map.containsKey(req.getRemoteAddr()) || !map.get(req.getRemoteAddr()).contains(board_id)){
             map.computeIfAbsent(req.getRemoteAddr(), k -> new ArrayList<>()).add(board_id);
@@ -180,9 +218,10 @@ public class BoardController {
             session.setAttribute("boardMap", map);
             session.setMaxInactiveInterval(3600);
         }
-        
+    }
         // 게시글 조회
         BoardVO board = boardDao.selectOne(board_id);
+
         model.addAttribute("board", board);
         // 커뮤니티 게시글에 달린 댓글 목록 조회
         model.addAttribute("commentList", commonCommentDAO.getBoardList(board_id));
@@ -238,20 +277,19 @@ public class BoardController {
     @PostMapping("/api/category")
     @ResponseBody
     public Map<?, ?> getCategory(@RequestBody Map<String, Object> map) {
-        List<CategoryVO> list = categoryDAO.getSubName((String)map.get("category"));
+        List<CategoryVO> list = categoryDAO.getSubName((String) map.get("category"));
         String res = list.size() > 0 ? "success" : "fail";
         map.put("list", list);
         map.put("result", res);
         return map;
     }
-    
+
     @PostMapping("/api/food")
     @ResponseBody
-    public Map<?, ?> getFood(@RequestBody Map<String, Object> map){
-        List<FoodVO> list = categoryDAO.getFoodName((String)map.get("categoryId"));
+    public Map<?, ?> getFood(@RequestBody Map<String, Object> map) {
+        List<FoodVO> list = categoryDAO.getFoodName((String) map.get("categoryId"));
         map.put("list", list);
         map.put("result", list.size() > 0 ? "success" : "fail");
         return map;
     }
-
 }

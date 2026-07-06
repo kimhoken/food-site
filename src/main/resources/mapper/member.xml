@@ -48,7 +48,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <update id="userUpdate" parameterType="member">
-        update member set nickname = #{nickname}, email = #{email}, status = #{status}, profile_img = #{filename}, name = #{name}, member_intro = #{member_intro}
+        update member set nickname = #{nickname}, email = #{email}, status = #{status}, profile_img = #{filename}, name = #{name}, member_intro = #{member_intro},
+                suspend_start = CASE 
+                                  WHEN #{status} = 'SUSPEND' THEN NOW()
+                                ELSE NULL 
+                                END,
+                suspend_end = CASE 
+                                WHEN #{status} = 'SUSPEND' THEN DATE_ADD(NOW(), INTERVAL 2 MINUTE)     
+                                ELSE NULL
+                                END           
         where member_id = #{member_id}
     </update>
 
@@ -127,6 +135,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         from member m
         where m.member_id = #{member_id}
     </select>
+
+    <update id="relaseSuspend">
+        update member set 
+            status = 'ACTIVE',
+            suspend_start = null,
+            suspend_end = null,
+            report_count = 0
+        where member_id = #{member_id}    
+    </update>
 
 
 

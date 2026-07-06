@@ -1,3 +1,4 @@
+
 <%@ page import="java.util.Random"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -148,7 +149,7 @@
     <%-- 레시피의 조리순서, 재료, 사진 등을 보여주기 --%>
     <div class="title-wrap">
         <h1>${dto.recipeTitle}</h1>
-        <div class="recipe-author">작성자: ${dto.nickName}</div>
+        <div class="recipe-author" onclick="location.href='/user/${dto.memberId}'">작성자: ${dto.nickName}</div>
     </div>
 
     <div class="recipe-detail-wrap">
@@ -224,6 +225,12 @@
         </a>
 
     </div>
+
+    <!-- <div class="recipe-bookmark-wrap">
+    </div>
+
+    <div class="recipe-review-wrap">
+    </div> -->
 
     <c:if test="${not empty commentList}">
         <div class="comment-main-title">레시피 댓글</div>
@@ -323,48 +330,54 @@
     </c:if>
 
     <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
+    
+                </head>
 
-    <script>
-        const ratingStars = [...document.getElementsByClassName("rating__star")];
-        const ratingResult = document.querySelector(".rating__result");
-        
-        function printRatingResult(result, num) {
-            result.textContent = num
-            document.getElementById("rating").value=num;
-        }
+                <body>
+                    <%-- 레시피의 조리순서, 재료, 사진 등을 보여주기 --%>                       
 
-        printRatingResult(ratingResult, 0);
+                        <script>
+                            const ratingStars = [...document.getElementsByClassName("rating__star")];
+                            const ratingResult = document.querySelector(".rating__result");
 
-        function executeRating(stars, result) {
-            const starClassActive = "rating__star fas fa-star";
-            const starClassUnactive = "rating__star far fa-star";
-            const starsLength = stars.length;
-            let i;
+                            function printRatingResult(result, num) {
+                                result.textContent = num
+                                document.getElementById("rating").value = num;
+                            }
 
-            stars.map((star) => {
-                star.onclick = () => {
-                    i = stars.indexOf(star);
+                            printRatingResult(ratingResult, 0);
 
-                    if (star.className.indexOf(starClassUnactive) !== -1) {
-                        printRatingResult(result, i + 1);
+                            function executeRating(stars, result) {
+                                const starClassActive = "rating__star fas fa-star";
+                                const starClassUnactive = "rating__star far fa-star";
+                                const starsLength = stars.length;
+                                let i;
 
-                        for (i; i >= 0; --i) {
-                            stars[i].className = starClassActive;
-                        }
-                    } else {
-                        printRatingResult(result, i);
-                        
-                        for (i; i < starsLength; ++i) {
-                            stars[i].className = starClassUnactive;
-                        }
-                    }
-                };
-            });
-        }
+                                stars.map((별) => {
+                                    star.onclick = () => {
+                                        i = stars.indexOf(별);
 
-        executeRating(ratingStars, ratingResult);
-    </script>
+                                        if (star.className.indexOf(starClassUnactive) !== -1) {
+                                            printRatingResult(result, i + 1);
 
-    <jsp:include page="/WEB-INF/views/chatbot/chatbot_main.jsp" />
-</body>
-</html>
+                                            for (i; i >= 0; --i) {
+                                                stars[i].className = starClassActive;
+                                            }
+                                        } else {
+                                            printRatingResult(result, i);
+
+                                            for (i; i < starsLength; ++i) {
+                                                stars[i].className = starClassUnactive;
+                                            }
+                                        }
+                                    };
+                                });
+                            }
+
+                            executeRating(ratingStars, ratingResult);
+                        </script>
+
+                        <jsp:include page="/WEB-INF/views/chatbot/chatbot_main.jsp" />
+                </body>
+
+                </html>

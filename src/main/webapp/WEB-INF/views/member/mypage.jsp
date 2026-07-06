@@ -47,9 +47,11 @@
                         <div><a href="/mypage.do?menu=account" class="menu-item ${param.menu eq 'account' ? 'active' : ''}">
                                 <!-- <img src="/images/user.png" width="32px" height="32px" /> -->
                                 회원정보</a></div>
-                        <div><a href="/mypage.do?menu=pwd" class="menu-item ${param.menu eq 'pwd' ? 'active' : ''}">
+                        <c:if test="${ not empty profileuser.password }">
+                            <div><a href="/mypage.do?menu=pwd" class="menu-item ${param.menu eq 'pwd' ? 'active' : ''}">
                                 <!-- <img src="/images/padlock.png" width="32px" height="32px" /> -->
                                 비밀번호 변경</a></div>
+                        </c:if>
                         <div><a href="/mypage.do?menu=del" class="menu-item ${param.menu eq 'del' ? 'active' : ''}">
                                 <!-- <img src="/images/delete_user.png" /> -->
                                 회원 탈퇴</a></div>

@@ -1,6 +1,7 @@
 package com.project.foodsite.controller;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 @Controller
 public class memberController {
 
+   
     private final HttpSession httpSession;
 
     private final MemberDAO memberDAO;
@@ -32,6 +34,7 @@ public class memberController {
     private final pwdSecurity pwdSecurity;
     private final NicknameGenerater nicknameGenerater;
     private final TokenDAO tokenDAO;
+  
 
     
     // 로그인 페이지
@@ -43,9 +46,9 @@ public class memberController {
     // 로그인
     @PostMapping("/login.do")
     @ResponseBody
-    public Map<String, String> loginCheck(MemberVO vo) {
+    public Map<String, Object> loginCheck(MemberVO vo) {
         MemberVO user = memberDAO.getUserById(vo.getLogin_id());
-        Map<String, String> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         String login_res = "no_id";
 
         if (user != null) {
@@ -53,6 +56,23 @@ public class memberController {
             boolean pwdcheck = pwdSecurity.pwdDecoding(vo.getPassword(),user.getPassword()); 
 
             if (pwdcheck) {
+                if("SUSPEND".equals(user.getStatus())){
+                
+                    if (user.getSuspend_end().after(new Date())){
+                        map.put("res", "suspend");
+                        map.put("day", user.getSuspend_end().toString());
+
+                        return map;
+                    }
+
+                    memberDAO.relaseSuspend(user.getMember_id());
+
+                    user.setStatus("ACTIVE");
+                    user.setSuspend_end(null);
+                    user.setSuspend_start(null);
+
+                }
+
                 httpSession.setAttribute("user", user);
                 httpSession.setMaxInactiveInterval(3600);
                 map.put("nick", user.getNickname());
