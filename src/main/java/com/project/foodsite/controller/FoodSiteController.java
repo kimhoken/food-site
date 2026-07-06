@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.project.foodsite.util.Recommand;
 import com.project.foodsite.util.SearchLog;
-import com.project.foodsite.vo.MemberVO;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
