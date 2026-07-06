@@ -40,7 +40,7 @@
                                    name="password" 
                                    type="password" 
                                    placeholder="비밀번호 입력하세요" 
-                                   oninput="deletecheck()" />
+                                   oninput="deletecheck(this)" />
                         </div>
                     </c:if>
 
@@ -51,7 +51,7 @@
                             <input class="delete-input" 
                                    name="str" 
                                    placeholder="오늘 뭐먹지?를 탈퇴합니다." 
-                                   oninput="deletecheck()" />
+                                   oninput="deletecheck(this)" />
                         </div>
                     </c:if>
 
