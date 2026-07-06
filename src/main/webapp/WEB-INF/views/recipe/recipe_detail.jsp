@@ -16,6 +16,8 @@
     <link rel="stylesheet" href="/css/chatbot.css" />
     <meta charset="UTF-8">
     <title>오늘 뭐 먹지? - 레시피 상세 페이지</title>
+
+    <script src="/js/chatbot.js"></script>
     <script>
         const del = (commentId)=>{
             if(confirm("삭제하시겠습니까?")){
@@ -141,6 +143,50 @@
                     menu.style.display = "none";
                 }
             )}
+        });
+        
+        document.addEventListener("DOMContentLoaded", function() {
+            const ratingStars = [...document.getElementsByClassName("rating__star")];
+            const ratingResult = document.querySelector(".rating__result");
+
+            function printRatingResult(result, num) {
+                if (result) {
+                    result.textContent = num;
+                }
+
+                const ratingInput = document.getElementById("rating");
+                if (ratingInput) {
+                    ratingInput.value = num;
+                }
+            }
+
+            printRatingResult(ratingResult, 0);
+
+            function executeRating(stars, result) {
+                const starClassActive = "rating__star fas fa-star";
+                const starClassUnactive = "rating__star far fa-star";
+                const starsLength = stars.length;
+
+                stars.forEach((star, index) => {
+                    star.onclick = () => {
+                        if (star.className.indexOf("far") !== -1) {
+                            printRatingResult(result, index + 1);
+
+                            for (let i = 0; i <= index; i++) {
+                                stars[i].className = starClassActive;
+                            }
+                        } else {
+                            printRatingResult(result, index);
+
+                            for (let i = index; i < starsLength; i++) {
+                                stars[i].className = starClassUnactive;
+                            }
+                        }
+                    };
+                });
+            }
+
+            executeRating(ratingStars, ratingResult);
         });
     </script>
 </head>
@@ -330,6 +376,7 @@
     </c:if>
 
     <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
+    <jsp:include page="/WEB-INF/views/chatbot/chatbot_main.jsp" />
     
                 </head>
 
@@ -353,9 +400,9 @@
                                 const starsLength = stars.length;
                                 let i;
 
-                                stars.map((별) => {
+                                stars.map((star) => {
                                     star.onclick = () => {
-                                        i = stars.indexOf(별);
+                                        i = stars.indexOf(star);
 
                                         if (star.className.indexOf(starClassUnactive) !== -1) {
                                             printRatingResult(result, i + 1);

@@ -34,22 +34,36 @@
 
             function goRecipeSearch(keyword) {
                 const searchKeyword = keyword ? keyword.trim() : "";
-                if (searchKeyword === "") return;
 
-                const searchInput =
-                    document.querySelector("input[name='search_text']") ||
-                    document.querySelector("input[name='keyword']") ||
-                    document.querySelector("input[name='search']");
-
-                if (searchInput) {
-                    const searchForm = searchInput.closest("form");
-                    searchInput.value = searchKeyword;
-                    if (searchForm) {
-                        searchForm.submit();
-                        return;
-                    }
+                if (searchKeyword === "") {
+                    return;
                 }
-                location.href = "${pageContext.request.contextPath}/recipe_list.do?search_text=" + encodeURIComponent(searchKeyword);
+
+                const form = document.createElement("form");
+                form.method = "post";
+                form.action = "${pageContext.request.contextPath}/search_recipe.do";
+
+                const inputSearch = document.createElement("input");
+                inputSearch.type = "hidden";
+                inputSearch.name = "search";
+                inputSearch.value = searchKeyword;
+
+                const inputSelect = document.createElement("input");
+                inputSelect.type = "hidden";
+                inputSelect.name = "select";
+                inputSelect.value = "recipe";
+
+                const inputFromCategory = document.createElement("input");
+                inputFromCategory.type = "hidden";
+                inputFromCategory.name = "fromCategory";
+                inputFromCategory.value = "Y";
+
+                form.appendChild(inputSearch);
+                form.appendChild(inputSelect);
+                form.appendChild(inputFromCategory);
+
+                document.body.appendChild(form);
+                form.submit();
             }
 
             function selectCategory(category) {

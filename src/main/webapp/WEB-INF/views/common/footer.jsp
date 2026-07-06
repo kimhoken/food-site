@@ -5,6 +5,9 @@
 <html>
     <head>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
+        <link rel="stylesheet" href="/css/chatbot.css">
+
+        <script src="/js/chatbot.js"></script>
     </head>
     <body>
         <footer>
@@ -33,7 +36,7 @@
                         <a href="/terms.do"><strong>이용약관</strong></a>
                         <a href="/privacy.do"><strong>개인정보처리방침</strong></a>
                         <a href="/notice.do">공지사항</a>
-                        <a href="#">자주묻는질문</a>
+                        <a href="javascript:void(0);" onclick="openChatbot()">자주묻는질문</a>
                     </div>
                 </div>
 
@@ -59,6 +62,7 @@
 
         </div>
         </footer>
+        <jsp:include page="/WEB-INF/views/chatbot/chatbot_main.jsp" />
     </body>
 </html>
 

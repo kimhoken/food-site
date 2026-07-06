@@ -129,7 +129,7 @@
                         <a href="/terms.do"><strong>이용약관</strong></a>
                         <a href="/privacy.do"><strong>개인정보처리방침</strong></a>
                         <a href="/notice.do">공지사항</a>
-                        <a href="#">자주묻는질문</a>
+                        <a href="javascript:void(0);" onclick="openChatbot()">자주묻는질문</a>
                         <span class="partner-mail">광고/제휴 문의: kh@culture.net</span>
                     </div>
                 </div>
