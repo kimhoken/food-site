@@ -173,7 +173,7 @@
     )
     </insert>
 
-    <insert id="insertCookOrder" parameterType="cookOrder">
+    <insert id="insertCookOrder" parameterType="cook_order">
     INSERT INTO cook_order(
         recipe_id,
         `order`,

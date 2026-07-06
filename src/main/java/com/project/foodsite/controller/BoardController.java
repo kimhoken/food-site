@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.project.foodsite.common.Fileupload;
 import com.project.foodsite.dao.BoardDAO;
+import com.project.foodsite.dao.CategoryDAO;
 import com.project.foodsite.dao.CommonCommentDAO;
 import com.project.foodsite.dao.RecipeDAO;
 import com.project.foodsite.dao.ReviewDAO;
@@ -40,6 +41,8 @@ public class BoardController {
     private final ReviewDAO reviewDao;
     private final Fileupload fileupload;
     private final CommonCommentDAO commonCommentDAO;
+
+    private final CategoryDAO categoryDAO;
 
     // board list 조회
     @GetMapping("/list.do")
