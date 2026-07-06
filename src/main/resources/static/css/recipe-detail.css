@@ -498,8 +498,85 @@
 }
 
 
-/* 신고, 삭제, 수정 버튼 */ 
+/* ==========================
+   하단 버튼 영역
+========================== */
 
+/* 공통 버튼 */ 
+.recipe-manage-wrap a{
+    text-decoration:none;
+    font-size:14px;
+    color:#666;
+    border:1px solid #ddd;
+    border-radius:20px;
+    padding:8px 16px;
+    transition:.2s;
+}
+
+.recipe-manage-wrap a:hover{
+    background:#f7f7f7;
+    border-color:#bbb;
+}
+
+/* 버튼 */
+.recipe-bookmark-btn,
+.recipe-report-btn{
+    text-decoration:none;
+    color:#666;
+    font-size:15px;
+    transition:.2s;
+}
+
+.recipe-bookmark-btn:hover,
+.recipe-report-btn:hover{
+    color:#cda87c;
+}
+
+/* 신고, 삭제, 수정 버튼 */ 
+.recipe-manage-wrap{
+    max-width:800px;
+    margin:15px auto 30px;
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+}
+
+/*삭제 강조*/
+.recipe-delete-btn:hover{
+    color:#d9534f;
+}
+
+/* 북마크 신고 후기 */
+.recipe-action-wrap{
+    max-width:800px;
+    margin:60px auto;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:25px;
+}
+
+/* 북마크 신고 */
+.recipe-sub-action{
+    display:flex;
+    gap:30px;
+}
+
+/* 후기 */
+.recipe-review-btn{
+    text-decoration:none;
+    background:#222;
+    color:white;
+    padding:14px 34px;
+    border-radius:30px;
+    font-size:15px;
+    font-weight:500;
+    transition:.3s;
+}
+
+.recipe-review-btn:hover{
+    background:#444;
+}
 .thumbnail{
     max-width: 100%;
     max-height:100%;

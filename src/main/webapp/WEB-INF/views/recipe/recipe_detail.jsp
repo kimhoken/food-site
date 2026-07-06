@@ -1,3 +1,4 @@
+
 <%@ page import="java.util.Random"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -201,33 +202,39 @@
 
     <!-- 작성자만 삭제 가능 -->
     <c:if test="${not empty sessionScope.user && sessionScope.user.member_id == dto.memberId}">
-        <a href="/recipe_delete.do?recipeId=${dto.recipeId}" class="recipe-delete-btn"
-           onclick="return confirm('삭제하시겠습니까?');">
+        <div class="recipe-manage-wrap">
+            <a href="/recipe_delete.do?recipeId=${dto.recipeId}" class="recipe-delete-btn"
+            onclick="return confirm('삭제하시겠습니까?');">
             삭제
         </a>
-    </c:if>
-
-    <div class="recipe-report-wrapx">
-        <a href="/report/form.do?recipe_id=${recipe_id}"
-           class="recipe-report-btn">
-            신고하기
-        </a>
     </div>
+</c:if>
 
-    <div class="recipe-bookmark-wrap">
-        <a href="#"
-           class="recipe-bookmark-btn"
-           onclick="bookmarkSet('${recipe_id}')">
-            북마크
-        </a>
-    </div>
 
-    <div class="recipe-review-wrap">
+    <div class="recipe-action-wrap">
+        <div class="recipe-sub-action">
+            <a href="/report/form.do?recipe_id=${recipe_id}"
+               class="recipe-report-btn">
+               신고하기
+            </a>
+            
+            <a href="#"
+               class="recipe-bookmark-btn"
+               onclick="bookmarkSet('${recipe_id}')">
+                북마크
+            </a>
+        </div>
         <a href="/review/insert?recipe_id=${recipe_id}"
            class="recipe-review-btn">
             레시피 후기 작성하기
         </a>
     </div>
+
+    <!-- <div class="recipe-bookmark-wrap">
+    </div>
+
+    <div class="recipe-review-wrap">
+    </div> -->
 
     <c:if test="${not empty commentList}">
         <div class="comment-main-title">레시피 댓글</div>
@@ -327,48 +334,54 @@
     </c:if>
 
     <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
+    
+                </head>
 
-    <script>
-        const ratingStars = [...document.getElementsByClassName("rating__star")];
-        const ratingResult = document.querySelector(".rating__result");
-        
-        function printRatingResult(result, num) {
-            result.textContent = num
-            document.getElementById("rating").value=num;
-        }
+                <body>
+                    <%-- 레시피의 조리순서, 재료, 사진 등을 보여주기 --%>                       
 
-        printRatingResult(ratingResult, 0);
+                        <script>
+                            const ratingStars = [...document.getElementsByClassName("rating__star")];
+                            const ratingResult = document.querySelector(".rating__result");
 
-        function executeRating(stars, result) {
-            const starClassActive = "rating__star fas fa-star";
-            const starClassUnactive = "rating__star far fa-star";
-            const starsLength = stars.length;
-            let i;
+                            function printRatingResult(result, num) {
+                                result.textContent = num
+                                document.getElementById("rating").value = num;
+                            }
 
-            stars.map((star) => {
-                star.onclick = () => {
-                    i = stars.indexOf(star);
+                            printRatingResult(ratingResult, 0);
 
-                    if (star.className.indexOf(starClassUnactive) !== -1) {
-                        printRatingResult(result, i + 1);
+                            function executeRating(stars, result) {
+                                const starClassActive = "rating__star fas fa-star";
+                                const starClassUnactive = "rating__star far fa-star";
+                                const starsLength = stars.length;
+                                let i;
 
-                        for (i; i >= 0; --i) {
-                            stars[i].className = starClassActive;
-                        }
-                    } else {
-                        printRatingResult(result, i);
-                        
-                        for (i; i < starsLength; ++i) {
-                            stars[i].className = starClassUnactive;
-                        }
-                    }
-                };
-            });
-        }
+                                stars.map((별) => {
+                                    star.onclick = () => {
+                                        i = stars.indexOf(별);
 
-        executeRating(ratingStars, ratingResult);
-    </script>
+                                        if (star.className.indexOf(starClassUnactive) !== -1) {
+                                            printRatingResult(result, i + 1);
 
-    <jsp:include page="/WEB-INF/views/chatbot/chatbot_main.jsp" />
-</body>
-</html>
+                                            for (i; i >= 0; --i) {
+                                                stars[i].className = starClassActive;
+                                            }
+                                        } else {
+                                            printRatingResult(result, i);
+
+                                            for (i; i < starsLength; ++i) {
+                                                stars[i].className = starClassUnactive;
+                                            }
+                                        }
+                                    };
+                                });
+                            }
+
+                            executeRating(ratingStars, ratingResult);
+                        </script>
+
+                        <jsp:include page="/WEB-INF/views/chatbot/chatbot_main.jsp" />
+                </body>
+
+                </html>

@@ -719,3 +719,22 @@
         width: 100%;
     }
 }
+.review-page-box {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin: 28px 0 20px;
+}
+
+.review-page-box a {
+    color: #222;
+    font-size: 18px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.review-page-box a:hover,
+.review-page-box a.active {
+    color: #c0392b;
+}

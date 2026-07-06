@@ -313,3 +313,21 @@
     margin-top: 50px;
     text-align: center;
 }
+.board-page-box {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin: 25px 0 10px;
+}
+
+.board-page-box a {
+    color: #222;
+    font-size: 18px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.board-page-box a:hover,
+.board-page-box a.active {
+    color: #c0392b;
+}
