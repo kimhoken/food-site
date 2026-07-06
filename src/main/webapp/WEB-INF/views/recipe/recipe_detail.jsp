@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
     <link rel="stylesheet" href="/css/chatbot.css" />
     <meta charset="UTF-8">
-
+    <title>오늘 뭐 먹지? - 레시피 상세 페이지</title>
     <script>
         const del = (commentId)=>{
             if(confirm("삭제하시겠습니까?")){
