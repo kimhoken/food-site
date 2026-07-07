@@ -132,24 +132,159 @@
                 }else{
                     menu.style.display = "none";
                 }
-            }
-            
-            document.addEventListener("click", function(e) {
-                if(!e.target.closest(".comment-menu-wrap")){
-                    document.querySelectorAll(".comment-dropdown").forEach(menu => {
-                        menu.style.display = "none";
-                    }
-                    )}
-                });
-        </script>
-    </head>
+            )}
+        });
+        
+        document.addEventListener("DOMContentLoaded", function() {
+            const ratingStars = [...document.getElementsByClassName("rating__star")];
+            const ratingResult = document.querySelector(".rating__result");
 
-        <body>
-            <%-- 레시피의 조리순서, 재료, 사진 등을 보여주기 --%>
-            <div class="title-wrap">
-                <h1>${dto.recipeTitle}</h1>
-                <div class="recipe-author" onclick="location.href='/user/${dto.memberId}'">작성자: ${dto.nickName}</div>
-            </div>
+            function printRatingResult(result, num) {
+                if (result) {
+                    result.textContent = num;
+                }
+
+                const ratingInput = document.getElementById("rating");
+                if (ratingInput) {
+                    ratingInput.value = num;
+                }
+            }
+
+            printRatingResult(ratingResult, 0);
+
+            function executeRating(stars, result) {
+                const starClassActive = "rating__star fas fa-star";
+                const starClassUnactive = "rating__star far fa-star";
+                const starsLength = stars.length;
+
+                stars.forEach((star, index) => {
+                    star.onclick = () => {
+                        if (star.className.indexOf("far") !== -1) {
+                            printRatingResult(result, index + 1);
+
+                            for (let i = 0; i <= index; i++) {
+                                stars[i].className = starClassActive;
+                            }
+                        } else {
+                            printRatingResult(result, index);
+
+                            for (let i = index; i < starsLength; i++) {
+                                stars[i].className = starClassUnactive;
+                            }
+                        }
+                    };
+                });
+            }
+ 
+            executeRating(ratingStars, ratingResult);
+        });
+    </script>
+</head>
+
+<body>
+    <%-- 레시피의 조리순서, 재료, 사진 등을 보여주기 --%>
+    <div class="title-wrap">
+        <h1>${dto.recipeTitle}</h1>
+        <div class="recipe-author" onclick="location.href='/user/${dto.memberId}'">작성자: ${dto.nickName}</div>
+    </div>
+
+    <div class="recipe-detail-wrap">
+        <div class="recipe-top-section">
+            <table class="ingredient-table">
+                <tr>
+                    <td rowspan="${size + 1}" class="thumb-cell">
+                        <img class="thumbnail" src="/upload/recipe/${dto.thumbnail}" alt="썸네일">
+                    </td>
+                    <th colspan="2" class="section-title-cell">필요 재료</th>
+                </tr>
+
+                <c:forEach var="vo" items="${ingredients}">
+                    <tr class="ingredient-row">
+                        <td class="ing-name">${vo.ingredient_name}</td>
+                        <td class="ing-amount">${vo.quantity}${vo.unit}</td>
+                    </tr>
+                </c:forEach>
+            </table>
+        </div>
+
+        <hr class="section-divider" />
+
+        <div class="recipe-bottom-section">
+            <table class="step-table">
+                <c:forEach var="vo" items="${orderList}">
+                    <tr class="step-row-top">
+                        <td rowspan="2" class="step-thumb-cell">
+                            <c:if test="${not empty vo.cook_image}"> 
+                                <img src="/upload/recipe/${vo.cook_image}" class="cook-img"> 
+                            </c:if>
+                        </td> 
+                        <td class="step-num">순서 ${vo.order}</td>
+                    </tr>
+
+                    <tr class="step-row-bottom">
+                        <td class="step-desc">${vo.description}</td>
+                    </tr>
+
+                    <tr class="step-divider-row">
+                        <td colspan="2">
+                            <hr class="step-line">
+                        </td>
+                    </tr>  
+                </c:forEach>
+            </table>
+        </div>
+    </div>
+
+    <div class="recipe-action-wrap">
+
+        <!-- 작성자만 -->
+        <c:if test="${not empty sessionScope.user && sessionScope.user.member_id == dto.memberId}">
+            <a href="/recipe_update.do?recipeId=${dto.recipeId}" class="recipe-update-btn">
+                수정
+            </a>
+
+            <a href="/recipe_delete.do?recipeId=${dto.recipeId}" class="recipe-delete-btn" onclick="return confirm('삭제하시겠습니까?');">
+                삭제
+            </a>
+        </c:if>
+
+        <a href="/report/form.do?target_type=레시피&recipe_id=${param.recipe_id}" class="recipe-report-btn">
+            신고하기
+        </a>
+
+        <a href="#" class="recipe-bookmark-btn">
+            북마크
+        </a>
+
+        <a href="/review/insert?recipe_id=${param.recipe_id}" class="recipe-review-btn">
+            레시피 후기 작성하기
+        </a>
+
+    </div>
+
+    <!-- <div class="recipe-bookmark-wrap">
+    </div>
+
+    <div class="recipe-review-wrap">
+    </div> -->
+
+    <c:if test="${not empty commentList}">
+        <div class="comment-main-title">레시피 댓글</div>
+
+        <div class="read-comment-div">
+            <c:forEach var="vo" items="${commentList}">
+
+                <table id="comment-${vo.comment_id}">
+                    <tr>
+                        <td>${vo.nickname}</td>
+
+                        <td>
+                            <textarea class="comment-content" id="modi_content${vo.comment_id}" maxlength="150" readonly>${vo.content}</textarea>
+                            <c:set var="rates" value="${vo.rating * 20}%"/>
+                            <div class="rate">
+                                <span style="width: ${rates};"></span>
+                            </div> 
+                        </td>
 
             <div class="recipe-detail-wrap">
                 <div class="recipe-top-section">
@@ -224,6 +359,13 @@
                 </a>
 
             </div>
+        </form>
+    </c:if>
+
+    <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
+    <jsp:include page="/WEB-INF/views/chatbot/chatbot_main.jsp" />
+    
+                </head>
 
             <!-- <div class="recipe-bookmark-wrap">
             </div>
@@ -354,10 +496,34 @@
                             for (i; i >= 0; --i) {
                                 stars[i].className = starClassActive;
                             }
-                            } else {
-                                printRatingResult(result, i);
-                            for (i; i < starsLength; ++i) {
-                                stars[i].className = starClassUnactive;
+
+                            printRatingResult(ratingResult, 0);
+
+                            function executeRating(stars, result) {
+                                const starClassActive = "rating__star fas fa-star";
+                                const starClassUnactive = "rating__star far fa-star";
+                                const starsLength = stars.length;
+                                let i;
+
+                                stars.map((star) => {
+                                    star.onclick = () => {
+                                        i = stars.indexOf(star);
+
+                                        if (star.className.indexOf(starClassUnactive) !== -1) {
+                                            printRatingResult(result, i + 1);
+
+                                            for (i; i >= 0; --i) {
+                                                stars[i].className = starClassActive;
+                                            }
+                                        } else {
+                                            printRatingResult(result, i);
+
+                                            for (i; i < starsLength; ++i) {
+                                                stars[i].className = starClassUnactive;
+                                            }
+                                        }
+                                    };
+                                });
                             }
                         }
                     };

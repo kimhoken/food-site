@@ -165,72 +165,82 @@ public class RecipeController {
      * @return jsp
      */
     @PostMapping("/search_recipe.do")
-    public String recipeSearch(Model model, String search, HttpServletRequest req, String select) {
-        // 검색어를 입력받아 검색어로 유사 검색 후 결과 리턴
-        // 최근검색어는 큐로 저장해 5개 유지 및 오래된 검색어 삭제
-        // 검색어를 받아 검색어 테이블에 저장
+    public String recipeSearch(Model model, String search, HttpServletRequest req, String select, String fromCategory) {
+        // 검색어를 입력받아 유사 검색 후 결과 리턴
+        // 일반 검색일 때만 최근검색어/검색어 테이블에 저장
+        // 카테고리 클릭 검색은 fromCategory=Y로 들어오므로 검색기록에 저장하지 않음
 
-        // ip를 키, 검색어를 value로 저장
-        @SuppressWarnings("unchecked")
-        HashMap<String, List<String>> map = session.getAttribute("searchMap") == null ? new HashMap<>()
-                : (HashMap<String, List<String>>) session.getAttribute("searchMap");
+        // 카테고리 클릭이 아닐 때만 검색기록 저장
+        if (!"Y".equals(fromCategory)) {
 
-        // IP가 같은 키 값이 없을 경우
-        if (!map.containsKey(req.getRemoteAddr())) {
-            searchLogDAO.insertKeyWord(search);
-            map.computeIfAbsent(req.getRemoteAddr(), k -> new ArrayList<>()).add(search);
-            // 세션에 저장
-            session.setAttribute("searchMap", map);
-            session.setMaxInactiveInterval(3600);
-        } else {
-            boolean flag = true;
-            for (String val : map.get(req.getRemoteAddr())) {
+            // ip를 키, 검색어를 value로 저장
+            @SuppressWarnings("unchecked")
+            HashMap<String, List<String>> map = session.getAttribute("searchMap") == null ? new HashMap<>()
+                    : (HashMap<String, List<String>>) session.getAttribute("searchMap");
+
+            // IP가 같은 키 값이 없을 경우
+            if (!map.containsKey(req.getRemoteAddr())) {
+                searchLogDAO.insertKeyWord(search);
+                map.computeIfAbsent(req.getRemoteAddr(), k -> new ArrayList<>()).add(search);
+
+                // 세션에 저장
+                session.setAttribute("searchMap", map);
+                session.setMaxInactiveInterval(3600);
+            } else {
+                boolean flag = true;
+
+                // 같은 IP에서 이미 검색한 단어인지 확인
+                for (String val : map.get(req.getRemoteAddr())) {
+                    if (val.equals(search)) {
+                        flag = false;
+                        break;
+                    }
+                }
+
+                // 맵에서 value가 search랑 같은 값이 없을 경우
+                if (flag) {
+                    searchLogDAO.insertKeyWord(search);
+                    map.computeIfAbsent(req.getRemoteAddr(), k -> new ArrayList<>()).add(search);
+
+                    // 세션에 저장
+                    session.setAttribute("searchMap", map);
+                    session.setMaxInactiveInterval(3600);
+                }
+            }
+
+            @SuppressWarnings("unchecked")
+            Queue<String> searchQueue = (Queue<String>) session.getAttribute("searchQueue") == null ? new LinkedList<>()
+                    : (Queue<String>) session.getAttribute("searchQueue");
+
+            // 겹치는 단어를 큐의 맨 뒤로 보냄
+            for (String val : searchQueue) {
                 if (val.equals(search)) {
-                    flag = false;
+                    searchQueue.remove(search);
                     break;
                 }
             }
 
-            // 맵에서 value가 search랑 같은 값이 없을 경우
-            if (flag) {
-                searchLogDAO.insertKeyWord(search);
-                map.computeIfAbsent(req.getRemoteAddr(), k -> new ArrayList<>()).add(search);
-                // 세션에 저장
-                session.setAttribute("searchMap", map);
-                session.setMaxInactiveInterval(3600);
+            if (searchQueue.size() >= 5) {
+                // 크기가 5 이상이면 가장 먼저 검색한 검색어 삭제
+                searchQueue.poll();
             }
+
+            searchQueue.add(search);
+
+            // 기존 세션의 값 삭제
+            session.removeAttribute("searchQueue");
+
+            // 세션에 값을 새로 저장
+            session.setAttribute("searchQueue", searchQueue);
+            session.setAttribute("searchWord", search);
+            session.setAttribute("select", select);
+
+            // 검색 로그 갱신
+            log.getSearchLog();
         }
 
-        @SuppressWarnings("unchecked")
-        Queue<String> searchQueue = (Queue<String>) session.getAttribute("searchQueue") == null ? new LinkedList<>()
-                : (Queue<String>) session.getAttribute("searchQueue");
-
-        // 겹치는 단어를 큐의 맨 뒤로 보냄
-        for (String val : searchQueue) {
-            if (val.equals(search)) {
-                searchQueue.remove(search);
-                break;
-            }
-        }
-
-        if (searchQueue.size() >= 5) {
-            // 크기가 5이상이면 가장 먼저 검색한 검색어 삭제
-            searchQueue.poll();
-        }
-
-        searchQueue.add(search);
-
-        // 기존 세션의 값 삭제
-        session.removeAttribute("searchQueue");
-
-        // 세션에 값을 새로 저장
-        session.setAttribute("searchQueue", searchQueue);
-        session.setAttribute("searchWord", search);
-        session.setAttribute("select", select);
-
-        log.getSearchLog();
-
-        if (select.equals("review")) {
+        // 검색 결과 조회는 카테고리 클릭이어도 무조건 실행
+        if ("review".equals(select)) {
             model.addAttribute("list", boardDAO.search(search));
             return "board/board_list";
         } else {
