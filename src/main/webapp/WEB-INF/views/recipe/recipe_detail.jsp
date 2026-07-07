@@ -1,4 +1,3 @@
-
 <%@ page import="java.util.Random"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -10,137 +9,175 @@
 
 <!DOCTYPE html>
 <html>
-<head>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/recipe-detail.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
-    <link rel="stylesheet" href="/css/chatbot.css" />
-    <meta charset="UTF-8">
-    <title>오늘 뭐 먹지? - 레시피 상세 페이지</title>
-    <script>
-        const del = (commentId)=>{
-            if(confirm("삭제하시겠습니까?")){
-                console.log(commentId);
-                fetch("/api/recomment/delete", {
-                    method: "delete",
+    <head>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/recipe-detail.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+        <link rel="stylesheet" href="/css/chatbot.css" />
+        <meta charset="UTF-8">
+        <title>오늘 뭐 먹지? - 레시피 상세 페이지</title>
+        <script src="js/bookmark.js"></script>
+        <script>
+            const del = (commentId)=>{
+                if(confirm("삭제하시겠습니까?")){
+                    console.log(commentId);
+                    fetch("/api/recomment/delete", {
+                        method: "delete",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            commentId: commentId
+                        })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if(data.result == "success"){
+                            alert("삭제되었습니다");
+                            location.reload();
+                        }else{
+                            alert("실패했습니다.")
+                        }
+                    })
+                }
+            }
+            
+            const register = (f) => {
+                let content = f.content.value;
+                let member_id = f.member_id.value;
+                let recipe_id = f.recipe_id.value;
+                
+                if(!content.trim()){
+                    alert("내용은 공백을 제외하고 1자 이상 입력해주세요");
+                    return ;
+                }
+                
+                if(content.length > 150){
+                    alert("댓글은 150자 이내로 작성해주세요.");
+                    f.content.focus();
+                    return;
+                }
+                
+                fetch("/api/recomment/insert", {
+                    method:"post",
                     headers: {
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                        commentId: commentId
+                        content: content,
+                        recipeId: recipe_id,
+                        memberId: member_id,
+                        rating: f.rating.value
                     })
                 })
                 .then(res => res.json())
                 .then(data => {
-                    if(data.result == "success"){
-                        alert("삭제되었습니다");
+                    if(data.result == 'success'){
+                        alert("등록되었습니다.")
                         location.reload();
                     }else{
-                        alert("실패했습니다.")
+                        alert("실패하였습니다...")
+                    }
+                })
+                .catch(err => {
+                    console.log("에러발생 " + err)
+                })
+            }
+            
+            const modi = (commentId) => {
+                let btn = document.getElementById('send_btn' + commentId);
+                let content = document.getElementById('modi_content' + commentId);
+                btn.type="button";
+                content.readOnly=false;
+                content.style="border:1px solid #333;";
+                content.focus();
+            }
+            
+            const modiFin = (commentId) => {
+                let content = document.getElementById('modi_content' + commentId);
+                
+                if(content.value.length > 150){
+                    alert("댓글은 150자 이내로 작성해주세요.");
+                    content.focus();
+                    return;
+                }
+                
+                content.readOnly = true;
+                
+                fetch("/api/recomment/update", {
+                    method:"put",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body:JSON.stringify({
+                        commentId: commentId,
+                        content: content.value
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if(data.result == 'success'){
+                        alert("수정되었습니다.");
+                        location.reload();
+                    }else{
+                        alert("실패하였습니다...")
                     }
                 })
             }
-        }
-
-        const register = (f) => {
-            let content = f.content.value;
-            let member_id = f.member_id.value;
-            let recipe_id = f.recipe_id.value;
-
-            if(!content.trim()){
-                alert("내용은 공백을 제외하고 1자 이상 입력해주세요");
-                return ;
-            }
-
-            if(content.length > 150){
-                alert("댓글은 150자 이내로 작성해주세요.");
-                f.content.focus();
-                return;
-            }
-
-            fetch("/api/recomment/insert", {
-                method:"post",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    content: content,
-                    recipeId: recipe_id,
-                    memberId: member_id,
-                    rating: f.rating.value
-                })  
-            })
-            .then(res => res.json())
-            .then(data => {
-                if(data.result == 'success'){
-                    alert("등록되었습니다.")
-                    location.reload();
+            
+            // 댓글 ⋮ 버튼 클릭 시 드롭다운 열고 닫기
+            const toggleCommentMenu = (commentId) => {
+                const menu = document.getElementById("commentMenu" + commentId);
+                
+                if(menu.style.display === "none" || menu.style.display === ""){
+                    menu.style.display = "block";
                 }else{
-                    alert("실패하였습니다...")
-                }
-            })
-            .catch(err => {
-                console.log("에러발생 " + err)
-            })
-        }
-
-        const modi = (commentId) => {
-            let btn = document.getElementById('send_btn' + commentId);
-            let content = document.getElementById('modi_content' + commentId);
-            btn.type="button";
-            content.readOnly=false;
-            content.style="border:1px solid #333;";
-            content.focus();
-        }
-
-        const modiFin = (commentId) => {
-            let content = document.getElementById('modi_content' + commentId);
-
-            if(content.value.length > 150){
-                alert("댓글은 150자 이내로 작성해주세요.");
-                content.focus();
-                return;
-            }
-
-            content.readOnly = true;
-
-            fetch("/api/recomment/update", {
-                method:"put",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body:JSON.stringify({
-                    commentId: commentId,
-                    content: content.value
-                })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if(data.result == 'success'){
-                    alert("수정되었습니다.");
-                    location.reload();
-                }else{
-                    alert("실패하였습니다...")
-                }
-            })
-        }
-
-        // 댓글 ⋮ 버튼 클릭 시 드롭다운 열고 닫기
-        const toggleCommentMenu = (commentId) => {
-            const menu = document.getElementById("commentMenu" + commentId);
-
-            if(menu.style.display === "none" || menu.style.display === ""){
-                menu.style.display = "block";
-            }else{
-                menu.style.display = "none";
-            }
-        }
-
-        document.addEventListener("click", function(e) {
-            if(!e.target.closest(".comment-menu-wrap")){
-                document.querySelectorAll(".comment-dropdown").forEach(menu => {
                     menu.style.display = "none";
                 }
-            )}
+            }
+        
+        
+        document.addEventListener("DOMContentLoaded", function() {
+            const ratingStars = [...document.getElementsByClassName("rating__star")];
+            const ratingResult = document.querySelector(".rating__result");
+
+            function printRatingResult(result, num) {
+                if (result) {
+                    result.textContent = num;
+                }
+
+                const ratingInput = document.getElementById("rating");
+                if (ratingInput) {
+                    ratingInput.value = num;
+                }
+            }
+
+            printRatingResult(ratingResult, 0);
+
+            function executeRating(stars, result) {
+                const starClassActive = "rating__star fas fa-star";
+                const starClassUnactive = "rating__star far fa-star";
+                const starsLength = stars.length;
+
+                stars.forEach((star, index) => {
+                    star.onclick = () => {
+                        if (star.className.indexOf("far") !== -1) {
+                            printRatingResult(result, index + 1);
+
+                            for (let i = 0; i <= index; i++) {
+                                stars[i].className = starClassActive;
+                            }
+                        } else {
+                            printRatingResult(result, index);
+
+                            for (let i = index; i < starsLength; i++) {
+                                stars[i].className = starClassUnactive;
+                            }
+                        }
+                    };
+                });
+            }
+ 
+            executeRating(ratingStars, ratingResult);
         });
     </script>
 </head>
@@ -216,7 +253,7 @@
             신고하기
         </a>
 
-        <a href="#" class="recipe-bookmark-btn">
+        <a href="#" class="recipe-bookmark-btn" onclick="bookmarkSet('${param.recipe_id}')">
             북마크
         </a>
 
@@ -226,18 +263,11 @@
 
     </div>
 
-    <!-- <div class="recipe-bookmark-wrap">
-    </div>
-
-    <div class="recipe-review-wrap">
-    </div> -->
-
     <c:if test="${not empty commentList}">
         <div class="comment-main-title">레시피 댓글</div>
 
         <div class="read-comment-div">
             <c:forEach var="vo" items="${commentList}">
-
                 <table id="comment-${vo.comment_id}">
                     <tr>
                         <td>${vo.nickname}</td>
@@ -247,7 +277,7 @@
                             <c:set var="rates" value="${vo.rating * 20}%"/>
                             <div class="rate">
                                 <span style="width: ${rates};"></span>
-                            </div> 
+                            </div>
                         </td>
 
                         <td>
@@ -275,7 +305,7 @@
                                         </li>
                                     </ul>
                                 </div>
-                            </div>                   
+                            </div>
                         </td>
                     </tr>
                 </table>
@@ -330,54 +360,6 @@
     </c:if>
 
     <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
-    
-                </head>
-
-                <body>
-                    <%-- 레시피의 조리순서, 재료, 사진 등을 보여주기 --%>                       
-
-                        <script>
-                            const ratingStars = [...document.getElementsByClassName("rating__star")];
-                            const ratingResult = document.querySelector(".rating__result");
-
-                            function printRatingResult(result, num) {
-                                result.textContent = num
-                                document.getElementById("rating").value = num;
-                            }
-
-                            printRatingResult(ratingResult, 0);
-
-                            function executeRating(stars, result) {
-                                const starClassActive = "rating__star fas fa-star";
-                                const starClassUnactive = "rating__star far fa-star";
-                                const starsLength = stars.length;
-                                let i;
-
-                                stars.map((별) => {
-                                    star.onclick = () => {
-                                        i = stars.indexOf(별);
-
-                                        if (star.className.indexOf(starClassUnactive) !== -1) {
-                                            printRatingResult(result, i + 1);
-
-                                            for (i; i >= 0; --i) {
-                                                stars[i].className = starClassActive;
-                                            }
-                                        } else {
-                                            printRatingResult(result, i);
-
-                                            for (i; i < starsLength; ++i) {
-                                                stars[i].className = starClassUnactive;
-                                            }
-                                        }
-                                    };
-                                });
-                            }
-
-                            executeRating(ratingStars, ratingResult);
-                        </script>
-
-                        <jsp:include page="/WEB-INF/views/chatbot/chatbot_main.jsp" />
-                </body>
-
-                </html>
+    <jsp:include page="/WEB-INF/views/chatbot/chatbot_main.jsp" />
+</body>
+</html>

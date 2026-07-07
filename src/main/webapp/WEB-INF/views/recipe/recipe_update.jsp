@@ -18,6 +18,9 @@
             <title>오늘 뭐먹지? - 레시피 작성하기</title>
             <link rel="stylesheet" href="${pageContext.request.contextPath}/css/regiRecipe.css" />
             <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
+            <link rel="stylesheet" href="/css/chatbot.css" />
+
+            <script src="/js/chatbot.js"></script>
 
 
             <script>
@@ -429,7 +432,7 @@
                             <a href="/terms.do"><strong>이용약관</strong></a>
                             <a href="/privacy.do"><strong>개인정보처리방침</strong></a>
                             <a href="/notice.do">공지사항</a>
-                            <a href="#">자주묻는질문</a>
+                            <a href="javascript:void(0);" onclick="openChatbot()">자주묻는질문</a>
                             <span class="partner-mail">광고/제휴 문의: kh@culture.net</span>
                         </div>
                     </div>
@@ -460,6 +463,7 @@
                     </div>
                 </div>
             </footer>
+            <jsp:include page="/WEB-INF/views/chatbot/chatbot_main.jsp" />
 
         </body>
 
