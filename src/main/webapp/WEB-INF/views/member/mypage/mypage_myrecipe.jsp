@@ -29,7 +29,7 @@
                         </div>
 
                         <div class="active-main">
-                            <a href="/recipe_detail.do?id=${recipe.recipe_id}"><strong>${recipe.title}</strong></a>
+                            <a href="/recipe_detail.do?recipe_id=${recipe.recipe_id}"><strong>${recipe.title}</strong></a>
                         </div>
 
                         <div class="activity-date">
