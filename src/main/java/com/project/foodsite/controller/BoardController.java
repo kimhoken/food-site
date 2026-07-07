@@ -45,6 +45,7 @@ public class BoardController {
     private final CategoryDAO categoryDAO;
     private final RecipeDAO recipeDAO;
 
+
     // board list 조회
     @GetMapping("/list.do")
     public String boardList(

@@ -1,6 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
         <jsp:include page="/WEB-INF/views/common/is_login.jsp" />
+        <c:if test="${profileuser.role ne 'ADMIN'}">
+            <script>
+                alert("관리자만 이용할수 있습니다.");
+                location.href="main_list.do";
+            </script>
+        </c:if>
         <html>
 
         <head>
@@ -9,6 +15,28 @@
             <script src="/js/util.js"></script>
 
             <script>
+
+                const logout = () => {
+                    if (confirm("로그아웃 하시겠습니까?")) {
+                        fetch("/logout.do", {
+                            method: "post",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                id: "${user.member_id}"
+                            })
+                        })
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.result == "success") {
+                                    alert("로그아웃 되었습니다.")
+                                    location.href = "/main_list.do";
+                                }
+                            })
+                    }
+                }
+
+
+
                 let recipedetailrecipe;
                 let recipeStatus;
 
@@ -50,20 +78,20 @@
 
                     setImg("model_img", "/upload/recipe/" + recipe.thumbnail);
 
-                    document.querySelector(".btn-private").value=
-                    recipe.status === "public"
-                    ? "비공개 전환" 
-                    : "공개 전환";
+                    document.querySelector(".btn-private").value =
+                        recipe.status === "public"
+                            ? "비공개 전환"
+                            : "공개 전환";
 
-                    document.querySelector(".btn-delete").value=
-                    recipe.status === "delete"
-                    ? "복원 하기" 
-                    : "삭제 하기";
+                    document.querySelector(".btn-delete").value =
+                        recipe.status === "delete"
+                            ? "복원 하기"
+                            : "삭제 하기";
 
-                    document.querySelector(".btn-recommend").value=
-                    recipe.recommend
-                    ? "추천 해제" 
-                    : "추천 등록";
+                    document.querySelector(".btn-recommend").value =
+                        recipe.recommend
+                            ? "추천 해제"
+                            : "추천 등록";
 
                 }
 
@@ -85,7 +113,7 @@
         `);
                     });
                 }
-                
+
                 // 레시피 공개/ 비공개 함수
                 function recipeprivate() {
                     if (confirm("정말로 비공개 처리 하시겠습니까?")) {
@@ -135,7 +163,7 @@
                 // 카테고리 및 공개/비공개 레시피 조회하는 함수
                 function searchRecipe() {
                     document.querySelector('form[action="/admin/recipe"]').submit();
-        
+
                 }
 
                 // 검색 결과 리셋 함수
@@ -172,7 +200,7 @@
                     if (!profileName || !profileTrigger) return;
 
                     profileTrigger.addEventListener("click", (event) => {
-                        
+
                         event.stopPropagation();
                         const isOpen = profileName.classList.toggle("open");
                         profileTrigger.setAttribute("aria-expanded", isOpen);
@@ -205,7 +233,7 @@
 
                         <div class="logo-box">
                             <a href="/main_list.do">
-                                <img src="/images/logo.png" width="200px" height="50px" />
+                                <img src="/images/Logo.png" width="200px" height="50px" />
                             </a>
                         </div>
 
@@ -238,7 +266,7 @@
                                         </li>
 
                                         <li>
-                                            <a href="#">로그아웃</a>
+                                            <a href="#" onclick="logout()">로그아웃</a>
                                         </li>
                                     </ul>
                                 </li>
@@ -273,11 +301,11 @@
                                         <li>
                                             <a href="/admin/recipe?recommend=true">추천 레시피</a>
                                         </li>
-                                            
+
                                         <li>
                                             <a href="/admin/recipe?status=delete">삭제 레시피</a>
                                         </li>
-                                            
+
                                         <li>
                                             <a href="/admin/review">레시피 후기</a>
                                         </li>
@@ -297,20 +325,20 @@
                                         댓글 관리</a>
                                 </li>
                             </ul>
-                            
+
                         </div>
 
 
                         <div class="menu-section">
                             <div class="sub-title">고객지원</div>
-                            
+
                             <a class="admin-menu ${menu eq 'inquiry' ? 'active' :''}" href="/admin/inquiry">
                                 문의 관리</a>
                             <a class="admin-menu ${menu eq 'report' ? 'active' :''}" href="/report/admin/list.do">
                                 신고 관리</a>
                         </div>
 
-                       
+
 
                     </aside>
 

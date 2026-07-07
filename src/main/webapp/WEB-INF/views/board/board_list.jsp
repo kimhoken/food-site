@@ -13,7 +13,6 @@
             <link rel="stylesheet" href="/css/chatbot.css" />
             <script src="/js/chatbot.js"></script>
             <script src="${pageContext.request.contextPath}/js/util.js"></script>
-
             <script>
                 document.addEventListener("DOMContentLoaded", function () {
                     // 1. 검색창 드롭다운 로직
@@ -263,7 +262,6 @@
                                 <th>게시글 번호</th>
                                 <th>닉네임</th>
                                 <th>제목</th>
-                                <th>게시글 내용</th>
                                 <th>조회수</th>
                                 <th>작성일</th>
                             </tr>
@@ -278,7 +276,6 @@
                                             ${board.title}
                                         </a>
                                     </td>
-                                    <td>${board.content}</td>
                                     <td>${board.view_count}</td>
                                     <td>${board.created_date}</td>
                                 </tr>
@@ -434,7 +431,4 @@
                 <img id="imageModalImg" class="image-modal-img"/>
             </div>
         </body>
-
-        
-
-        </html>
+</html>
