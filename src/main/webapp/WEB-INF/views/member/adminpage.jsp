@@ -314,10 +314,7 @@
                                     </ul>
                                 </li>
 
-                                <li>
-                                    <a class="admin-menu ${menu eq 'status' ? 'active'  :''}" href="/admin/status">
-                                        통계 관리</a>
-                                </li>
+                                
                                 <li>
                                     <a class="admin-menu ${menu eq 'status' ? 'active'  :''}" href="/admin/board">
                                         게시글 관리</a>
