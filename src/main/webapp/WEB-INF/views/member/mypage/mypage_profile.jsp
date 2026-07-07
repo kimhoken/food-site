@@ -16,7 +16,7 @@
 
                     <div class="logo-box">
                         <a href="/main_list.do">
-                            <img src="/images/logo.png" width="200px" height="50px" />
+                            <img src="/images/Logo.png" width="200px" height="50px" />
                         </a>
                     </div>
 
