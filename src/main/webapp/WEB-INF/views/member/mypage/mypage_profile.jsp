@@ -41,7 +41,7 @@
 
 
                     <div class="menu-section">
-                        <div class="sub-title"><a href="/mypage.do?menu=activity">회원 활동</a></div>
+                        <div class="sub-title">회원 활동</div>
                         <div><a href="/user/${profileUser.member_id}?menu=recipe">
 
                                 작성한 레시피 <span>${recipeCount}</span></a></div>
