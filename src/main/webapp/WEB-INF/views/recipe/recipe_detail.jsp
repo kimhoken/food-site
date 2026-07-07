@@ -15,6 +15,7 @@
         <link rel="stylesheet" href="/css/chatbot.css" />
         <meta charset="UTF-8">
         <title>오늘 뭐 먹지? - 레시피 상세 페이지</title>
+        <script src="js/bookmark.js"></script>
         <script>
             const del = (commentId)=>{
                 if(confirm("삭제하시겠습니까?")){
@@ -252,7 +253,7 @@
             신고하기
         </a>
 
-        <a href="#" class="recipe-bookmark-btn">
+        <a href="#" class="recipe-bookmark-btn" onclick="bookmarkSet('${param.recipe_id}')">
             북마크
         </a>
 
@@ -262,18 +263,11 @@
 
     </div>
 
-    <!-- <div class="recipe-bookmark-wrap">
-    </div>
-
-    <div class="recipe-review-wrap">
-    </div> -->
-
     <c:if test="${not empty commentList}">
         <div class="comment-main-title">레시피 댓글</div>
 
         <div class="read-comment-div">
             <c:forEach var="vo" items="${commentList}">
-
                 <table id="comment-${vo.comment_id}">
                     <tr>
                         <td>${vo.nickname}</td>
@@ -283,255 +277,89 @@
                             <c:set var="rates" value="${vo.rating * 20}%"/>
                             <div class="rate">
                                 <span style="width: ${rates};"></span>
-                            </div> 
+                            </div>
                         </td>
 
-            <div class="recipe-detail-wrap">
-                <div class="recipe-top-section">
-                    <table class="ingredient-table">
-                        <tr>
-                            <td rowspan="${size + 1}" class="thumb-cell">
-                                <img class="thumbnail" src="/upload/recipe/${dto.thumbnail}" alt="썸네일">
-                            </td>
-                            <th colspan="2" class="section-title-cell">필요 재료</th>
-                        </tr>
+                        <td>
+                            <input type="hidden" id="send_btn${vo.comment_id}" value="등록" onClick="modiFin('${vo.comment_id}')">
 
-                        <c:forEach var="vo" items="${ingredients}">
-                            <tr class="ingredient-row">
-                                <td class="ing-name">${vo.ingredient_name}</td>
-                                <td class="ing-amount">${vo.quantity}${vo.unit}</td>
-                            </tr>
-                        </c:forEach>
-                    </table>
-                </div>
+                            <div class="comment-menu-wrap" style="position:relative; display:inline-block;">
+                                <button type="button" class="comment-toggle-btn" onclick="toggleCommentMenu('${vo.comment_id}')">⋮</button>
 
-                <hr class="section-divider" />
+                                <div id="commentMenu${vo.comment_id}" class="comment-dropdown" style="display:none; position:absolute; right:0; background:white; border:1px solid #ccc;">
+                                    <ul>
+                                        <li>
+                                            <a href="/report/form.do?recipe_id=${recipe_id}&comment_id=${vo.comment_id}">
+                                                신고
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <c:if test="${vo.member_id eq sessionScope.user.member_id}">
+                                                <a href="javascript:void(0);" onclick="modi('${vo.comment_id}')">수정</a>
+                                            </c:if>
+                                        </li>
+                                        <li>
+                                            <c:if test="${vo.member_id eq sessionScope.user.member_id || sessionScope.user.role eq 'ADMIN'}">
+                                                <a href="javascript:void(0);" onclick="del('${vo.comment_id}')">삭제</a>
+                                            </c:if>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </c:forEach>
+        </div>
+    </c:if>
 
-                <div class="recipe-bottom-section">
-                    <table class="step-table">
-                        <c:forEach var="vo" items="${orderList}">
-                            <tr class="step-row-top">
-                                <td rowspan="2" class="step-thumb-cell">
-                                    <c:if test="${not empty vo.cook_image}">
-                                        <img src="/upload/recipe/${vo.cook_image}" class="cook-img">
-                                    </c:if>
-                                </td>
-                                <td class="step-num">순서 ${vo.order}</td>
-                            </tr>
+    <c:if test="${empty commentList}">
+        <div class="read-comment-div">
+            <h2>댓글을 작성해 첫 댓글의 주인공이 되어보세요!</h2>
+        </div>
+    </c:if>
 
-                            <tr class="step-row-bottom">
-                                <td class="step-desc">${vo.description}</td>
-                            </tr>
+    <c:if test="${not empty sessionScope.user}">
+        <form>
+            <div class="comment-insert-div">
+                <table>
+                    <tr>
+                        <td>
+                            댓글 달기
+                            <input type="hidden" name="rating" id="rating" value="0"/>
+                            <div class="rating">
+                                <span class="rating__result"></span>
+                                <i class="rating__star far fa-star"></i>
+                                <i class="rating__star far fa-star"></i>
+                                <i class="rating__star far fa-star"></i>
+                                <i class="rating__star far fa-star"></i>
+                                <i class="rating__star far fa-star"></i>
+                            </div>
+                        </td>
 
-                            <tr class="step-divider-row">
-                                <td colspan="2">
-                                    <hr class="step-line">
-                                </td>
-                            </tr>
-                        </c:forEach>
-                    </table>
-                </div>
-            </div>
+                        <td>
+                            <input type="hidden" name="member_id" value="${sessionScope.user.member_id}">
+                            <input type="hidden" name="recipe_id" value="${recipe_id}">
+                        </td>
+                    </tr>
 
-            <div class="recipe-action-wrap">
+                    <tr>
+                        <td>
+                            <textarea name="content" id="comment-content" maxlength="150" placeholder="비방, 욕설 등의 댓글은 무통보 삭제될 수 있습니다."></textarea>
+                        </td>
+                    </tr>
 
-                <!-- 작성자만 -->
-                <c:if test="${not empty sessionScope.user && sessionScope.user.member_id == dto.memberId}">
-                    <a href="/recipe_update.do?recipeId=${dto.recipeId}" class="recipe-update-btn">
-                        수정
-                    </a>
-
-                    <a href="/recipe_delete.do?recipeId=${dto.recipeId}" class="recipe-delete-btn" onclick="return confirm('삭제하시겠습니까?');">
-                        삭제
-                    </a>
-                </c:if>
-
-                <a href="/report/form.do?target_type=레시피&recipe_id=${param.recipe_id}" class="recipe-report-btn">
-                    신고하기
-                </a>
-
-                <a href="#" class="recipe-bookmark-btn">
-                    북마크
-                </a>
-
-                <a href="/review/insert?recipe_id=${param.recipe_id}" class="recipe-review-btn">
-                    레시피 후기 작성하기
-                </a>
-
+                    <tr>
+                        <td>
+                            <input type="button" value="등록" class="comment-register" onClick="register(this.form)">
+                        </td>
+                    </tr>
+                </table>
             </div>
         </form>
     </c:if>
 
     <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
     <jsp:include page="/WEB-INF/views/chatbot/chatbot_main.jsp" />
-    
-                </head>
-
-            <!-- <div class="recipe-bookmark-wrap">
-            </div>
-            
-            <div class="recipe-review-wrap">
-            </div> -->
-
-            <c:if test="${not empty commentList}">
-                <div class="comment-main-title">레시피 댓글</div>
-
-                <div class="read-comment-div">
-                    <c:forEach var="vo" items="${commentList}">
-
-                        <table id="comment-${vo.comment_id}">
-                            <tr>
-                                <td>${vo.nickname}</td>
-
-                                <td>
-                                    <textarea class="comment-content" id="modi_content${vo.comment_id}" maxlength="150" readonly>${vo.content}</textarea>
-                                    <c:set var="rates" value="${vo.rating * 20}%"/>
-                                    <div class="rate">
-                                        <span style="width: ${rates};"></span>
-                                    </div>
-                                </td>
-
-                                <td>
-                                    <input type="hidden" id="send_btn${vo.comment_id}" value="등록" onClick="modiFin('${vo.comment_id}')">
-
-                                    <div class="comment-menu-wrap" style="position:relative; display:inline-block;">
-                                        <button type="button" class="comment-toggle-btn" onclick="toggleCommentMenu('${vo.comment_id}')">⋮</button>
-
-                                        <div id="commentMenu${vo.comment_id}" class="comment-dropdown" style="display:none; position:absolute; right:0; background:white; border:1px solid #ccc;">
-                                            <ul>
-                                                <li>
-                                                    <a href="/report/form.do?recipe_id=${recipe_id}&comment_id=${vo.comment_id}">
-                                                        신고
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <c:if test="${vo.member_id eq sessionScope.user.member_id}">
-                                                        <a href="javascript:void(0);" onclick="modi('${vo.comment_id}')">수정</a>
-                                                    </c:if>
-                                                </li>
-                                                <li>
-                                                    <c:if test="${vo.member_id eq sessionScope.user.member_id || sessionScope.user.role eq 'ADMIN'}">
-                                                        <a href="javascript:void(0);" onclick="del('${vo.comment_id}')">삭제</a>
-                                                    </c:if>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </c:forEach>
-                </div>
-            </c:if>
-
-            <c:if test="${empty commentList}">
-                <div class="read-comment-div">
-                    <h2>댓글을 작성해 첫 댓글의 주인공이 되어보세요!</h2>
-                </div>
-            </c:if>
-
-            <c:if test="${not empty sessionScope.user}">
-                <form>
-                    <div class="comment-insert-div">
-                        <table>
-                            <tr>
-                                <td>
-                                    댓글 달기
-                                    <input type="hidden" name="rating" id="rating" value="0"/>
-                                    <div class="rating">
-                                        <span class="rating__result"></span>
-                                        <i class="rating__star far fa-star"></i>
-                                        <i class="rating__star far fa-star"></i>
-                                        <i class="rating__star far fa-star"></i>
-                                        <i class="rating__star far fa-star"></i>
-                                        <i class="rating__star far fa-star"></i>
-                                    </div>
-                                </td>
-
-                                <td>
-                                    <input type="hidden" name="member_id" value="${sessionScope.user.member_id}">
-                                    <input type="hidden" name="recipe_id" value="${recipe_id}">
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>
-                                    <textarea name="content" id="comment-content" maxlength="150" placeholder="비방, 욕설 등의 댓글은 무통보 삭제될 수 있습니다."></textarea>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>
-                                    <input type="button" value="등록" class="comment-register" onClick="register(this.form)">
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </form>
-            </c:if>
-
-            <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
-            <script>
-                const ratingStars = [...document.getElementsByClassName("rating__star")];
-                const ratingResult = document.querySelector(".rating__result");
-                
-                function printRatingResult(result, num) {
-                    result.textContent = num
-                    document.getElementById("rating").value = num;
-                }
-                
-                printRatingResult(ratingResult, 0);
-                
-                function executeRating(stars, result) {
-                    const starClassActive = "rating__star fas fa-star";
-                    const starClassUnactive = "rating__star far fa-star";
-                    const starsLength = stars.length;
-                    let i;
-                    
-                    stars.map((별) => {
-                        star.onclick = () => {
-                            i = stars.indexOf(별);
-                            if (star.className.indexOf(starClassUnactive) !== -1) {
-                                printRatingResult(result, i + 1);
-                            for (i; i >= 0; --i) {
-                                stars[i].className = starClassActive;
-                            }
-
-                            printRatingResult(ratingResult, 0);
-
-                            function executeRating(stars, result) {
-                                const starClassActive = "rating__star fas fa-star";
-                                const starClassUnactive = "rating__star far fa-star";
-                                const starsLength = stars.length;
-                                let i;
-
-                                stars.map((star) => {
-                                    star.onclick = () => {
-                                        i = stars.indexOf(star);
-
-                                        if (star.className.indexOf(starClassUnactive) !== -1) {
-                                            printRatingResult(result, i + 1);
-
-                                            for (i; i >= 0; --i) {
-                                                stars[i].className = starClassActive;
-                                            }
-                                        } else {
-                                            printRatingResult(result, i);
-
-                                            for (i; i < starsLength; ++i) {
-                                                stars[i].className = starClassUnactive;
-                                            }
-                                        }
-                                    };
-                                });
-                            }
-                        }
-                    };
-                });
-                }
-                    
-                executeRating(ratingStars, ratingResult);
-            </script>
-        </body>
-    <jsp:include page="/WEB-INF/views/chatbot/chatbot_main.jsp" />
+</body>
 </html>
