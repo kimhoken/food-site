@@ -20,29 +20,30 @@
 
                 <c:if test="${ empty list }">
                     <div>작성한 레시피가 존재하지 않습니다.</div>
-                    <input type="button" value="레시피 등록 하러 가기" onclick="" />
+                    <input type="button" value="레시피 등록 하러 가기" onclick="location.href='/regiRecipe.do?id=${sessionScope.user.member_id}'" />
                 </c:if>
-                <c:forEach var="recipe" items="${list}">
-                    <div class="activity-row">
-                        <div class="activity-thumb">
-                            <img src="/upload/recipe/${recipe.thumbnail}" />
+                <c:if test="${ not empty list }">
+                    <c:forEach var="recipe" items="${list}">
+                        <div class="activity-row">
+                            <div class="activity-thumb">
+                                <img src="/upload/recipe/${recipe.thumbnail}" />
+                            </div>
+
+                            <div class="active-main">
+                                <a href="/recipe_detail.do?id=${recipe.recipe_id}"><strong>${recipe.title}</strong></a>
+                            </div>
+
+                            <div class="activity-date">
+                                <small> ${recipe.created_date.substring(0,10).replace('-','.')}</small>
+                            </div>
+
+                            <div class="activity-extra">
+                                ♥ ${recipe.like_count}
+                            </div>
+
                         </div>
-
-                        <div class="active-main">
-                            <a href="/recipe_detail.do?id=${recipe.recipe_id}"><strong>${recipe.title}</strong></a>
-                        </div>
-
-                        <div class="activity-date">
-                            <small> ${recipe.created_date.substring(0,10).replace('-','.')}</small>
-                        </div>
-
-                        <div class="activity-extra">
-                            ♥ ${recipe.like_count}
-                        </div>
-
-                    </div>
-                </c:forEach>
-
+                    </c:forEach>
+                </c:if>
 
 
                 <c:set var="pageUrl" value="/mypage.do?menu=recipe" scope="request" />

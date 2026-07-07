@@ -37,7 +37,7 @@
                             <span class="pwd-label">비밀번호</span>
                             <div class="pwd-control">
                                 <input type="password" class="pwd-input" id="pwd" name="pwd" placeholder="비밀번호 입력하세요"
-                                    oninput="pwdchange()" />
+                                    onChange="pwdchange()" />
                                 <div class="pwd-msg" id="pwd_msg">영문 특수문자 10글자 이상</div>
                             </div>
                         </div>
@@ -46,7 +46,7 @@
                             <span class="pwd-label">비밀번호 확인</span>
                             <div class="pwd-control">
                                 <input type="password" id="pwd_check" class="pwd-input" name="pwd_check" placeholder="비밀번호 확인 입력하세요"
-                                    oninput="pwdchange()" />
+                                    onChange="pwdchange()" />
                                 <div class="pwd-msg" id="pwd_check_msg"></div>
                             </div>
                         </div>

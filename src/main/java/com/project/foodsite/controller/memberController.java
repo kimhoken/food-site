@@ -175,7 +175,7 @@ public class memberController {
             pwd_msg = "yes";
         }
 
-        if(!pwd.equals(pwd_check)){
+        if(!pwd.equals(pwd_check) || pwd.length() < 10){
             pwd_check_msg = "no";
         }else{
             pwd_check_msg = "yes";

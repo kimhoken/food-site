@@ -15,7 +15,6 @@ import com.project.foodsite.common.Paging;
 import com.project.foodsite.dao.BoardDAO;
 import com.project.foodsite.dao.CategoryDAO;
 import com.project.foodsite.dao.CommonCommentDAO;
-import com.project.foodsite.dao.RecipeDAO;
 import com.project.foodsite.dao.ReviewDAO;
 import com.project.foodsite.vo.BoardVO;
 import com.project.foodsite.vo.CategoryVO;
@@ -43,8 +42,8 @@ public class BoardController {
     private final Fileupload fileupload;
     private final CommonCommentDAO commonCommentDAO;
     private final CategoryDAO categoryDAO;
-    private final RecipeDAO recipeDAO;
-
+    //private final RecipeDAO recipeDAO;
+    private final BoardDAO boardDAO;
 
     // board list 조회
     @GetMapping("/list.do")
@@ -139,7 +138,7 @@ public class BoardController {
         }
 
         // 1. 레시피테이블에 레시피 등록
-        recipeDAO.insertRecipe(dto);
+        boardDAO.insertRecipe(dto);
 
         // 2. ingredient 저장
         for (int i = 0; i < dto.getIngredientName().size(); i++) {
@@ -156,7 +155,7 @@ public class BoardController {
 
             ingredient.setRecipe_id(dto.getRecipeId().intValue());
 
-            recipeDAO.insertIngredient(ingredient);
+            boardDAO.insertIngredient(ingredient);
         }
 
         // 3. 조리과정 저장
@@ -179,7 +178,7 @@ public class BoardController {
 
             //조리시간 들어오는지 확인
 
-            recipeDAO.insertCookOrder(order);
+            boardDAO.insertCookOrder(order);
         }
 
         return "redirect:/recipe_list.do";
