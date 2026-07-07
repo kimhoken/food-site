@@ -24,7 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             f.member_id AS member_id
         FROM fridge_item f
         INNER JOIN web_push_subscription s ON f.member_id = s.member_id
-        WHERE f.expire_date = CURDATE() + INTERVAL #{daysLeft} DAY
+        WHERE DATE(f.expire_date) BETWEEN CURDATE() AND CURDATE() + INTERVAL #{date} DAY
     </select>
 
 
