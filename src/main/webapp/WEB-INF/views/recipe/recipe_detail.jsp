@@ -329,6 +329,7 @@
             </c:if>
 
             <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
+
             <script>
                 const ratingStars = [...document.getElementsByClassName("rating__star")];
                 const ratingResult = document.querySelector(".rating__result");
@@ -346,22 +347,22 @@
                     const starsLength = stars.length;
                     let i;
                     
-                    stars.map((별) => {
+                    stars.map((star) => {
                         star.onclick = () => {
-                            i = stars.indexOf(별);
+                            i = stars.indexOf(star);
                             if (star.className.indexOf(starClassUnactive) !== -1) {
                                 printRatingResult(result, i + 1);
-                            for (i; i >= 0; --i) {
-                                stars[i].className = starClassActive;
-                            }
-                            } else {
+                                for (i; i >= 0; --i) {
+                                    stars[i].className = starClassActive;
+                                }
+                            }else {
                                 printRatingResult(result, i);
-                            for (i; i < starsLength; ++i) {
-                                stars[i].className = starClassUnactive;
+                                for (i; i < starsLength; ++i) {
+                                    stars[i].className = starClassUnactive;
+                                }
                             }
                         }
-                    };
-                });
+                    });
                 }
                     
                 executeRating(ratingStars, ratingResult);
