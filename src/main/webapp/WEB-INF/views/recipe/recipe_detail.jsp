@@ -132,8 +132,8 @@
                 }else{
                     menu.style.display = "none";
                 }
-            )}
-        });
+            }
+        
         
         document.addEventListener("DOMContentLoaded", function() {
             const ratingStars = [...document.getElementsByClassName("rating__star")];
