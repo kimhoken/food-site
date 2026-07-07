@@ -262,3 +262,94 @@
 .ma-btn-report:hover {
     background: #ececec;
 }
+
+/* Align member admin page with the recipe admin layout */
+.ma-wrap {
+    background: #fff;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.ma-content {
+    display: block;
+}
+
+.ma-list-panel,
+.ma-detail-panel {
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.ma-filter {
+    flex-wrap: wrap;
+}
+
+.ma-search,
+.ma-status,
+.ma-role {
+    height: 42px;
+    border-radius: 10px;
+}
+
+.ma-table th {
+    text-align: left;
+    background: #fff;
+}
+
+.ma-table td {
+    text-align: left;
+}
+
+.ma-footer {
+    margin-top: 25px;
+}
+
+.ma-action {
+    flex-direction: row;
+}
+
+.ma-btn {
+    border-radius: 12px;
+}
+
+.admin-member-page .ma-wrap {
+    position: relative;
+}
+
+.admin-member-page .ma-detail-panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 430px;
+    min-height: 100%;
+    margin-top: 0;
+    display: none;
+    z-index: 10;
+}
+
+.admin-member-page .ma-detail-panel.active {
+    display: block;
+}
+
+.admin-member-page .ma-detail-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.admin-member-page .ra-close {
+    border: none;
+    background: none;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+@media (max-width: 900px) {
+    .admin-member-page .ma-detail-panel {
+        position: static;
+        width: auto;
+        min-height: auto;
+        margin-top: 20px;
+    }
+}

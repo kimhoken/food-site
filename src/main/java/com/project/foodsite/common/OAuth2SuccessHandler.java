@@ -86,6 +86,9 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             member.setSuspend_start(null);
             member.setSuspend_end(null);
             
+        } else if("WITHDRAW".equals(member.getStatus())) {
+            response.sendRedirect("/login.do?error=WITHDRAW");
+            return;
         }
 
         request.getSession().setAttribute("user", member);
