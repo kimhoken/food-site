@@ -176,8 +176,9 @@
                            onclick="if(confirm('삭제하시겠습니까?')){location.href='/delete.do?board_id=${board.board_id}'}">
                 </c:if>
 
-                <a href="/report/form.do?target_type=게시판&board_id=${board.board_id}">
-                    신고하기
+               <a class="board-report-btn"
+                href="/report/form.do?target_type=게시판&board_id=${board.board_id}">
+                    신고
                 </a>
             </div>
         </div>
@@ -235,6 +236,29 @@
                     </table>
                 </c:forEach>
             </div>
+            <c:if test="${commentPaging.totalcount > commentPaging.size}">
+                <div class="comment-paging">
+
+                    <c:if test="${commentPaging.prev}">
+                        <a href="/view.do?board_id=${board.board_id}&commentPage=${commentPaging.startpage - 1}#comment-section">
+                            ◀
+                        </a>
+                    </c:if>
+
+                    <c:forEach var="i" begin="${commentPaging.startpage}" end="${commentPaging.endpage}">
+                        <a href="/view.do?board_id=${board.board_id}&commentPage=${i}#comment-section"
+                           class="${commentPaging.page == i ? 'active' : ''}">
+                            ${i}
+                        </a>
+                    </c:forEach>
+
+                    <c:if test="${commentPaging.next}">
+                        <a href="/view.do?board_id=${board.board_id}&commentPage=${commentPaging.endpage + 1}#comment-section">
+                            ▶
+                        </a>
+                    </c:if>
+                </div>
+            </c:if>
         </c:if>
 
         <c:if test="${empty commentList}">

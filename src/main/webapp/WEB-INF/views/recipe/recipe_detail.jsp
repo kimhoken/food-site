@@ -258,7 +258,7 @@
         </a>
 
         <a href="/review/insert?recipe_id=${param.recipe_id}" class="recipe-review-btn">
-            레시피 후기 작성하기
+            후기 작성
         </a>
 
     </div>
@@ -311,6 +311,30 @@
                 </table>
             </c:forEach>
         </div>
+        <c:if test="${commentPaging.totalcount > commentPaging.size}">
+            <div class="comment-paging">
+
+                <c:if test="${commentPaging.prev}">
+                    <a href="/recipe_detail.do?recipe_id=${recipe_id}&commentPage=${commentPaging.startpage - 1}">
+                        ◀
+                    </a>
+                </c:if>
+
+                <c:forEach var="i" begin="${commentPaging.startpage}" end="${commentPaging.endpage}">
+                    <a href="/recipe_detail.do?recipe_id=${recipe_id}&commentPage=${i}"
+                       class="${commentPaging.page == i ? 'active' : ''}">
+                        ${i}
+                    </a>
+                </c:forEach>
+
+                <c:if test="${commentPaging.next}">
+                    <a href="/recipe_detail.do?recipe_id=${recipe_id}&commentPage=${commentPaging.endpage + 1}">
+                        ▶
+                    </a>
+                </c:if>
+
+            </div>
+        </c:if>
     </c:if>
 
     <c:if test="${empty commentList}">
