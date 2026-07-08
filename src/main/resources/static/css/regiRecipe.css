@@ -274,7 +274,7 @@ button[onclick="addStep()"]:hover {
 }
 
 /* 내 레시피 등록 버튼 (눈에 확 띄게!) */
-button[onclick^="send"] {
+.submit-btn {
     background: #ff7e36;
     color: white;
     font-size: 18px;
@@ -284,7 +284,7 @@ button[onclick^="send"] {
     margin-top: 20px;
 }
 
-button[onclick^="send"]:hover {
+.submit-btn:hover {
     background: #f06a20;
     transform: translateY(-3px);
     box-shadow: 0 8px 20px rgba(255, 126, 54, 0.4);
