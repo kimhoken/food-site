@@ -416,7 +416,7 @@
             </div>
 
             <div class="btn-wrap">
-                <button type="button" onclick="send(this.form)">내 레시피 등록!</button>
+                <button type="button" class="submit-btn" onclick="send(this.form)">내 레시피 등록!</button>
             </div>
 
         </form>
