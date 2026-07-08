@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.project.foodsite.common.*;
 import com.project.foodsite.dao.*;
+import com.project.foodsite.dto.MypageDTO;
 import com.project.foodsite.vo.*;
 
 

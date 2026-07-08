@@ -2,6 +2,7 @@
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
         <!-- 레시피 탭 레시피 수정 -->
+         <jsp:include page="/WEB-INF/views/common/navibar.jsp"></jsp:include>
 
         <!-- 페이지 렌더링 전에 로그인 여부를 먼저 보여주기-->
         <c:if test="${empty sessionScope.user}">
@@ -19,6 +20,7 @@
             <link rel="stylesheet" href="${pageContext.request.contextPath}/css/regiRecipe.css" />
             <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
             <link rel="stylesheet" href="/css/chatbot.css" />
+            
 
             <script src="/js/chatbot.js"></script>
 
