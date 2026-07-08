@@ -51,6 +51,39 @@
             }
         }
 
+            function goRecipeSearch(keyword) {
+                const searchKeyword = keyword ? keyword.trim() : "";
+
+                if (searchKeyword === "") {
+                    return;
+                }
+
+                const form = document.createElement("form");
+                form.method = "post";
+                form.action = "${pageContext.request.contextPath}/search_recipe.do";
+
+                const inputSearch = document.createElement("input");
+                inputSearch.type = "hidden";
+                inputSearch.name = "search";
+                inputSearch.value = searchKeyword;
+
+                const inputSelect = document.createElement("input");
+                inputSelect.type = "hidden";
+                inputSelect.name = "select";
+                inputSelect.value = "recipe";
+
+                const inputFromCategory = document.createElement("input");
+                inputFromCategory.type = "hidden";
+                inputFromCategory.name = "fromCategory";
+                inputFromCategory.value = "Y";
+
+                form.appendChild(inputSearch);
+                form.appendChild(inputSelect);
+                form.appendChild(inputFromCategory);
+
+                document.body.appendChild(form);
+                form.submit();
+            }
         function updateDots(realIndex) {
             for (let i = 0; i < dots.length; i++) {
                 dots[i].classList.remove("active");

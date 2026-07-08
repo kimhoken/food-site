@@ -36,6 +36,7 @@
                             // 신고 내역 보려 가는 함수 추가할 예정
                             document.querySelector(".bd-btn-delete").onclick =
                                 () => boarddelete(dto.board_id);
+                            document.querySelector(".bd-detail-panel").classList.add("active");
                         })
                 }
 
@@ -97,9 +98,13 @@
                         })
                 }
 
+                function closeBoardDetail() {
+                    document.querySelector(".bd-detail-panel").classList.remove("active");
+                }
+
             </script>
         </head>
-        <section>
+        <section class="admin-list-page admin-board-page">
             <div>
                 <div>
                     <h3>게시글 관리 페이지</h3>
@@ -162,6 +167,7 @@
                 </div>
                 <div class="bd-detail-panel">
                     <div class="bd-detail-header">
+                        <button type="button" class="ra-close" onclick="closeBoardDetail()">x</button>
                         <h3>게시글 상세</h3>
                     </div>
 

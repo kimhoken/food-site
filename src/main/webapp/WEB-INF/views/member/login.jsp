@@ -78,8 +78,13 @@
 
 <body>
     <c:if test="${param.error eq 'SUSPEND'}">
-    <script>
-        alert('정지된 계정입니다. \n정지해제 날짜는 ${param.day}입니다.');
+        <script>
+            alert('정지된 계정입니다. \n정지해제 날짜는 ${param.day}입니다.');
+        </script>
+    </c:if>
+    <c:if test="${param.error eq 'WITHDRAW'}">
+        <script>
+            alert("탈퇴한 계정입니다. \n다른걸로 로그인 해주세요.");
         </script>
     </c:if>
     <form>

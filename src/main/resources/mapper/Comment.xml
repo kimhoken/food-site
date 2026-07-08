@@ -6,25 +6,42 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.project.foodsite.dao.CommentDAO">
 
 <select id="userComment" resultType="comment">
-    SELECT *
-    FROM comment
-    WHERE member_id = #{member_id}
-    ORDER BY created_date DESC
+    SELECT c.*,
+           r.thumbnail AS thumbnail
+    FROM comment c
+    JOIN recipe r
+        ON r.recipe_id = c.recipe_id
+    WHERE c.member_id = #{member_id}
+    ORDER BY c.created_date DESC
     LIMIT 5;
 </select>
 
 <!-- 회원이 작성한 댓글 갯수 조회 -->
-    <select id="countUserComment" >
-        SELECT count(*) FROM comment 
-        WHERE member_id = #{member_id} 
+    <select id="countUserComment" parameterType="mypage">
+        SELECT count(*)
+        FROM comment c
+        JOIN recipe r
+            ON r.recipe_id = c.recipe_id
+        WHERE c.member_id = #{member_id} 
     </select>
 
     <!-- 회원의 전체 댓글 리스트 조회 -->
-    <select id="getUserCommentList" parameterType="java.util.Map" resultType="comment">
-        SELECT * FROM comment
-        WHERE member_id = #{member_id}
-        ORDER BY comment_id DESC
-        LIMIT #{size} OFFSET #{offest}
+    <select id="getUserCommentList" parameterType="mypage" resultType="comment">
+        SELECT c.*,
+               r.thumbnail AS thumbnail
+        FROM comment c
+        JOIN recipe r
+            ON r.recipe_id = c.recipe_id
+        WHERE c.member_id = #{member_id}
+        <choose>
+            <when test="sort == 'asc'">
+                ORDER BY c.comment_id ASC
+            </when>
+            <otherwise>
+                ORDER BY c.comment_id DESC
+            </otherwise>
+        </choose>
+        LIMIT #{size} OFFSET #{offset}
     </select>
     <!-- 관리자 댓글 총 갯수 조회 -->
     <select id="commentCount" parameterType="admincomment">

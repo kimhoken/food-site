@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.project.foodsite.dto.AdminRecipeDTO;
+import com.project.foodsite.dto.MypageDTO;
 import com.project.foodsite.dto.RecipeDTO;
 import com.project.foodsite.dto.RecipeDetailDTO;
 import com.project.foodsite.dto.RecipeSearchDTO;
@@ -34,10 +35,10 @@ public interface RecipeDAO {
     List<RecipeVO> search(String search);
 
     // 회원 레시피 개수 조회
-    int countUserRecipe(int member_id);
+    int countUserRecipe(MypageDTO mypageDTO);
 
     // 회원의 전체 레시피 리스트 조회
-    List<RecipeVO> getUserRecipeList(Map<String, Object> map);
+    List<RecipeVO> getUserRecipeList(MypageDTO mypageDTO);
 
     // 회원 최근 레시피 조회
     List<RecipeVO> recentlyUserRecipe(int member_id);

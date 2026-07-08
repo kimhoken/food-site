@@ -23,13 +23,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
 <!-- 회원이 작성한 북마크 갯수 조회 -->
-    <select id="countUserBookmark" >
+    <select id="countUserBookmark" parameterType="mypage">
         SELECT count(*) FROM bookmark
         WHERE member_id = #{member_id} 
     </select>
 
 <!-- 회원의 전체 북마크 리스트 조회 -->
-    <select id="getUserBookmarkList" parameterType="java.util.Map" resultType="bookmark">
+    <select id="getUserBookmarkList" parameterType="mypage" resultType="bookmark">
         SELECT 
             b.bookmark_id,
             r.recipe_id,
@@ -43,7 +43,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         INNER JOIN member m
             ON r.member_id = m.member_id
         WHERE b.member_id = #{member_id}
-        ORDER BY b.bookmark_id DESC
+        <choose>
+            <when test="sort == 'asc'">
+                ORDER BY b.bookmark_id ASC
+            </when>
+            <otherwise>
+                ORDER BY b.bookmark_id DESC
+            </otherwise>
+        </choose>
         LIMIT #{size} OFFSET #{offset}
     </select>
 

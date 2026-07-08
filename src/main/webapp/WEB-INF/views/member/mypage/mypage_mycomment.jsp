@@ -10,7 +10,7 @@
                 <div class="activity-header">
                     <h3>내가 쓴 댓글</h3>
 
-                    <select>
+                    <select onchange="location.href='/mypage.do?menu=comment&sort='+ this.value">
                         <option value="recently">최신순</option>
                         <option value="asc">오름차순</option>
                         <option value="desc">내림차순</option>
@@ -24,13 +24,19 @@
 
                 <!-- foreach문으로 돌릴 예정 -->
                 <c:forEach var="comment" items="${list}">
+
                     <div class="activity-row">
+
                         <div class="activity-thumb">
-                            <img src="#" />
+                            <img src="/upload/recipe/${comment.thumbnail}" />
                         </div>
+
                         <div class="active-main">
-                            <a href="#"><strong>${comment.content}</storng></a>
+                            <a href="/recipe_detail.do?recipe_id=${comment.recipe_id}">
+                                <strong>${comment.content}</strong>
+                            </a>
                         </div>
+                        
                         <div class="activity-date">
                             <small>${comment.created_date}</small>
                         </div>
@@ -41,7 +47,7 @@
 
 
                 <!-- 페이징 구현 해서 아래에 출력하게 하기 -->
-                <c:set var="pageUrl" value="/mypage.do?menu=comment" scope="request" />
+                <c:set var="pageUrl" value="/mypage.do?menu=comment&sort=${sort}" scope="request" />
                 <jsp:include page="/WEB-INF/views/common/paging.jsp" />
             </div>
         </section>

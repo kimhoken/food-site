@@ -10,11 +10,11 @@
             <div class="activity-box">
                 <div class="activity-header">
                     <h3>내가 쓴 레시피</h3>
-                    <select>
-                        <option value="recently">최신순</option>
-                        <option value="asc">오름차순</option>
-                        <option value="desc">내림차순</option>
-                        <option value="likes">좋아요순</option>
+                    <select onchange="location.href='/mypage.do?menu=recipe&sort='+ this.value">
+                        <option value="recently" ${sort eq 'recently' ? 'selected' : ''}>최신순</option>
+                        <option value="asc" ${sort eq 'asc' ? 'selected' : ''}>오름차순</option>
+                        <option value="desc" ${sort eq 'desc' ? 'selected' : ''}>내림차순</option>
+                        <option value="view" ${sort eq 'view' ? 'selected' : ''}>조회수순</option>
                     </select>
                 </div>
 
@@ -29,24 +29,27 @@
                                 <img src="/upload/recipe/${recipe.thumbnail}" />
                             </div>
 
-                            <div class="active-main">
-                                <a href="/recipe_detail.do?id=${recipe.recipe_id}"><strong>${recipe.title}</strong></a>
-                            </div>
+                        <div class="active-main">
+                            <a href="/recipe_detail.do?recipe_id=${recipe.recipe_id}"><strong>${recipe.title}</strong></a>
+                        </div>
 
-                            <div class="activity-date">
-                                <small> ${recipe.created_date.substring(0,10).replace('-','.')}</small>
-                            </div>
+                        <div class="activity-date">
+                            <small> 등록일: ${recipe.created_date.substring(0,10).replace('-','.')}</small>
+                        </div>
 
-                            <div class="activity-extra">
-                                ♥ ${recipe.like_count}
-                            </div>
+                        <div class="activity-extra">
+                           조회: ${recipe.view_count}
+                        </div>
+
+                    </div>
+                </c:forEach>
 
                         </div>
                     </c:forEach>
                 </c:if>
 
 
-                <c:set var="pageUrl" value="/mypage.do?menu=recipe" scope="request" />
+                <c:set var="pageUrl" value="/mypage.do?menu=recipe&sort=${sort}" scope="request" />
                 <jsp:include page="/WEB-INF/views/common/paging.jsp" />
             </div>
         </section>

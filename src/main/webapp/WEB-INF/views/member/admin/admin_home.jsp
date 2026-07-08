@@ -37,7 +37,7 @@
             <div class="recent-recipe-box">
                 <div class="box-title">
                     <h3>최근 등록 레시피</h3>
-                    <span>더보기</span>
+                    <span onclick="location.href='/admin/recipe'">더보기</span>
                 </div>
                 <table class="admin-table">
                     <tr>
@@ -86,7 +86,7 @@
                     <a href="/admin/inquiry">문의 관리
                         <small> 문의 확인 및 답변</small>
                     </a>
-                    <a href="/admin/report">신고 관리
+                    <a href="/report/admin/list.do">신고 관리
                         <small>신고 확인 및 처리</small>
                     </a>
                 </div>

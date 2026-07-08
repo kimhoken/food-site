@@ -10,7 +10,9 @@
         <html>
 
         <head>
-            <link rel="stylesheet" href="${pageContent.request.contentPath}/css/admin.css" />
+            <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin.css" />
+            <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin_recipe.css" />
+            <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin_mypage.css" />
 
             <script src="/js/util.js"></script>
 
@@ -312,10 +314,7 @@
                                     </ul>
                                 </li>
 
-                                <li>
-                                    <a class="admin-menu ${menu eq 'status' ? 'active'  :''}" href="/admin/status">
-                                        통계 관리</a>
-                                </li>
+                                
                                 <li>
                                     <a class="admin-menu ${menu eq 'status' ? 'active'  :''}" href="/admin/board">
                                         게시글 관리</a>

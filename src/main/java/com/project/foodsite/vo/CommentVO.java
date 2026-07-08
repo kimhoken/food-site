@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Alias("comment")
 public class CommentVO {
     private Integer comment_id, rating, recipe_id, member_id, board_id;
-    private String content, status, created_date, nickname;
+    private String content, status, created_date, nickname, thumbnail;
 
 }
  
