@@ -42,7 +42,7 @@ public class BoardController {
     private final Fileupload fileupload;
     private final CommonCommentDAO commonCommentDAO;
     private final CategoryDAO categoryDAO;
-    //private final RecipeDAO recipeDAO;
+    // private final RecipeDAO recipeDAO;
     private final BoardDAO boardDAO;
 
     // board list 조회
@@ -137,6 +137,21 @@ public class BoardController {
                 break;
         }
 
+        // 재료수량 검증
+        for (int i = 0; i < dto.getIngredientName().size(); i++) {
+
+            String unit = dto.getUnit().get(i);
+            String amount = dto.getAmount().get(i);
+
+            if (!"적당히".equals(unit) &&
+                    !"원하는 만큼".equals(unit)) {
+
+                if (amount == null || amount.trim().isEmpty()) {
+                    throw new IllegalArgumentException((i + 1) + "번째 재료의 수량을 입력하세요.");
+                }
+            }
+        }
+
         // 1. 레시피테이블에 레시피 등록
         boardDAO.insertRecipe(dto);
 
@@ -148,8 +163,14 @@ public class BoardController {
             ingredient.setIngredient_name(
                     dto.getIngredientName().get(i));
 
-            ingredient.setQuantity(
-                    Long.parseLong(dto.getAmount().get(i)));
+            String amount = dto.getAmount().get(i);
+            String unit = dto.getUnit().get(i);
+
+            if ("적당히".equals(unit) || "원하는 만큼".equals(unit)) {
+                ingredient.setQuantity(null);
+            } else {
+                ingredient.setQuantity(Double.parseDouble(amount));
+            }
 
             ingredient.setUnit(dto.getUnit().get(i));
 
@@ -167,7 +188,7 @@ public class BoardController {
             order.setDescription(dto.getStep().get(i));
             order.setRecipe_id(dto.getRecipeId().intValue());
 
-            //파일 저장
+            // 파일 저장
             MultipartFile img = dto.getStepImg().get(i);
 
             if (img != null && !img.isEmpty()) {
@@ -176,7 +197,7 @@ public class BoardController {
                 order.setCook_image(cookOrderImg);
             }
 
-            //조리시간 들어오는지 확인
+            // 조리시간 들어오는지 확인
 
             boardDAO.insertCookOrder(order);
         }
@@ -187,10 +208,10 @@ public class BoardController {
     // 여기서 부터 커뮤니티 상세보기
     @GetMapping("/view.do")
     public String boardView(int board_id, Model model, HttpServletRequest req) {
-        //조회수 
+        // 조회수
         @SuppressWarnings("unchecked")
         HashMap<String, List<Integer>> map = session.getAttribute("viewMap") == null ? new HashMap<>()
-            : (HashMap<String, List<Integer>>) session.getAttribute("viewMap");
+                : (HashMap<String, List<Integer>>) session.getAttribute("viewMap");
 
         /*
          * // 세션에서 IP, 게시글 ID를 확인해 없을경우 조회수 증가
@@ -212,13 +233,13 @@ public class BoardController {
 
         if (!viewedList.contains(board_id)) {
 
-        if(!map.containsKey(req.getRemoteAddr()) || !map.get(req.getRemoteAddr()).contains(board_id)){
-            map.computeIfAbsent(req.getRemoteAddr(), k -> new ArrayList<>()).add(board_id);
-            boardDao.updateViewCount(board_id);
-            session.setAttribute("boardMap", map);
-            session.setMaxInactiveInterval(3600);
+            if (!map.containsKey(req.getRemoteAddr()) || !map.get(req.getRemoteAddr()).contains(board_id)) {
+                map.computeIfAbsent(req.getRemoteAddr(), k -> new ArrayList<>()).add(board_id);
+                boardDao.updateViewCount(board_id);
+                session.setAttribute("boardMap", map);
+                session.setMaxInactiveInterval(3600);
+            }
         }
-    }
         // 게시글 조회
         BoardVO board = boardDao.selectOne(board_id);
 

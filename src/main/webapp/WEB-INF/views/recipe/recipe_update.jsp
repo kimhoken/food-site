@@ -2,7 +2,7 @@
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
         <!-- 레시피 탭 레시피 수정 -->
-         <jsp:include page="/WEB-INF/views/common/navibar.jsp"></jsp:include>
+        <jsp:include page="/WEB-INF/views/common/navibar.jsp"></jsp:include>
 
         <!-- 페이지 렌더링 전에 로그인 여부를 먼저 보여주기-->
         <c:if test="${empty sessionScope.user}">
@@ -20,7 +20,7 @@
             <link rel="stylesheet" href="${pageContext.request.contextPath}/css/regiRecipe.css" />
             <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
             <link rel="stylesheet" href="/css/chatbot.css" />
-            
+
 
             <script src="/js/chatbot.js"></script>
 
@@ -28,6 +28,10 @@
             <script>
                 function send(f) {
                     const ingredients = document.getElementsByName("ingredientName");
+
+                    const amounts = document.getElementsByName("amount");
+                    const units = document.getElementsByName("unit");
+
                     const steps = document.getElementsByName("step");
 
                     if (f.title.value.trim() === "") {
@@ -40,6 +44,27 @@
                         alert("재료를 입력하세요.");
                         ingredients[0].focus();
                         return;
+                    }
+
+                    for (let i = 0; i < ingredients.length; i++) {
+
+                        if (ingredients[i].value.trim() === "") {
+                            alert((i + 1) + "번째 재료명을 입력하세요.");
+                            ingredients[i].focus();
+                            return;
+                        }
+
+                        const unit = units[i].value;
+
+                        if (unit !== "적당히" && unit !== "원하는 만큼") {
+
+                            if (amounts[i].value.trim() === "") {
+                                alert((i + 1) + "번째 재료의 수량을 입력하세요.");
+                                amounts[i].focus();
+                                return;
+                            }
+
+                        }
                     }
 
                     if (steps[0].value.trim() === "") {
@@ -129,6 +154,19 @@
 
                 //'직접입력' 선택시 그 자리에서 입력하기
                 function changeUnit(select) {
+
+                    //'적당히'나 '원하는 만큼'을 선택했을 때는 수량 입력칸을 비활성화
+                    const amountInput = select.closest("tr").querySelector("input[name='amount']");
+
+                    if (select.value === "적당히" || select.value === "원하는 만큼") {
+                        amountInput.value = "";
+                        amountInput.readOnly = true;
+                        amountInput.style.background = "#eee";
+                    } else {
+                        amountInput.readOnly = false;
+                        amountInput.style.background = "";
+                    }
+
                     if (select.value === "direct") {
 
                         // input 생성
@@ -239,7 +277,16 @@
                     updateStepNumbers();
                 }
 
+
+                //기존에 불러온 데이터 처리(수정 페이지를 열자마자 수량 칸이 비활성화)
+                window.onload = function () {
+                    document.querySelectorAll("select[name='unit']").forEach(function (select) {
+                        changeUnit(select);
+                    });
+                };
+
             </script>
+
             <style>
                 textarea {
                     resize: none;
@@ -249,7 +296,7 @@
         </head>
 
         <body>
-            <form action="/recipe_update.do" method="post" enctype="multipart/form-data">
+            <form action="/recipe_update.do" method="post" enctype="multipart/form-data" class="register-form">
                 <input type="hidden" name="memberId" value="${sessionScope.user.member_id}" />
                 <input type="hidden" name="recipeId" value="${dto.recipeId}">
 
@@ -273,9 +320,8 @@
                         <option value="">음식을 선택하세요</option>
 
                         <c:forEach var="food" items="${foodList}">
-                            <option value="${food.foodId}"
-                                <c:if test="${food.foodId == dto.foodId}">
-                                    selected
+                            <option value="${food.foodId}" <c:if test="${food.foodId == dto.foodId}">
+                                selected
                                 </c:if>>
                                 ${food.foodName}
                             </option>
@@ -328,7 +374,7 @@
                             </td>
 
                             <td>
-                                <input type="number" name="amount" value="${ing.quantity}">
+                                <input type="number" name="amount" step="any" value="${ing.quantity}">
                             </td>
 
                             <td>
@@ -341,7 +387,8 @@
                                     <option value="작은술" <c:if test="${ing.unit == '작은술'}">selected</c:if>>작은술</option>
                                     <option value="컵" <c:if test="${ing.unit == '컵'}">selected</c:if>>컵</option>
                                     <option value="적당히" <c:if test="${ing.unit == '적당히'}">selected</c:if>>적당히</option>
-                                    <option value="원하는 만큼" <c:if test="${ing.unit == '원하는 만큼'}">selected</c:if>>원하는 만큼</option>
+                                    <option value="원하는 만큼" <c:if test="${ing.unit == '원하는 만큼'}">selected</c:if>>원하는 만큼
+                                    </option>
                                     <option value="direct">직접입력</option>
                                 </select>
                             </td>
@@ -376,7 +423,8 @@
                                     <input type="file" name="stepImg" onchange="previewStep(this)" />
                                     <br />
                                     <!--미리보기 이미지 태그-->
-                                    <img class="step-image" src="/upload/recipe/${step.cook_image}" style="display:block;" />
+                                    <img class="step-image" src="/upload/recipe/${step.cook_image}"
+                                        style="display:block;" />
 
                                 </td>
 
@@ -398,7 +446,7 @@
                 </div>
 
                 <div class="btn-wrap">
-                    <button type="button" onclick="send(this.form)">레시피 수정</button>
+                    <button class="btn-update" type="button" onclick="send(this.form)">레시피 수정</button>
                 </div>
 
             </form>
