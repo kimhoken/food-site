@@ -96,7 +96,7 @@ public class BoardController {
         List<BoardVO> list = boardDao.search(search);
 
         model.addAttribute("list", list);
-        model.addAttribute("searchWord", search); // 검색어 보관
+        model.addAttribute("searchWord", search); //검색어 보관
         return "board/board_list";
     }
 
@@ -207,45 +207,50 @@ public class BoardController {
 
     // 여기서 부터 커뮤니티 상세보기
     @GetMapping("/view.do")
-    public String boardView(int board_id, Model model, HttpServletRequest req) {
-        // 조회수
+    public String boardView(
+            int board_id,
+            Model model,
+            HttpServletRequest req,
+            @RequestParam(value = "commentPage", defaultValue = "1") int commentPage) {
+
+        // 조회수 처리
         @SuppressWarnings("unchecked")
         HashMap<String, List<Integer>> map = session.getAttribute("viewMap") == null ? new HashMap<>()
                 : (HashMap<String, List<Integer>>) session.getAttribute("viewMap");
 
-        /*
-         * // 세션에서 IP, 게시글 ID를 확인해 없을경우 조회수 증가
-         * if (map.get(req.getRemoteAddr()) == null &&
-         * !map.get(req.getRemoteAddr()).contains(board_id)) {
-         * // 조회수 증가
-         * boardDao.updateViewCount(board_id);
-         * map.computeIfAbsent(req.getRemoteAddr(), k -> new
-         * LinkedList<>()).add(board_id);
-         * session.setAttribute("viewMap", map);
-         * session.setMaxInactiveInterval(3600);
-         * }
-         */
-
-        // 조회수 처리
+        // 조회수 처리 코드 정리
         String ip = req.getRemoteAddr();
-
         List<Integer> viewedList = map.computeIfAbsent(ip, k -> new ArrayList<>());
 
+        // 같은 IP에서 같은 게시글은 한 번만 조회수 증가
         if (!viewedList.contains(board_id)) {
-
-            if (!map.containsKey(req.getRemoteAddr()) || !map.get(req.getRemoteAddr()).contains(board_id)) {
-                map.computeIfAbsent(req.getRemoteAddr(), k -> new ArrayList<>()).add(board_id);
-                boardDao.updateViewCount(board_id);
-                session.setAttribute("boardMap", map);
-                session.setMaxInactiveInterval(3600);
-            }
+            viewedList.add(board_id);
+            boardDao.updateViewCount(board_id);
+            session.setAttribute("viewMap", map); 
+            session.setMaxInactiveInterval(3600);
         }
+
         // 게시글 조회
         BoardVO board = boardDao.selectOne(board_id);
 
+        // 커뮤니티 댓글 페이징 처리
+        int commentSize = 5;
+        int commentTotalCount = commonCommentDAO.boardCommentCount(board_id);
+        Paging commentPaging = new Paging(commentPage, commentSize, commentTotalCount);
+
+        // 커뮤니티 댓글 페이징 조회용 map
+        Map<String, Object> commentMap = new HashMap<>();
+        commentMap.put("board_id", board_id);
+        commentMap.put("offset", commentPaging.getOffset());
+        commentMap.put("size", commentPaging.getSize());
+
         model.addAttribute("board", board);
-        // 커뮤니티 게시글에 달린 댓글 목록 조회
-        model.addAttribute("commentList", commonCommentDAO.getBoardList(board_id));
+
+        // 기존 getBoardList(board_id) 대신 페이징 조회
+        model.addAttribute("commentList", commonCommentDAO.getBoardListPaging(commentMap));
+
+        // JSP 페이징 출력용 객체
+        model.addAttribute("commentPaging", commentPaging);
 
         return "board/board_view";
     }

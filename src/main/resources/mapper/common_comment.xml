@@ -59,4 +59,57 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         SET content = #{content}
         WHERE comment_id = #{commentId}
     </update>
+
+    <!--  레시피 댓글 페이징 조회 -->
+    <select id="getRecipeListPaging" parameterType="java.util.Map" resultType="comment">
+        SELECT 
+            c.comment_id,
+            c.content,
+            c.recipe_id,
+            c.board_id,
+            c.member_id,
+            c.rating,
+            c.status,
+            c.created_date,
+            m.nickname
+        FROM comment c
+        LEFT JOIN member m ON c.member_id = m.member_id
+        WHERE c.recipe_id = #{recipe_id}
+        ORDER BY c.comment_id
+        LIMIT #{size} OFFSET #{offset}
+    </select>
+
+    <!--  레시피 댓글 전체 개수 조회 -->
+    <select id="recipeCommentCount" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+        FROM comment
+        WHERE recipe_id = #{value}
+    </select>
+
+    <!-- 커뮤니티 댓글 페이징 조회 -->
+    <select id="getBoardListPaging" parameterType="java.util.Map" resultType="comment">
+        SELECT 
+            c.comment_id,
+            c.content,
+            c.recipe_id,
+            c.board_id,
+            c.member_id,
+            c.rating,
+            c.status,
+            c.created_date,
+            m.nickname
+        FROM comment c
+        LEFT JOIN member m ON c.member_id = m.member_id
+        WHERE c.board_id = #{board_id}
+        ORDER BY c.comment_id
+        LIMIT #{size} OFFSET #{offset}
+    </select>
+
+    <!--  커뮤니티 댓글 전체 개수 조회 -->
+    <select id="boardCommentCount" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+        FROM comment
+        WHERE board_id = #{value}
+    </select>
+
 </mapper>

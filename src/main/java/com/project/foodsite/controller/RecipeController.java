@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.project.foodsite.common.Fileupload;
+import com.project.foodsite.common.Paging;
 import com.project.foodsite.dao.BoardDAO;
 import com.project.foodsite.dao.CommonCommentDAO;
 import com.project.foodsite.dao.RecipeDAO;
@@ -258,7 +259,10 @@ public class RecipeController {
      * @return jsp
      */
     @GetMapping("/recipe_detail.do")
-    public String recipeDetail(Model model, @RequestParam(value = "recipe_id", required = false) Integer recipe_id,
+    public String recipeDetail(
+            Model model,
+            @RequestParam(value = "recipe_id", required = false) Integer recipe_id,
+            @RequestParam(value = "commentPage", defaultValue = "1") int commentPage,
             HttpServletRequest req) {
 
         if (recipe_id == null) {
@@ -290,8 +294,18 @@ public class RecipeController {
 
         session.setAttribute("viewMap", map);
         session.setMaxInactiveInterval(3600);
+        
+        int commentSize = 5;
+        int commentTotalCount = commonCommentDAO.recipeCommentCount(recipe_id);
+        Paging commentPaging = new Paging(commentPage, commentSize, commentTotalCount);
 
-        model.addAttribute("commentList", commonCommentDAO.getRecipeList(recipe_id));
+        Map<String, Object> commentMap = new HashMap<>();
+        commentMap.put("recipe_id", recipe_id);
+        commentMap.put("offset", commentPaging.getOffset());
+        commentMap.put("size", commentPaging.getSize());
+
+        model.addAttribute("commentList", commonCommentDAO.getRecipeListPaging(commentMap));
+        model.addAttribute("commentPaging", commentPaging);
         model.addAttribute("dto", dto);
         model.addAttribute("orderList", olist);
         model.addAttribute("ingredients", ilist);

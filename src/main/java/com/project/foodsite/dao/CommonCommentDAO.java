@@ -16,4 +16,13 @@ public interface CommonCommentDAO {
     int deleteComment(int comment_id);
 
     int update(Map<?, ?> map);
+
+    List<CommentVO> getRecipeListPaging(Map<String, Object> map);
+
+    int recipeCommentCount(int recipe_id);
+
+    List<CommentVO> getBoardListPaging(Map<String, Object> map);
+
+    int boardCommentCount(int board_id);
+
 }
