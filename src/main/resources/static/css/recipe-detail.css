@@ -3,10 +3,15 @@
    ========================================================================== */
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 
+body{
+    background:#fff;
+}
 
 .title-wrap {
+    position: relative;
+    max-width: 800px;
+    margin: 50px auto 40px;
     text-align: center;
-    margin: 50px 0 40px 0;
 }
 
 /* 제목 스타일링 */
@@ -85,9 +90,9 @@
 }
 
 .thumb-cell {
-    width: 45%;
+    width:38%;
     /* 왼쪽 사진 비율 */
-    padding-right: 40px;
+    padding-right:30px;
     /* 사진과 재료 사이 간격 */
     vertical-align: top;
 }
@@ -293,12 +298,14 @@
     letter-spacing: 0.5px;
 }
 
-.read-comment-div table {
-    width: 100%;
-    border-bottom: 1px solid #eee;
-    margin-bottom: 15px;
-    border-collapse: collapse;
-    table-layout: fixed;
+.read-comment-div table{
+    width:100%;
+    border-collapse:separate;
+    border-spacing:0;
+    border:1px solid #efefef;
+    border-radius:12px;
+    overflow:hidden;
+    margin-bottom:18px;
 }
 
 .read-comment-div td {
@@ -308,22 +315,24 @@
     vertical-align: middle;
 }
 
-.read-comment-div td:first-child {
-    width: 90px;
-    font-weight: 500;
-    color: #666;
-    text-align: left;
+.comment-header td{
+    border:none;
+    padding-bottom:8px;
+    vertical-align:middle;
 }
 
-.read-comment-div td:nth-child(2) {
-    width: auto;
+.comment-user{
+    width:140px;
+    font-weight:600;
 }
 
-.read-comment-div td:last-child {
-    width: 55px;
-    text-align: right;
-    white-space: nowrap;
-    overflow: visible;
+.comment-star{
+    text-align:left;
+}
+
+.comment-menu{
+    width:55px;
+    text-align:right;
 }
 
 /* ==========================================================================
@@ -351,6 +360,13 @@
     border-radius: 2px;
     position: relative;
     top: -2px;
+}
+
+/* 댓글 내용 여백 */
+.comment-content{
+    padding-top:6px;
+    padding-bottom:6px;
+    line-height:1.8;
 }
 
 /* 별점 표시 */
@@ -384,7 +400,8 @@
     position: relative;
     display: inline-block;
     vertical-align: middle;
-    margin-left: 5px;
+    margin-top:8px;
+    margin-left: 0px;
     margin-bottom: 3px;
 }
 
@@ -401,18 +418,22 @@
 
 /* 썸네일 및 조리과정 이미지 상세보기 사이즈 */
 
-.thumbnail-img{
-    width: 500px;
+.thumbnail{
+    width:100%;
+    max-width:350px;
+    height:auto;
+    border-radius:10px;
+    display:block;
 }
 
 .cook-img{
-    max-width: 500px;
+    max-width: 300px;
     width: 110%;
     height: auto;
     object-fit: cover;
     border-radius: 8px;
     margin: 10px auto 20px;
-    display: block;
+    display: block; 
 }
 
 /* ==========================================================================
@@ -530,51 +551,78 @@
 }
 
 /* 신고, 삭제, 수정 버튼 */ 
-.recipe-manage-wrap{
-    max-width:800px;
-    margin:15px auto 30px;
-    display:flex;
-    justify-content:flex-end;
-    gap:10px;
-}
-
-/*삭제 강조*/
-.recipe-delete-btn:hover{
-    color:#d9534f;
-}
-
-/* 북마크 신고 후기 */
 .recipe-action-wrap{
     max-width:800px;
-    margin:60px auto;
+    margin:35px auto;
     display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:25px;
+    justify-content:center;
 }
 
-/* 북마크 신고 */
-.recipe-sub-action{
-    display:flex;
-    gap:30px;
+.recipe-menu-wrap{
+    position:absolute;
+    top:0;
+    right:20px;
 }
 
-/* 후기 */
-.recipe-review-btn{
+.recipe-toggle-btn{
+    border:none;
+    background:none;
+    font-size:28px;
+    color:#888;
+    cursor:pointer;
+    padding:0;
+}
+
+.recipe-toggle-btn:hover{
+    color:#222;
+}
+
+.recipe-dropdown{
+    display:none;
+    position:absolute;
+    top:35px;
+    right:0;
+    left:auto;
+    transform:none;
+
+    width:150px;
+    background:#fff;
+    border:1px solid #ddd;
+    border-radius:15px;
+    box-shadow:0 8px 18px rgba(0,0,0,.12);
+    overflow:hidden;
+    z-index:999;
+}
+
+.recipe-dropdown a{
+    display:block;
+    padding:16px 22px;
     text-decoration:none;
-    background:#222;
-    color:white;
+    color:#333;
+    font-size:17px;
+}
+
+.recipe-dropdown a:hover{
+    background:#f7f7f7;
+}
+
+/* 레시피 후기 작성하기 버튼 */
+.recipe-review-btn{
+    display:inline-block;
     padding:14px 34px;
+
+    background:#222;
+    color:#fff;
+
+    text-decoration:none;
     border-radius:30px;
+
     font-size:15px;
     font-weight:500;
-    transition:.3s;
+
+    transition:.25s;
 }
 
 .recipe-review-btn:hover{
-    background:#444;
-}
-.thumbnail{
-    max-width: 100%;
-    max-height:100%;
+    background:#5a7e4d;
 }
