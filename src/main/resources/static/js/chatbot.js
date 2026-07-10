@@ -56,7 +56,9 @@ function resetChatbot() {
         <div class="bot-row">
             <img src="/images/bot.png" class="bot-icon">
             <div class="bot-msg">
-                안녕하세요! 무엇을 도와드릴까요?
+                안녕하세요! 오늘 뭐 먹지? <br/>
+                고객지원 챗봇입니다 <br/>
+                궁금한 메뉴를 선택해 주세요.  
             </div>
         </div>
     `;
