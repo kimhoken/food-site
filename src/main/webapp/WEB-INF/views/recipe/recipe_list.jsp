@@ -14,17 +14,18 @@
         <script src="/js/chatbot.js"></script>
         <script src="${pageContext.request.contextPath}/js/alarm.js"></script>
         <script>
-            window.onload = ()=>{
-                const sort = '${sort}';
-                let select = document.getElementById("sort");
-                let arr = ["latest", "name", "view", "like" ];
+//            window.onload = ()=>{
+//                const sort = '${sort}';
+//                let select = document.getElementById("sort");
+//                let arr = ["latest", "name", "view", "like" ];
 
-                for(let i=0 ; i<arr.length ; i++){
-                    if(arr[i] == sort){
-                        select.options[i].selected = true;
-                    }
-                }
-            }//onload
+//                for(let i=0 ; i<arr.length ; i++){
+//                    if(arr[i] == sort){
+//                        select.options[i].selected = true;
+//                  }
+//                }
+//            }//onload  
+
             function send() {
                 let f = document.frm;
                 //카테고리 선택 여부
@@ -45,6 +46,16 @@
                 f.submit();
             }//send
             document.addEventListener("DOMContentLoaded", function() {
+                // select 동기화 로직 [추가]
+                const sort = '${sort}';
+                let select = document.getElementById("sort");
+                let arr = ["latest", "name", "view", "like"];
+                for (let i = 0; i < arr.length; i++){
+                    if (arr[i] == sort){
+                        select.options[i].selected = true;
+                    }
+                }
+
                 const searchInput = document.getElementById("mainSearch");
                 const searchDropdown = document.getElementById("searchDropdown");
                 
@@ -174,7 +185,7 @@
                         </c:choose>                                                                                                                        
                     </div>
                     <%-- 페이징 --%>
-                    <c:if test="${totalPage > 0}">
+                    <c:if test="${totalPage > 0 and empty emptyMsg}">
                         <div class="paging">
                             <c:set var="curPage" value="${empty recipeSearchDTO.page ? 1 : recipeSearchDTO.page}" />
                             
