@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class IngredientVO {
     private int ingredient_id;
     private String ingredient_name;
-    private long quantity;
+    private Double quantity;
     private String unit;
     private String type;
     private int recipe_id;

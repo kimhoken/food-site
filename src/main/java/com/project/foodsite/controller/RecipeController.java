@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.project.foodsite.common.Fileupload;
+import com.project.foodsite.common.Paging;
 import com.project.foodsite.dao.BoardDAO;
 import com.project.foodsite.dao.CommonCommentDAO;
 import com.project.foodsite.dao.RecipeDAO;
@@ -258,7 +259,11 @@ public class RecipeController {
      * @return jsp
      */
     @GetMapping("/recipe_detail.do")
-    public String recipeDetail(Model model, @RequestParam(value = "recipe_id", required = false) Integer recipe_id, HttpServletRequest req) {
+    public String recipeDetail(
+            Model model,
+            @RequestParam(value = "recipe_id", required = false) Integer recipe_id,
+            @RequestParam(value = "commentPage", defaultValue = "1") int commentPage,
+            HttpServletRequest req) {
 
         if (recipe_id == null) {
             return "redirect:/recipe_list.do";
@@ -267,15 +272,15 @@ public class RecipeController {
         model.addAttribute("recipe_id", recipe_id);
         RecipeDetailDTO dto = recipeDao.getRecipe(recipe_id);
 
-        //조회수 증가
-        //IP를 키, 레시피 아이디를 value로 저장
+        // 조회수 증가
+        // IP를 키, 레시피 아이디를 value로 저장
         @SuppressWarnings("unchecked")
         Map<String, List<Integer>> map = session.getAttribute("viewMap") == null ? new HashMap<>()
                 : (Map<String, List<Integer>>) session.getAttribute("viewMap");
-        
-        //맵에 ip자체가 없을 경우 또는 ip가 키값으로 있지만 value 리스트에 recipe_id가 없을 경우
-        if(!map.containsKey(req.getRemoteAddr()) || !map.get(req.getRemoteAddr()).contains(recipe_id) ){
-            //검색의 편의를 위해 arrayList 사용
+
+        // 맵에 ip자체가 없을 경우 또는 ip가 키값으로 있지만 value 리스트에 recipe_id가 없을 경우
+        if (!map.containsKey(req.getRemoteAddr()) || !map.get(req.getRemoteAddr()).contains(recipe_id)) {
+            // 검색의 편의를 위해 arrayList 사용
             map.computeIfAbsent(req.getRemoteAddr(), k -> new ArrayList<>()).add(recipe_id);
             recipeDao.updateViewCount(recipe_id);
         }
@@ -289,8 +294,18 @@ public class RecipeController {
 
         session.setAttribute("viewMap", map);
         session.setMaxInactiveInterval(3600);
+        
+        int commentSize = 5;
+        int commentTotalCount = commonCommentDAO.recipeCommentCount(recipe_id);
+        Paging commentPaging = new Paging(commentPage, commentSize, commentTotalCount);
 
-        model.addAttribute("commentList", commonCommentDAO.getRecipeList(recipe_id));
+        Map<String, Object> commentMap = new HashMap<>();
+        commentMap.put("recipe_id", recipe_id);
+        commentMap.put("offset", commentPaging.getOffset());
+        commentMap.put("size", commentPaging.getSize());
+
+        model.addAttribute("commentList", commonCommentDAO.getRecipeListPaging(commentMap));
+        model.addAttribute("commentPaging", commentPaging);
         model.addAttribute("dto", dto);
         model.addAttribute("orderList", olist);
         model.addAttribute("ingredients", ilist);
@@ -349,6 +364,21 @@ public class RecipeController {
                 break;
         }
 
+        // 재료수량 검증
+        for (int i = 0; i < dto.getIngredientName().size(); i++) {
+
+            String unit = dto.getUnit().get(i);
+            String amount = dto.getAmount().get(i);
+
+            if (!"적당히".equals(unit) &&
+                    !"원하는 만큼".equals(unit)) {
+
+                if (amount == null || amount.trim().isEmpty()) {
+                    throw new IllegalArgumentException((i + 1) + "번째 재료의 수량을 입력하세요.");
+                }
+            }
+        }
+
         // 3. recipe 수정
         recipeDao.updateNewRecipe(dto);
 
@@ -361,8 +391,19 @@ public class RecipeController {
             IngredientVO ingredient = new IngredientVO();
 
             ingredient.setIngredient_name(dto.getIngredientName().get(i));
-            ingredient.setQuantity(Long.parseLong(dto.getAmount().get(i)));
+
+            // 재료추가
+            String amount = dto.getAmount().get(i);
+            String unit = dto.getUnit().get(i);
+
+            if ("적당히".equals(unit) || "원하는 만큼".equals(unit)) {
+                ingredient.setQuantity(null);
+            } else {
+                ingredient.setQuantity(Double.parseDouble(amount));
+            }
+
             ingredient.setUnit(dto.getUnit().get(i));
+
             ingredient.setRecipe_id(dto.getRecipeId().intValue());
 
             boardDAO.insertIngredient(ingredient);
@@ -388,7 +429,7 @@ public class RecipeController {
             }
 
             boardDAO.insertCookOrder(order);
-        } 
+        }
 
         return "redirect:/recipe_detail.do?recipe_id=" + dto.getRecipeId();
     }

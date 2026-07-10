@@ -688,10 +688,18 @@
     </div>
 
     <div class="info-bar">
-        <div class="info-item">🍳 <span>쉽고 간단한 레시피<br><small>누구나 따라할 수 있어요</small></span></div>
-        <div class="info-item">🍱 <span>다양한 카테고리<br><small>원하는 메뉴를 쉽게 찾아보세요</small></span></div>
-        <div class="info-item">🥕 <span>냉장고 재료 활용<br><small>남은 재료로 알뜰하게 요리해요</small></span></div>
-        <div class="info-item">💬 <span>요리로 소통해요<br><small>후기와 팁을 공유해보세요</small></span></div>
+        <a href="/recipe_list.do"> 
+            <div class="info-item">🍳 <span>쉽고 간단한 레시피<br><small>누구나 따라할 수 있어요</small></span></div>
+        </a>
+        <a href="#" onclick="openModal(); return false;">
+            <div class="info-item">🍱 <span>다양한 카테고리<br><small>원하는 메뉴를 쉽게 찾아보세요</small></span></div>
+        </a>
+        <a href="/fridge_list.do?member_id=${user.member_id}">
+            <div class="info-item">🥕 <span>냉장고 재료 활용<br><small>남은 재료로 알뜰하게 요리해요</small></span></div>
+        </a>
+        <a href="/list.do">
+            <div class="info-item">💬 <span>요리로 소통해요<br><small>후기와 팁을 공유해보세요</small></span></div>
+        </a>
     </div>
 
     <!-- footer 회사 정보 jsp 파일 include -->

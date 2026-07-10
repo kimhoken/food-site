@@ -146,7 +146,15 @@
                             <c:forEach var="member" items="${list}">
                                 <tr class="ma-row" onclick="member_view('${member.member_id}')">
                                     <td>
-                                        <img class="ma-profile-img" src="/upload/profile/${member.profile_img}" />
+                                        <c:choose>
+                                            <c:when test="${member.profile_img eq 'no_file.png'}">
+                                                <img class="ma-profile-img" src="/images/no_file.png" />
+                                            </c:when>
+
+                                            <c:otherwise>
+                                                <img class="ma-profile-img" src="/upload/profile/${member.profile_img}"/>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </td>
                                     <td>${member.nickname}</td>
                                     <td>

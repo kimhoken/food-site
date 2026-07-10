@@ -289,7 +289,8 @@
                 <%-- 로그인 한 경우만 버튼이 보이게 --%>
                     <c:if test="${!empty sessionScope.user}">
                         <div style="text-align:center; margin-top:20px;">
-                            <input type="button" value="나도 끄적끄적 ✍️" onclick="location.href='/community_form.do'" />
+                            <input type="button" class="community-write-btn"
+                                   value="나도 끄적끄적 ✍️" onclick="location.href='/community_form.do'"/>
                         </div>
                     </c:if>
                     <!-- 페이징 처리 -->
