@@ -2,18 +2,16 @@ package com.project.foodsite.dao;
 
 import java.util.List;
 
+
 import com.project.foodsite.dto.AdminMemberDTO;
+import com.project.foodsite.dto.MemberDTO;
 import com.project.foodsite.vo.MemberVO;
 
 public interface MemberDAO {
     
     int userInsert(MemberVO vo);
-    
-    MemberVO getUserById(String id);    
-
-    MemberVO getUserNickname(String nickname);
-    
-    MemberVO getUserEmail(String email);
+        
+    MemberVO getUser( MemberDTO member );
 
     MemberVO getUserByMemberId(int member_id);
 

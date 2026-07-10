@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,11 +43,8 @@ public class ReviewController {
     private final RecipeDAO recipeDao;
     private final Fileupload fileupload;
     private final ImgDAO imgDAO;
-
-    // ReviewController(ViewCount viewCount) {
-    //     this.viewCount = viewCount;
-    // } 
-
+   
+    // 레시피 등록 폼으로 연결
     @GetMapping("/review/insert")
     public String review_insert_page( Model model ,int recipe_id ){
 
@@ -59,6 +55,7 @@ public class ReviewController {
         return "review/review_insert";
     }
 
+    //레시피 등록 함수
     @PostMapping("/review/insert")
     @ResponseBody
     public Map<String, Object> reviewinsert(ReviewVO review){
@@ -73,9 +70,7 @@ public class ReviewController {
 
         if (files != null && !files.isEmpty()){
             try {
-                String filenames = fileupload.saveFiles(files, "review");
-
-                review.setThumbnail(filenames.split(",")[0]);
+                String filenames = fileupload.saveFiles(files, "review");                
 
                 int res = reviewDao.reviewInsert(review);
 
@@ -114,6 +109,7 @@ public class ReviewController {
         }
     }
 
+    // 후기 불려오기 
     @PostMapping("/review/detail")
     @ResponseBody
     public ReviewDetailDTO reviewdetail(int review_id){
@@ -124,9 +120,10 @@ public class ReviewController {
 
         ReviewDetailDTO review = reviewDao.selectreview(review_id);
 
-
         if(review.getImage_list() != null && !review.getImage_list().isBlank()){
+            
             review.setImgList(Arrays.asList(review.getImage_list().split(",")));
+            review.setThumbnail(review.getImage_list().split(",")[0]);
         }
 
         if(user == null){
@@ -138,6 +135,7 @@ public class ReviewController {
         return review;
     }
 
+    //레시피 삭제 
     @PostMapping("/review/delete")
     @ResponseBody
     public Map<String, Object> reviewDelete( int review_id ) {
@@ -163,6 +161,7 @@ public class ReviewController {
 
     }
 
+    //레시피 수정 페이지
     @GetMapping("/review/modify")
     public String reviewmodify( Model model, int review_id ){
 
@@ -178,12 +177,12 @@ public class ReviewController {
 
     }
 
+    //레시피 수정
     @PostMapping("/review/modify")
     @ResponseBody
     public Map<String,Object> reviewModifyFin(ReviewVO review, String deleteImages){
 
         Map<String,Object> map =  new HashMap<>();
-
         
 
         ImgVO img = imgDAO.img_select(review.getImg_id());
@@ -198,6 +197,8 @@ public class ReviewController {
         List<String> deleteList = new ArrayList<>(Arrays.asList(deleteImages.split(",")));
         
         imageList.removeAll(deleteList);
+
+        review.setThumbnail(imageList.isEmpty() ? null : imageList.get(0));
 
         if(review.getPhoto() != null && !review.getPhoto().isEmpty()){
             try {

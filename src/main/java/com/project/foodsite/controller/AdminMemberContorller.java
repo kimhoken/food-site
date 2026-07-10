@@ -99,7 +99,43 @@ public class AdminMemberContorller {
     } 
 
     // 회원 등급 변경(관리자 => 일반 회원/ 일반회원 => 관리자)
-    
+    @PostMapping("/admin/member/role")
+    @ResponseBody
+    public Map<String,Object> memberrole( MemberVO vo ){
+
+        MemberVO user = memberDAO.getUserByMemberId(vo.getMember_id());
+
+        MemberVO loginuser = (MemberVO)httpSession.getAttribute("user");
+        
+        Map<String,Object> map = new HashMap<>();
+        
+        if( loginuser.getMember_id() == user.getMember_id() ){
+
+            map.put("msg","자기 자신의 권한은 설정 할수 없습니다.");
+
+            return map;
+        }
+
+        if("ADMIN".equals(user.getRole())){
+
+            user.setRole("USER");
+            
+
+        } else {
+
+            user.setRole("ADMIN");
+
+        }
+
+        int res = memberDAO.userUpdate(user);
+        
+
+        map.put("result", res);
+        map.put("role", user.getRole());
+        
+        return map;
+
+    }
     
 
 }

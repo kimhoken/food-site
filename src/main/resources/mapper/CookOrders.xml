@@ -6,7 +6,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.project.foodsite.dao.CookOrderDAO">
 
 <select id="cookorderList" resultType="cook_order">
-    select * from cook_order where recipe_id = #{recipe_id}
+    select cook_order_id, cook_order as 'order', cook_image, description, recipe_id
+    from cook_order
+    where recipe_id = #{recipe_id}
+    order by cook_order asc
 </select>
 
 

@@ -3,6 +3,171 @@
 
         <head>
             <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin_recipe.css" />
+
+            <script>
+                let recipedetailrecipe;
+                let recipeStatus;
+
+                // 레시피 상세 보기 모달 열기 닫기 함수
+                function openDetail() {
+                    document.querySelector(".ra-detail").classList.add("active");
+                }
+                function closeDetail() {
+                    document.querySelector(".ra-detail").classList.remove("active");
+                }
+
+                // 상세보기 함수
+                function recipe_view(recipe_id) {
+
+                    fetch("/admin/recipe", {
+                        method: "post",
+                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                        body: "recipe_id=" + recipe_id
+                    }).then(res => res.json())
+                        .then(data => {
+                            recipedetailrecipe = data.recipe.recipe_id;
+                            recipeStatus = data.recipe.status;
+                            fileRecipe(data.recipe);
+                            renderCookOrders(data.list);
+                            openDetail();
+                        })
+                }
+
+                // 레시피 상세보기 데이터 값 넣는 함수
+                function fileRecipe(recipe) {
+                    setText("title", recipe.title);
+                    setText("nickname", recipe.nickname);
+                    setText("category", recipe.category_name);
+                    setText("created", recipe.created_date);
+                    setText("modify", recipe.updated_date);
+                    setText("count", recipe.view_count);
+                    setText("like", recipe.like_count);
+                    setText("status", recipe.status);
+
+                    setImg("model_img", "/upload/recipe/" + recipe.thumbnail);
+
+                    document.querySelector(".btn-private").value =
+                        recipe.status === "ACTIVE"
+                            ? "비공개 전환"
+                            : "공개 전환";
+
+                    document.querySelector(".btn-delete").value =
+                        recipe.status === "DELETE"
+                            ? "복원 하기"
+                            : "삭제 하기";
+
+                    document.querySelector(".btn-recommend").value =
+                        recipe.recommend
+                            ? "추천 해제"
+                            : "추천 등록";
+
+                }
+
+                // 상세보기 조리 순서 출력 함수
+                function renderCookOrders(list) {
+                    console.log(list);
+                    const box = document.getElementById("cookOrderBox");
+                    box.innerHTML = "";
+
+                    list.forEach(order => {
+                        box.insertAdjacentHTML("beforeend", `
+                        <div class="ra-step">
+                            <img class="ra-step-img" src="/upload/recipe/\${order.cook_image}">
+                            <div class="ra-step-body">
+                                <div class="ra-step-title">\${order.order}단계</div>
+                                <small class="ra-step-desc">\${order.description}</small>
+                            </div>
+                        </div>
+                    `);
+                    });
+                }
+
+                // 레시피 공개/ 비공개 함수
+                function recipeprivate() {
+                    if (confirm("정말로 비공개 처리 하시겠습니까?")) {
+                        fetch("/admin/private", {
+                            method: 'post',
+                            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                            body: "recipe_id=" + recipedetailrecipe
+                        }).then(res => res.json())
+                            .then(data => {
+                                if (data.result == 1) {
+                                    alert(data.title + " 수정돠었습니다.");
+                                    location.href = 'redirect:/admin?menu=recipe';
+                                }
+                            })
+                    }
+                }
+
+                // 레시피 삭제 및 복원 함수
+                function recipedel() {
+                    if (!confirm("정말로 삭제 하시겠습니까?")) {
+
+                        return;
+                    }
+                    fetch("/admin/recipedel", {
+                        method: 'post',
+                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                        body: "recipe_id=" + recipedetailrecipe
+                    }).then(res => res.json())
+                        .then(data => {
+
+                            if (data.result == 1 && data.status == "delete") {
+                                alert(data.title + "가 삭제되었습니다.");
+                            } else if (data.result == 1 && data.status == "public") {
+                                alert(data.title + "가 복원되었습니다.");
+                            } else {
+                                alert("이스터에그 발견!!");
+                            }
+                        })
+                }
+
+                // 검색창에서 엔터시 검색되는 함수
+                function eneterSearch(e) {
+                    if (e.key === "Enter") {
+                        searchRecipe();
+                    }
+                }
+
+                // 카테고리 및 공개/비공개 레시피 조회하는 함수
+                function searchRecipe() {
+                    document.querySelector('form[action="/admin/recipe"]').submit();
+
+                }
+
+                // 검색 결과 리셋 함수
+                function resetSearch() {
+
+                    document.getElementById("keyword").value = "";
+                    document.getElementById("category").value = "";
+                    document.getElementById("status").value = "";
+
+                    searchRecipe();
+                }
+
+                // 추천 레시피 등록/ 해제
+                function reciperecommend() {
+
+                    fetch("/admin/recipe/recommend", {
+                        method: 'post',
+                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                        body: "recipe_id=" + recipedetailrecipe
+                    }).then(res => res.json())
+                        .then(data => {
+                            if (data.result > 0 && data.recommend) {
+                                alert(data.title + "가 추천 레시피에 등록되었습니다");
+                            } else if (data.result > 0 && !data.recommend) {
+                                alert(data.title + "가 추천 레시피에 해제 되었습니다.");
+                            }
+                        })
+
+                }
+
+                // 레시피 수정 함수
+                function recipemodify(){
+                    location.href="/recipe_update.do?recipeId="+recipedetailrecipe;
+                }
+            </script>
         </head>
         <section class="ra-wrap">
             <div class="ra-main">
@@ -102,15 +267,15 @@
                                             <td>${recipe.view_count}</td>
                                             <td>${recipe.like_count}</td>
                                             <td>
-                                                <c:if test="${recipe.status eq 'public'}">
+                                                <c:if test="${recipe.status eq 'ACTIVE'}">
                                                     <span class="badge badge-public">공개</span>
                                                 </c:if>
 
-                                                <c:if test="${recipe.status eq 'private'}">
+                                                <c:if test="${recipe.status eq 'HIDDEN'}">
                                                     <span class="badge badge-private">비공개</span>
                                                 </c:if>
 
-                                                <c:if test="${recipe.status eq 'delete'}">
+                                                <c:if test="${recipe.status eq 'DELETE'}">
                                                     <span class="badge badge-delete">삭제</span>
                                                 </c:if>
                                             </td>
@@ -190,7 +355,7 @@
 
                     </div>
                     <div class="ra-actions">
-                        <input type="button" class="btn-edit" value="수정 하기" onclick="recipemodify(this)" />                        
+                        <input type="button" class="btn-edit" value="수정 하기" onclick="recipemodify()" />                        
                         <input type="button" class="btn-private" value="" onclick="recipeprivate(this)" />
                         <input type="button" class="btn-delete" value="" onclick="recipedel(this)" />
                         <input type="button" class="btn-recommend" value="" onclick="reciperecommend(this)" />

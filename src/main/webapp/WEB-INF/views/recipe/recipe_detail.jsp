@@ -205,13 +205,14 @@
                                 <h1>${dto.recipeTitle}</h1>
 
                                 <!-- 레시피 관리 메뉴 -->
+                                <c:if test="${not empty sessionScope.user}">
                                 <div class="recipe-menu-wrap">
-
+                                    
                                     <button type="button" class="recipe-toggle-btn" onclick="toggleRecipeMenu()">
                                         &#8942;
                                     </button>
-
-                                    <div id="recipeMenu" class="recipe-dropdown">
+                                    
+                                        <div id="recipeMenu" class="recipe-dropdown">
 
                                         <!-- 버튼 드롭다운 -->
                                         <!-- 작성자만 -->
@@ -228,7 +229,7 @@
                                         </c:if>
 
                                         <!-- 로그인 사용자 -->
-                                        <c:if test="${not empty sessionScope.user}">
+                                        
                                             <a href="/report/form.do?target_type=레시피&recipe_id=${param.recipe_id}">
                                                 신고
                                             </a>
@@ -236,11 +237,11 @@
                                             <a href="javascript:void(0)" onclick="bookmarkSet('${param.recipe_id}')">
                                                 북마크
                                             </a>
-                                        </c:if>
-
+                                            
+                                            
+                                        </div>
                                     </div>
-
-                                </div>
+                                </c:if>
 
                                 <div class="recipe-author" onclick="location.href='/user/${dto.memberId}'">
                                     작성자 : ${dto.nickName}

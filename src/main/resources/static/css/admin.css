@@ -197,6 +197,7 @@ body {
     grid-template-columns: 1.4fr 1fr;
     gap: 26px;
     margin-top: 28px;
+    align-items: start;
 }
 
 .recent-recipe-box,

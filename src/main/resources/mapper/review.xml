@@ -61,6 +61,7 @@
         join member m on r.member_id = m.member_id
         join recipe re on r.recipe_id = re.recipe_id
         where 1=1
+        
         <if test="keyword != null and keyword != ''">
         and (m.nickname like #{keyword}
             or re.title like #{keyword} )
@@ -129,6 +130,7 @@
               )
     </insert>
     
+    <!-- 후기 상세 조회 -->
     <select id="selectreview" resultType="reviewdetail">
         select re.*, 
                m.nickname,
@@ -143,16 +145,19 @@
         where re.review_id = #{review_id}       
     </select>
 
+    <!-- 후기 삭제 -->
     <delete id="deletereview">
         delete from review
         where review_id =#{review_id}
     </delete>
 
+    <!-- 후기 정보 업데이트 -->
     <update id="reviewUpdate">
-        update review set title = #{title}, content = #{content}, rating = #{rating}, updated_at = now()
+        update review set title = #{title}, content = #{content}, rating = #{rating}, updated_at = now(), thumbnail = #{thumbnail}
         where review_id = #{review_id}
     </update>
    
+   <!-- 후기 조회수 증가 -->
     <select id="reviewCount" parameterType="map" resultType="int">
         select count(*)
         from review r
@@ -160,6 +165,7 @@
         where 1=1
     </select>
 
+    <!-- 후기 페이징 및 카테고리 정렬 -->
     <select id="reviewPage" parameterType="map" resultType="review">
         select
             r.*,

@@ -16,6 +16,7 @@
                         <option value="desc">내림차순</option>
                         <option value="likes">좋아요순</option>
                     </select>
+                    
                 </div>
 
                 <c:if test="${ empty list }">

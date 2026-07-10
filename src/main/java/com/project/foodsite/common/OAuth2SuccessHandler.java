@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.util.Date;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -25,6 +26,10 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
+
+    @Value("${file.upload.path}")
+    private String uploadPath;
+
 
     private final MemberDAO memberDAO;
     
@@ -70,7 +75,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             response.sendRedirect("/register_form.do");
             return;
         }
-
+        // 회원 정지 여부 판단 및 처리
         if("SUSPEND".equals(member.getStatus())){
             if(member.getSuspend_end() != null && member.getSuspend_end().after(new Date())){
                 
@@ -157,7 +162,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             String filename = provider + "_" + provider_id+".png"; 
 
             //경로 설정
-            Path target = Paths.get("C:/upload", filename);
+            Path target = Paths.get(uploadPath+"/profile", filename);
 
             //파일 복사
             if(!Files.exists(target)){

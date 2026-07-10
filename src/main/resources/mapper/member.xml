@@ -5,29 +5,35 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 <mapper namespace="com.project.foodsite.dao.MemberDAO">
 
-    <select id="getUserById" 
-            parameterType="String"
+    <!-- 회원 조회 (아이디, 회원 번호, 닉네임, 이메일) -->
+    <select id="getUser"
+            parameterType="member"
             resultType="member">
-        select * from member where login_id = #{id}
+        select * from member 
+        where 1=1 
+
+        <if test="login_id != null and login_id != '' ">
+            and login_id = #{login_id}
+        </if> 
+       
+        <if test="email != null and email != '' ">
+            and email = #{email}
+        </if> 
+
+        <if test="nickname != null and nickname != '' ">
+            and nickname = #{nickname}
+        </if> 
+
+
     </select>        
 
+    
     <insert id="userInsert" parameterType="member">
         insert into member (login_id, password, nickname, email, role, status, report_count, created_date, profile_img, login_type, provider, provider_id,name)         
         values (#{login_id}, #{password}, #{nickname}, #{email}, #{role}, #{status}, 0, sysdate(), #{filename}, #{login_type}, #{provider}, #{provider_id}, #{name})
     </insert>
 
-    <select id="getUserNickname"
-            parameterType="String"
-            resultType = "member">
-        select * from member where nickname= #{nickname}
-    </select>        
-
-    <select id="getUserEmail"
-            parameterType="String"
-            resultType = "member">
-        select * from member where email = #{email}
-    </select>      
-
+        
     <select id="getUserByMemberId"
             parameterType="int"
             resultType = "member">
@@ -48,7 +54,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <update id="userUpdate" parameterType="member">
-        update member set nickname = #{nickname}, email = #{email}, status = #{status}, profile_img = #{filename}, name = #{name}, member_intro = #{member_intro},
+        update member set nickname = #{nickname}, email = #{email}, status = #{status}, 
+                          profile_img = #{filename}, name = #{name}, member_intro = #{member_intro}, role = #{role},
                 suspend_start = CASE 
                                   WHEN #{status} = 'SUSPEND' THEN NOW()
                                 ELSE NULL 

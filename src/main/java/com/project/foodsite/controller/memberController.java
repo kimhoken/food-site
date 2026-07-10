@@ -16,6 +16,7 @@ import com.project.foodsite.common.NicknameGenerater;
 import com.project.foodsite.common.pwdSecurity;
 import com.project.foodsite.dao.MemberDAO;
 import com.project.foodsite.dao.TokenDAO;
+import com.project.foodsite.dto.MemberDTO;
 import com.project.foodsite.vo.MemberVO;
 import com.project.foodsite.vo.TokenVO;
 
@@ -46,8 +47,9 @@ public class memberController {
     // 로그인
     @PostMapping("/login.do")
     @ResponseBody
-    public Map<String, Object> loginCheck(MemberVO vo) {
-        MemberVO user = memberDAO.getUserById(vo.getLogin_id());
+    public Map<String, Object> loginCheck(MemberDTO vo) {
+
+        MemberVO user = memberDAO.getUser(vo);
         Map<String, Object> map = new HashMap<>();
         String login_res = "no_id";
 
@@ -103,7 +105,11 @@ public class memberController {
         
         while(sys){
             nickname = nicknameGenerater.createnickname(); 
-            MemberVO vo = memberDAO.getUserNickname(nickname);
+
+            MemberDTO member = new MemberDTO();
+            member.setNickname(nickname);
+
+            MemberVO vo = memberDAO.getUser(member);
             if(vo == null){
                 sys=false;
             }  
@@ -145,8 +151,8 @@ public class memberController {
     //아이디 중복 검사
     @PostMapping("/check_id.do")
     @ResponseBody
-    public Map<String,String> checkId(String login_id){
-        MemberVO vo = memberDAO.getUserById(login_id);
+    public Map<String,String> checkId(MemberDTO member){
+        MemberVO vo = memberDAO.getUser(member);
         String id_msg="yes";
 
         if(vo != null ){            
@@ -156,7 +162,7 @@ public class memberController {
         Map<String,String> map = new HashMap<>();
 
         map.put("id_msg", id_msg);
-        map.put("id", login_id);
+        map.put("id", member.getLogin_id());
         return map;
 
     }
@@ -203,8 +209,8 @@ public class memberController {
     //닉네임 중복 검사 함수
     @PostMapping("/check_nickname.do")
     @ResponseBody
-    public Map<String,String> nicknameCheck(String nickname){
-        MemberVO vo = memberDAO.getUserNickname(nickname);
+    public Map<String,String> nicknameCheck(MemberDTO member){
+        MemberVO vo = memberDAO.getUser(member);
         String nickname_msg = "";
 
         if(vo != null){
@@ -216,7 +222,7 @@ public class memberController {
         Map<String,String> map = new HashMap<>();
 
         map.put("nickname_msg", nickname_msg);
-        map.put("nickname", nickname);
+        map.put("nickname", member.getNickname());
 
         return map;
     }
@@ -231,8 +237,9 @@ public class memberController {
     //회원 이메일 존재 여부 함수
     @PostMapping("/emailfind.do")
     @ResponseBody
-    public Map<String,String> findemail(String email){
-        MemberVO vo = memberDAO.getUserEmail(email);
+    public Map<String,String> findemail(MemberDTO member){
+
+        MemberVO vo = memberDAO.getUser(member);
         String res = "no";
 
         if(vo != null){
@@ -241,7 +248,7 @@ public class memberController {
 
         Map<String,String> map = new HashMap<>();
 
-        map.put("email",email);
+        map.put("email",member.getEmail());
         map.put("result",res);
 
         return map;
@@ -250,25 +257,25 @@ public class memberController {
     // 이메일로 회원 정보 조회
     @PostMapping("/findid.do")
     @ResponseBody
-    public String findid(String email){
-        MemberVO vo = memberDAO.getUserEmail(email);
+    public String findid(MemberDTO member){
+        MemberVO vo = memberDAO.getUser(member);
         return vo.getLogin_id();
     }
 
     //이메일 재설정 링크 보내는 함수
     @PostMapping("/resetpwd.do")
     @ResponseBody
-    public Map<String,String> resetpwd(String email, String login_id){
-        MemberVO membervo = memberDAO.getUserEmail(email);
+    public Map<String,String> resetpwd(MemberDTO memberDTO){
+        MemberVO membervo = memberDAO.getUser(memberDTO);
         Map<String,String> map = new HashMap<>();
 
         // 이메일과 아이디로 membervo 같은지 판별
-        if(!membervo.getLogin_id().equals(login_id)){
+        if(!membervo.getLogin_id().equals(memberDTO.getLogin_id())){
             map.put("result", "fail");
             return map;
         }
 
-        String res = mss.sendEmail(email, "resetpwd");
+        String res = mss.sendEmail(memberDTO.getEmail(), "resetpwd");
         TokenVO vo = new TokenVO();
 
         vo.setMember_id(membervo.getMember_id());
