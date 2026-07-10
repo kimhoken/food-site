@@ -144,10 +144,7 @@ input[type="file"] {
 
 /* X버튼을 absolute가 아닌 flex로 자연스럽게 배치 */
 #ingredientTable td:last-child {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
+    position:relative;
 }
 
 #ingredientTable input[name="customUnit"] {
@@ -216,23 +213,14 @@ textarea {
 
 /* 조리순서 텍스트 영역 */
 .step-content {
-    display: flex;
-    align-items: flex-start;
-    gap: 15px;
+    position: relative;
     width: 100%;
 }
 
 .step-content textarea {
-    flex-grow: 1; /* 남은 공간 다 차지하게 */
+    width: 100%;
     height: 220px;
     padding: 20px;
-    border: 1.5px solid #e0e0e0;
-    background: #fafafa;
-    border-radius: 12px;
-    font-size: 15px;
-    line-height: 1.6;
-    transition: 0.2s;
-    outline: none;
 }
 
 .step-content textarea:focus {
@@ -255,6 +243,23 @@ button {
     margin-bottom: 20px;
 }
 
+/* 레시피 수정 버튼 */
+.btn-update {
+    background: #ff7e36;
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+    padding: 18px 60px;
+    box-shadow: 0 6px 16px rgba(255, 126, 54, 0.3);
+    margin-top: 20px;
+}
+
+.btn-update:hover {
+    background: #f06a20;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(255, 126, 54, 0.4);
+}
+ 
 /* 추가 버튼 (+ 재료, + 조리순서) */
 button[onclick="addIngredient()"],
 button[onclick="addStep()"] {
@@ -273,8 +278,8 @@ button[onclick="addStep()"]:hover {
     transform: translateY(-2px);
 }
 
-/* 내 레시피 등록 버튼 (눈에 확 띄게!) */
-button[onclick^="send"] {
+/* 내 레시피 등록 버튼 */
+.submit-btn {
     background: #ff7e36;
     color: white;
     font-size: 18px;
@@ -284,14 +289,30 @@ button[onclick^="send"] {
     margin-top: 20px;
 }
 
-button[onclick^="send"]:hover {
+.submit-btn:hover {
     background: #f06a20;
     transform: translateY(-3px);
     box-shadow: 0 8px 20px rgba(255, 126, 54, 0.4);
 }
 
 /* 삭제 버튼(X) 디자인 */
-.x-btn,
+.x-btn{
+    position:absolute;
+    right:-30px;
+    top:50%;
+    transform:translateY(-50%);
+    background: #f4f4f4;
+    color: #888;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-weight: bold;
+    font-size: 14px;
+    justify-content: center;
+    align-items: center;
+
+}
+
 .x-btn2 {
     background: #f4f4f4;
     color: #888;
@@ -306,9 +327,10 @@ button[onclick^="send"]:hover {
     flex-shrink: 0; /* 찌그러짐 방지 */
 }
 
-/* .x-btn2의 불필요한 마진 제거 (flex 적용했기 때문) */
 .x-btn2 {
-    margin-top: 0;
+    position: absolute;
+    top: 90px;
+    right: -50px;   /* 원하는 만큼 바깥으로 */
 }
 
 .x-btn:hover,

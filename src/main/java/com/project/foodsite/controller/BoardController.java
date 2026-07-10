@@ -15,7 +15,6 @@ import com.project.foodsite.common.Paging;
 import com.project.foodsite.dao.BoardDAO;
 import com.project.foodsite.dao.CategoryDAO;
 import com.project.foodsite.dao.CommonCommentDAO;
-import com.project.foodsite.dao.RecipeDAO;
 import com.project.foodsite.dao.ReviewDAO;
 import com.project.foodsite.vo.BoardVO;
 import com.project.foodsite.vo.CategoryVO;
@@ -43,8 +42,8 @@ public class BoardController {
     private final Fileupload fileupload;
     private final CommonCommentDAO commonCommentDAO;
     private final CategoryDAO categoryDAO;
-    private final RecipeDAO recipeDAO;
-
+    // private final RecipeDAO recipeDAO;
+    private final BoardDAO boardDAO;
 
     // board list 조회
     @GetMapping("/list.do")
@@ -138,8 +137,23 @@ public class BoardController {
                 break;
         }
 
+        // 재료수량 검증
+        for (int i = 0; i < dto.getIngredientName().size(); i++) {
+
+            String unit = dto.getUnit().get(i);
+            String amount = dto.getAmount().get(i);
+
+            if (!"적당히".equals(unit) &&
+                    !"원하는 만큼".equals(unit)) {
+
+                if (amount == null || amount.trim().isEmpty()) {
+                    throw new IllegalArgumentException((i + 1) + "번째 재료의 수량을 입력하세요.");
+                }
+            }
+        }
+
         // 1. 레시피테이블에 레시피 등록
-        recipeDAO.insertRecipe(dto);
+        boardDAO.insertRecipe(dto);
 
         // 2. ingredient 저장
         for (int i = 0; i < dto.getIngredientName().size(); i++) {
@@ -149,14 +163,20 @@ public class BoardController {
             ingredient.setIngredient_name(
                     dto.getIngredientName().get(i));
 
-            ingredient.setQuantity(
-                    Long.parseLong(dto.getAmount().get(i)));
+            String amount = dto.getAmount().get(i);
+            String unit = dto.getUnit().get(i);
+
+            if ("적당히".equals(unit) || "원하는 만큼".equals(unit)) {
+                ingredient.setQuantity(null);
+            } else {
+                ingredient.setQuantity(Double.parseDouble(amount));
+            }
 
             ingredient.setUnit(dto.getUnit().get(i));
 
             ingredient.setRecipe_id(dto.getRecipeId().intValue());
 
-            recipeDAO.insertIngredient(ingredient);
+            boardDAO.insertIngredient(ingredient);
         }
 
         // 3. 조리과정 저장
@@ -168,7 +188,7 @@ public class BoardController {
             order.setDescription(dto.getStep().get(i));
             order.setRecipe_id(dto.getRecipeId().intValue());
 
-            //파일 저장
+            // 파일 저장
             MultipartFile img = dto.getStepImg().get(i);
 
             if (img != null && !img.isEmpty()) {
@@ -177,9 +197,9 @@ public class BoardController {
                 order.setCook_image(cookOrderImg);
             }
 
-            //조리시간 들어오는지 확인
+            // 조리시간 들어오는지 확인
 
-            recipeDAO.insertCookOrder(order);
+            boardDAO.insertCookOrder(order);
         }
 
         return "redirect:/recipe_list.do";
@@ -196,7 +216,7 @@ public class BoardController {
         // 조회수 처리
         @SuppressWarnings("unchecked")
         HashMap<String, List<Integer>> map = session.getAttribute("viewMap") == null ? new HashMap<>()
-            : (HashMap<String, List<Integer>>) session.getAttribute("viewMap");
+                : (HashMap<String, List<Integer>>) session.getAttribute("viewMap");
 
         // 조회수 처리 코드 정리
         String ip = req.getRemoteAddr();

@@ -303,6 +303,8 @@
         <%-- 댓글 영역 끝 --%>
 
     </div>
+
+    
     <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 </body>
 

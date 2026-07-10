@@ -121,7 +121,7 @@
 
                             <strong class="title">${vo.title}</strong>
 
-                           <span class="date">
+                            <span class="date">
                                 <fmt:formatDate value="${vo.created_date}" pattern="yyyy.MM.dd"/>
                             </span>
 

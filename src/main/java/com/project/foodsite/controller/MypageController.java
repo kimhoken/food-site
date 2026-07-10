@@ -14,23 +14,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam; // 추가
 import org.springframework.web.multipart.MultipartFile;
 
-import com.project.foodsite.common.Fileupload;
-import com.project.foodsite.common.Paging;
-import com.project.foodsite.common.pwdSecurity;
-import com.project.foodsite.dao.ActivityDAO;
-import com.project.foodsite.dao.BookmarkDAO;
-import com.project.foodsite.dao.CommentDAO;
-import com.project.foodsite.dao.ImgDAO;
-import com.project.foodsite.dao.InquiryDAO;
-import com.project.foodsite.dao.MemberDAO;
-import com.project.foodsite.dao.RecipeDAO;
+import com.project.foodsite.common.*;
+import com.project.foodsite.dao.*;
 import com.project.foodsite.dto.MypageDTO;
-import com.project.foodsite.vo.BookmarkVO;
-import com.project.foodsite.vo.CommentVO;
-import com.project.foodsite.vo.ImgVO;
-import com.project.foodsite.vo.InquiryVO;
-import com.project.foodsite.vo.MemberVO;
-import com.project.foodsite.vo.RecipeVO;
+import com.project.foodsite.vo.*;
+
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -107,6 +95,7 @@ public class MypageController {
         model.addAttribute("list", list);
     }
 
+    //유저 홈 페이징
     public void userHomePage(Model model, int member_id){
         model.addAttribute("activity", activityDAO.userActivity(member_id));
         model.addAttribute("recentlyRecipeList", recipeDAO.recentlyUserRecipe(member_id));
@@ -114,6 +103,7 @@ public class MypageController {
         model.addAttribute("bookmarkList", bookmarkDAO.userBookmark(member_id));
     }
 
+    //유저 문의 페이지
     private void userInquiry(int page, Model model, MemberVO user, String status){
 
         List<InquiryVO> allList = inquiryDAO.myInquiryList(user.getMember_id());
@@ -160,6 +150,7 @@ public class MypageController {
         model.addAttribute("status", status);
     }
 
+    //내용 페이징
     private void setContentPage(Model model, String menu){
 
         boolean mainshow = false;
@@ -192,6 +183,7 @@ public class MypageController {
         model.addAttribute("mainshow", mainshow);
     }
 
+    //
     private void setTotalCount(int member_id, Model model){
         MypageDTO mypageDTO = new MypageDTO();
         mypageDTO.setMember_id(member_id);

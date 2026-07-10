@@ -6,13 +6,12 @@
 
         <head>
             <link rel="stylesheet" href="/css/mypage.css" />
-
+            <title>오늘 뭐 먹지? - 마이페이지</title>
             <script src="/js/mypage.js"></script>
         </head>
 
         <body>
             <div class="mypage-wrap">
-
                 <!-- 마이페이지 왼쪽 메뉴 부분 -->
                 <aside class="mypage-left">
 
@@ -41,20 +40,28 @@
                         <p>맛있는 하루 되세요!</p>
                     </div>
 
-
                     <div class="menu-section">
                         <div class="sub-title">회원 정보</div>
-                        <div><a href="/mypage.do?menu=account" class="menu-item ${param.menu eq 'account' ? 'active' : ''}">
+                        <div>
+                            <a href="/mypage.do?menu=account" class="menu-item ${param.menu eq 'account' ? 'active' : ''}">
                                 <!-- <img src="/images/user.png" width="32px" height="32px" /> -->
-                                회원정보</a></div>
+                                회원정보
+                            </a>
+                        </div>
                         <c:if test="${ not empty profileuser.password }">
-                            <div><a href="/mypage.do?menu=pwd" class="menu-item ${param.menu eq 'pwd' ? 'active' : ''}">
-                                <!-- <img src="/images/padlock.png" width="32px" height="32px" /> -->
-                                비밀번호 변경</a></div>
+                            <div>
+                                <a href="/mypage.do?menu=pwd" class="menu-item ${param.menu eq 'pwd' ? 'active' : ''}">
+                                    <!-- <img src="/images/padlock.png" width="32px" height="32px" /> -->
+                                    비밀번호 변경
+                                </a>
+                            </div>
                         </c:if>
-                        <div><a href="/mypage.do?menu=del" class="menu-item ${param.menu eq 'del' ? 'active' : ''}">
+                        <div>
+                            <a href="/mypage.do?menu=del" class="menu-item ${param.menu eq 'del' ? 'active' : ''}">
                                 <!-- <img src="/images/delete_user.png" /> -->
-                                회원 탈퇴</a></div>
+                                회원 탈퇴
+                            </a>
+                        </div>
                     </div>
 
 
@@ -62,21 +69,31 @@
                         <div class="sub-title"><a href="/mypage.do?menu=home">내활동</a></div>
                         <div><a href="/mypage.do?menu=recipe" class="menu-item ${param.menu eq 'recipe' ? 'active' : ''}">
                                 <!-- <img src="images/document2.png" /> -->
-                                작성한 레시피</a></div>
-                        <div><a href="/mypage.do?menu=comment" class="menu-item ${param.menu eq 'comment' ? 'active' : ''}">
+                                작성한 레시피
+                            </a>
+                        </div>
+                        <div>
+                            <a href="/mypage.do?menu=comment" class="menu-item ${param.menu eq 'comment' ? 'active' : ''}">
                                 <!-- <img src="/images/chat.png" /> -->
-                                작성한 댓글</a></div>
-                        <div><a href="/mypage.do?menu=bookmark" class="menu-item ${param.menu eq 'bookmark' ? 'active' : ''}">
+                                작성한 댓글
+                            </a>
+                        </div>
+                        <div>
+                            <a href="/mypage.do?menu=bookmark" class="menu-item ${param.menu eq 'bookmark' ? 'active' : ''}">
                                 <!-- <img src="/images/bookmark2.png" /> -->
-                                북마크</a></div>
-
+                                북마크
+                            </a>
+                        </div>
                     </div>
 
                     <div class="menu-section">
                         <div class="sub-title">고객지원</div>
-                        <div><a href="/mypage.do?menu=inquiry" class="menu-item ${param.menu eq 'inquiry' ? 'active' : ''}">
+                        <div>
+                            <a href="/mypage.do?menu=inquiry" class="menu-item ${param.menu eq 'inquiry' ? 'active' : ''}">
                                 <!-- <img src="/images/help.png" /> -->
-                                문의 내역</a></div>
+                                문의 내역
+                            </a>
+                        </div>
                     </div>
 
                     <button class="logout-btn" type="button" onclick="logout()">
@@ -89,7 +106,7 @@
                    
 
                     <c:if test="${ not mainshow }">
-
+                    
                         <section class="main-box">
 
                             <div class="main-left">
