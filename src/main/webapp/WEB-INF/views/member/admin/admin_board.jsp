@@ -139,8 +139,7 @@
                             <c:forEach var="board" items="${list}">
 
                                 <tr onclick="board_view('${board.board_id}')">
-                                    <td>
-                                        <img src="/upload/board/#" />
+                                    <td>                                        
                                         <span>${board.title}</span>
                                     </td>
                                     <td>${board.nickname}</td>

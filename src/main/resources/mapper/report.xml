@@ -188,4 +188,11 @@
         delete from report
         where report_id = #{report_id}
     </delete>
+
+    <select id="reportTotal">
+        select count(report_id)
+        from report
+        where status = '처리대기'
+    </select>
+
 </mapper>

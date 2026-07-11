@@ -54,6 +54,7 @@ public class AdminController {
 
     }
 
+    // 관리자 정보 페이지
     @GetMapping("/admin/mypage")
     public String adminmypage(Model model){
 
@@ -67,6 +68,7 @@ public class AdminController {
 
     } 
 
+    // 관리자 회원 정보 수정 페이지
     @GetMapping("/admin/update")
     public String getMethodName(Model model) {
         MemberVO user = (MemberVO) httpSession.getAttribute("user");
@@ -77,7 +79,7 @@ public class AdminController {
         return "member/adminpage";
     }
     
-
+    // 관리자 회원 정보 수정 함수
     @PostMapping("/admin/updatefin")
     public String getMethodName(MemberVO vo, String filechange) throws Exception {
         MemberVO user = (MemberVO)httpSession.getAttribute("user");

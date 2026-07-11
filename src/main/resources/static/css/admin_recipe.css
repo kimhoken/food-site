@@ -30,9 +30,13 @@ section {
 
     width: 430px;
     height: 100%;
+   
+    overflow-y: auto;
 
     background: #fff;
     padding: 25px;
+    box-sizing: border-box;
+    border-radius: 16px;
     
     box-shadow: 0 4px 20px rgba(0,0,0,0.05);
 
@@ -45,6 +49,19 @@ section {
 
 .ra-detail.active{
     display: block;
+}
+
+.ra-detail::-webkit-scrollbar {
+    width: 8px;
+}
+
+.ra-detail::-webkit-scrollbar-thumb {
+    background: #d8dde5;
+    border-radius: 999px;
+}
+
+.ra-detail::-webkit-scrollbar-track {
+    background: transparent;
 }
 
 /* 헤더 */
@@ -227,6 +244,12 @@ section {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.ra-detail-head h4 {
+    margin: 0;
 }
 
 .ra-close {
@@ -238,9 +261,9 @@ section {
 
 .ra-cover {
     width: 100%;
-    height: 230px;
+    height: 190px;
     object-fit: cover;
-    border-radius: 16px;
+    border-radius: 14px;
     margin-bottom: 20px;
 }
 
@@ -255,9 +278,11 @@ section {
 .ra-meta {
     display: grid;
     grid-template-columns: 90px 1fr;
-    row-gap: 14px;
-
+    row-gap: 12px;
+    margin-top: 14px;
     margin-bottom: 25px;
+    padding-top: 16px;
+    border-top: 1px solid #f2f2f2;
 }
 
 .ra-meta dt {
@@ -301,12 +326,14 @@ section {
 /* 조리과정 */
 .ra-steps {
     margin-bottom: 25px;
+    padding-top: 4px;
 }
 
 .ra-step {
     display: flex;
     gap: 15px;
-
+    padding-bottom: 16px;
+    border-bottom: 1px solid #f2f2f2;
     margin-bottom: 20px;
 }
 
@@ -335,10 +362,14 @@ section {
 .ra-actions {
     display: flex;
     gap: 10px;
+    flex-wrap: wrap;
+    padding-top: 18px;
+    border-top: 1px solid #eee;
 }
 
 .ra-actions input {
-    flex: 1;
+    flex: 1 1 calc(50% - 5px);
+    min-width: 0;
 
     padding: 12px;
 
@@ -525,7 +556,6 @@ section {
     top: 0;
     right: 0;
     width: 430px;
-    min-height: 100%;
     margin-top: 0;
     display: none;
     z-index: 10;
@@ -770,6 +800,14 @@ section {
         position: static;
         width: auto;
         min-height: auto;
+        margin-top: 20px;
+    }
+
+    .ra-detail {
+        position: static;
+        width: auto;
+        height: auto;
+        max-height: 70vh;
         margin-top: 20px;
     }
 }

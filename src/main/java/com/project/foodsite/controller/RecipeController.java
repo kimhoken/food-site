@@ -92,8 +92,8 @@ public class RecipeController {
             });
         }
 
-        int offSet = searchDTO.getOffset();
-        int start = 1;
+        int offSet = searchDTO.getOffset() - 1;
+        int start = 0;
         List<RecipeVO> resultList = new LinkedList<>();
 
         /*
@@ -124,7 +124,7 @@ public class RecipeController {
             }
         }
 
-        if (offSet != 9) {
+        if (offSet != 8) {
             start = offSet - 8;
         }
         /*

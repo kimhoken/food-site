@@ -122,9 +122,9 @@
 
                         <select name="status" onchange="searchcomment()">
                             <option value="">상태</option>
-                            <option value="public">공개</option>
-                            <option value="hidden">숨김</option>
-                            <option value="delete">삭제</option>
+                            <option value="ACTIVE">공개</option>
+                            <option value="HIDDEN">숨김</option>
+                            <option value="DELETE">삭제</option>
                         </select>
 
                         <select name="sort" onchange="searchcomment()">

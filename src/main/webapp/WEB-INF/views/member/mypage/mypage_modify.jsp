@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+        <jsp:include page="/WEB-INF/views/common/nocache.jsp"/>
         <head>
             <link rel="stylesheet" href="css/mypage_account.css" />
 
@@ -52,6 +53,8 @@
 
                 <form action="/mypage_update.do" method="post" enctype="multipart/form-data">
                     <input type="hidden" id="filechange" value="no" name="filechange" />
+                    <input type="hidden" id="status" value="${profileuser.status}" name="status"/>
+                    <input type="hidden" name="role" value="role"/>
                     <!-- 프로필 이미지 -->
                     <div class="update-row profile-rows">
                         <div class="update-label">프로필</div>
