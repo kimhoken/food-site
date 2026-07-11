@@ -42,14 +42,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         SELECT COUNT(DISTINCT r.recipe_id) FROM recipe r
         LEFT JOIN food f ON r.food_id = f.food_id
         LEFT JOIN category c ON f.category_id = c.category_id
-        <where>
+        WHERE r.status = 'ACTIVE'
             <if test="category != null and category != ''">
-                REPLACE(c.category_name, ' ', '') = REPLACE(#{category}, ' ', '')
+                AND REPLACE(c.category_name, ' ', '') = REPLACE(#{category}, ' ', '')
             </if>
             <if test="maxCookTime > 0 and maxCookTime != 9999">
                 AND CAST(REPLACE(r.cooking_time, '분', '') AS UNSIGNED) &lt;= #{maxCookTime}
             </if>
-        </where>
+        
     </select>
 
     <!-- 카테고리/조리시간 필터링 레시피 목록 조회  -->
