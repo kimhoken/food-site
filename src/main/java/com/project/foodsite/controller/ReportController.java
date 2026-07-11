@@ -93,7 +93,8 @@ public class ReportController {
     @GetMapping("/report/admin/list.do")
     public String reportAdminList(
             Model model,
-            @RequestParam(value = "page", defaultValue = "1") int page) {
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "member_id", defaultValue = "0") int member_id) {
 
         MemberVO user = (MemberVO) session.getAttribute("user");
 
@@ -103,13 +104,14 @@ public class ReportController {
 
         model.addAttribute("profileuser", user);
 
-        int totalcount = reportDao.reportCount();
+        int totalcount = reportDao.reportCount( member_id );
 
         Paging paging = new Paging(page, 10, totalcount);
 
         Map<String, Object> map = new HashMap<>();
         map.put("offset", paging.getOffset());
         map.put("size", paging.getSize());
+        map.put("member_id", member_id);
 
         List<ReportVO> list = reportDao.reportListPage(map);
 

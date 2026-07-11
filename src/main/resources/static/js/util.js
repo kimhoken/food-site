@@ -74,7 +74,7 @@ function setList( id, list){
 
     list.forEach(item => {
         const li = document.createElement("li");
-        li.textContent = `${item.created_date} ${item.reson}`;
+        li.textContent = `${item.created_date}  ${item.reason}`;
         target.appendChild(li);
     })
 

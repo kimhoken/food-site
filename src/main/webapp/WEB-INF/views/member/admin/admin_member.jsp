@@ -101,7 +101,7 @@
         }
 
         function memberReport(id) {
-            alert("신고 내역 기능은 구현 예정입니다. 회원 번호: " + id);
+            location.href="/report/admin/list.do?member_id="+id;
         }
 
         function memberrank( id, role ){
@@ -126,7 +126,7 @@
                 body:"member_id=" + id + "&role="+role
             }).then( res => res.json() )
             .then( data => {
-                if( data.msg ){
+                if( data.msg ) {
                     alert(data.msg);
                     return;
                 }
