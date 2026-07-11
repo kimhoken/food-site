@@ -1,7 +1,7 @@
 let id_vailed = false;
-let pwd_vailed = true;
+let pwd_vailed = false;
 let email_vailed = false;
-let nickname_vailed = true;
+let nickname_vailed = false;
 
 
 window.addEventListener( "load", function () {
