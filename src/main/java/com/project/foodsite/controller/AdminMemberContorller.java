@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.project.foodsite.common.AdminUtil;
 import com.project.foodsite.common.Paging;
 import com.project.foodsite.dao.MemberDAO;
+import com.project.foodsite.dao.ReportDAO;
 import com.project.foodsite.vo.MemberVO;
 import com.project.foodsite.dto.AdminMemberDTO;
 
@@ -26,6 +27,7 @@ public class AdminMemberContorller {
     private final HttpSession httpSession;
     private final AdminUtil adminUtil;
     private final MemberDAO memberDAO;
+    private final ReportDAO reportDAO;
 
     // 회원 페이징 함수
     private void memberPaging(Model model, AdminMemberDTO admin){
@@ -68,8 +70,11 @@ public class AdminMemberContorller {
     @PostMapping("/admin/member/info")
     @ResponseBody
     public AdminMemberDTO memberDetail(AdminMemberDTO admin){     
+        AdminMemberDTO member = memberDAO.memberDetail(admin.getMember_id());
 
-        return memberDAO.memberDetail(admin.getMember_id());
+        member.setReportList( reportDAO.adminReportList(admin.getMember_id()) );
+
+        return member;
 
     }
 

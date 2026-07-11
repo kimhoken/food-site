@@ -39,4 +39,6 @@ public interface ReportDAO {
     int reportDelete(int report_id);
 
     int reportTotal();
+
+    List<ReportVO> adminReportList( int member_id );
 }

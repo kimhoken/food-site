@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin_member.css" />
 
     <script>
+        //  회원 상세 정보 모달 함수
         function member_view(member_id) {
             fetch("/admin/member/info", {
                 method: "post",
@@ -29,6 +30,7 @@
                 });
         }
 
+        // 모달 함수 정보 넣는 과정
         function filemember(dto) {
             setImg("model-img", "/upload/profile/" + dto.profile_img);
             setText("name", dto.name);
@@ -42,7 +44,8 @@
             setText("comment", dto.comment_count);
             setText("bookmark", dto.bookmark_count);
             setText("like", dto.like_count);
-            setText("up-report", "신고 내역 구현 예정");
+            
+            setList("up-report", dto.reportList );
 
             if (dto.status === "ACTIVE") {
                 document.querySelector(".model-status").textContent = "정상";
@@ -292,7 +295,7 @@
                 <dd id="model-like" class="model-like"></dd>
 
                 <dt>신고 내역</dt>
-                <dd id="model-up-report" class="model-up-report"></dd>
+                <ul id="model-up-report" class="model-up-report"></ul>
             </dl>
 
             <div class="ma-action">

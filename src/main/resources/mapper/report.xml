@@ -195,4 +195,14 @@
         where status = '처리대기'
     </select>
 
+    <!-- 회원 관리 신고내역 간단 조회 -->
+    <select id="adminReportList" resultType="adminmember">
+        select reason, created_date
+        from report
+        where member_id = #{member_id}
+        order by created_date desc
+        limit 3
+    </select>
+
+
 </mapper>
