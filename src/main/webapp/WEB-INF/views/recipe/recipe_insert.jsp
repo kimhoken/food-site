@@ -354,7 +354,7 @@
                                             <div class="recipe-meta">
                                                 ⏱ ${recipe.cooking_time} &nbsp;&nbsp; 등록일자: ${recipe.created_date}
                                                 <br>
-                                                👁 ${recipe.view_count} &nbsp;&nbsp; ❤️ ${recipe.like_count}
+                                                👁 ${recipe.view_count} &nbsp;&nbsp; 
                                             </div>
                                         </div>
                                     </div>

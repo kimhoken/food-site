@@ -141,7 +141,6 @@
                             <option value="latest">최신순</option>                                                                                                        
                             <option value="name">가나다순</option>
                             <option value="view">조회수순</option>
-                            <option value="like">좋아요순</option>
                         </select>
                     </div>
                     <div class="today-recommend-header">

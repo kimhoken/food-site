@@ -26,6 +26,7 @@ public class ReviewVO {
     private String status;          // 상태 (N: 정상, Y: 삭제)
     private String created_at;   // 작성일
     private String updated_at;   // 수정일
+    private String recipe_thumbnail; 
 
     private List<MultipartFile> photo; // 이미지 저장 
     private MultipartFile singlephoto;

@@ -54,7 +54,7 @@
                 <form action="/mypage_update.do" method="post" enctype="multipart/form-data">
                     <input type="hidden" id="filechange" value="no" name="filechange" />
                     <input type="hidden" id="status" value="${profileuser.status}" name="status"/>
-                    <input type="hidden" name="role" value="role"/>
+                    <input type="hidden" name="role" value="${profileuser.role}"/>
                     <!-- 프로필 이미지 -->
                     <div class="update-row profile-rows">
                         <div class="update-label">프로필</div>

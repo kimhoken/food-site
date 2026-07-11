@@ -16,6 +16,19 @@
                     document.querySelector(".ra-detail").classList.remove("active");
                 }
 
+                function statusText(status) {
+                    if (status === "ACTIVE") {
+                        return "\uACF5\uAC1C";
+                    }
+                    if (status === "HIDDEN") {
+                        return "\uBE44\uACF5\uAC1C";
+                    }
+                    if (status === "DELETE") {
+                        return "\uC0AD\uC81C";
+                    }
+                    return status || "";
+                }
+
                 // 상세보기 함수
                 function recipe_view(recipe_id) {
 
@@ -40,9 +53,8 @@
                     setText("category", recipe.category_name);
                     setText("created", recipe.created_date);
                     setText("modify", recipe.updated_date);
-                    setText("count", recipe.view_count);
-                    setText("like", recipe.like_count);
-                    setText("status", recipe.status);
+                    setText("count", recipe.view_count);                    
+                    setText("status", statusText(recipe.status));
 
                     setImg("model_img", "/upload/recipe/" + recipe.thumbnail);
 
@@ -112,9 +124,9 @@
                     }).then(res => res.json())
                         .then(data => {
 
-                            if (data.result == 1 && data.status == "delete") {
+                            if (data.result == 1 && data.status == "DELETE") {
                                 alert(data.title + "가 삭제되었습니다.");
-                            } else if (data.result == 1 && data.status == "public") {
+                            } else if (data.result == 1 && data.status == "ACTIVE") {
                                 alert(data.title + "가 복원되었습니다.");
                             } else {
                                 alert("이스터에그 발견!!");
@@ -226,9 +238,9 @@
 
                             <select id="status" class="ra-status" name="status" onchange="searchRecipe()">
                                 <option value="">공개/비공개</option>
-                                <option value="public" ${searchrecipe.status eq 'public' ? 'selected' : '' }>공개
+                                <option value="ACTIVE" ${searchrecipe.status eq 'ACTIVE' ? 'selected' : '' }>공개
                                 </option>
-                                <option value="private" ${searchrecipe.status eq 'private' ? 'selected' : '' }>비공개
+                                <option value="HIDDEN" ${searchrecipe.status eq 'HIDDEN' ? 'selected' : '' }>비공개
                                 </option>
                                 
                             </select>
@@ -247,7 +259,6 @@
                                     <th>작성자</th>
                                     <th>등록일</th>
                                     <th>조회수</th>
-                                    <th>좋아요</th>
                                     <th>상태</th>
                                     <th>관리</th>
                                 </tr>
@@ -265,7 +276,6 @@
                                             <td>${recipe.nickname}</td>
                                             <td>${recipe.created_date}</td>
                                             <td>${recipe.view_count}</td>
-                                            <td>${recipe.like_count}</td>
                                             <td>
                                                 <c:if test="${recipe.status eq 'ACTIVE'}">
                                                     <span class="badge badge-public">공개</span>
@@ -334,11 +344,7 @@
 
                             <dt>조회수</dt>
                             <dd id="model-count"></dd>
-
-
-                            <dt>좋아요</dt>
-                            <dd id="model-like"></dd>
-
+    
                             <dt>상태</dt>
                             <dd id="model-status"></dd>
 
