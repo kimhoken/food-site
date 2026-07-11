@@ -95,11 +95,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         WHERE REPLACE(c.category_name, ' ', '') = REPLACE(#{categoryName}, ' ', '')
     </select>
 
-    <!-- 조회수/좋아요순 인기 레시피 5개 조회 (메인페이지용) -->
+    <!-- 조회수순 인기 레시피 5개 조회 (메인페이지용) -->
     <select id="selectViewCount" resultType="recipe">
         SELECT r.*, m.nickname FROM recipe r
         JOIN member m ON r.member_id = m.member_id
-        ORDER BY view_count DESC, like_count DESC LIMIT 5
+        ORDER BY view_count DESC LIMIT 5
     </select>
 
     <!-- 회원이 작성한 레시피 갯수 조회 -->
@@ -273,7 +273,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <!-- 레시피 상세보기용 -->
     <select id="getRecipe" resultMap="RecipeDetailMap">
         SELECT 
-            r.recipe_id, r.title, r.food_id, r.cooking_time, r.view_count, r.like_count, 
+            r.recipe_id, r.title, r.food_id, r.cooking_time, r.view_count,  
             r.created_date, r.updated_date, r.thumbnail, r.difficulty, r.status,
             m.nickname, 
             m.member_id AS memberId, m.nickname AS nickName,

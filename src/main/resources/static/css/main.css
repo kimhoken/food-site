@@ -716,7 +716,7 @@ header {
 
 /* 오늘의 추천 섹션 */
 .box-title {
-    font-size: 15px;
+    font-size: 17px;
     font-weight: 700;
     margin-bottom: 12px;
     color: #1e293b;
@@ -728,9 +728,9 @@ header {
     margin-bottom: 12px;
 }
 
-.today-main-img {
-    width: 110px;
-    height: 80px;
+.today-main-img img{
+    width: 200px;
+    height: 150px;
     border-radius: 8px;
     background-size: cover;
     background-position: center;
@@ -1212,5 +1212,7 @@ footer {
     display: none;
 }
 .recommend-slide.active{
-    display: block;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
 }

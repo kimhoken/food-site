@@ -78,10 +78,6 @@ public class RecipeController {
             Collections.sort(recipeList, (e1, e2) -> {
                 return e2.getView_count() - e1.getView_count();
             });
-        } else if (sort.equals("like")) {
-            Collections.sort(recipeList, (e1, e2) -> {
-                return e2.getLike_count() - e1.getLike_count();
-            });
         } else {
             // 등록일자가 같을 경우 이름순으로 정렬
             Collections.sort(recipeList, (e1, e2) -> {

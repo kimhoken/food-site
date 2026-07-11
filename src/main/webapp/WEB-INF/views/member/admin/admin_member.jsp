@@ -43,7 +43,6 @@
             setText("recipe", dto.recipe_count);
             setText("comment", dto.comment_count);
             setText("bookmark", dto.bookmark_count);
-            setText("like", dto.like_count);
             
             setList("up-report", dto.reportList );
 
@@ -290,10 +289,7 @@
 
                 <dt>북마크</dt>
                 <dd id="model-bookmark" class="model-bookmark"></dd>
-
-                <dt>좋아요</dt>
-                <dd id="model-like" class="model-like"></dd>
-
+                
                 <dt>신고 내역</dt>
                 <ul id="model-up-report" class="model-up-report"></ul>
             </dl>

@@ -135,10 +135,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             where c.member_id = m.member_id) AS comment_count,
         (   select count(*)
             from bookmark b
-            where b.member_id = m.member_id) AS bookmark_count,
-        (   select coalesce(sum(r.like_count),0)
-            from recipe r
-            where r.member_id = m.member_id) AS like_count
+            where b.member_id = m.member_id) AS bookmark_count        
         from member m
         where m.member_id = #{member_id}
     </select>

@@ -40,8 +40,7 @@
                     setText("category", recipe.category_name);
                     setText("created", recipe.created_date);
                     setText("modify", recipe.updated_date);
-                    setText("count", recipe.view_count);
-                    setText("like", recipe.like_count);
+                    setText("count", recipe.view_count);                    
                     setText("status", recipe.status);
 
                     setImg("model_img", "/upload/recipe/" + recipe.thumbnail);
@@ -247,7 +246,6 @@
                                     <th>작성자</th>
                                     <th>등록일</th>
                                     <th>조회수</th>
-                                    <th>좋아요</th>
                                     <th>상태</th>
                                     <th>관리</th>
                                 </tr>
@@ -265,7 +263,6 @@
                                             <td>${recipe.nickname}</td>
                                             <td>${recipe.created_date}</td>
                                             <td>${recipe.view_count}</td>
-                                            <td>${recipe.like_count}</td>
                                             <td>
                                                 <c:if test="${recipe.status eq 'ACTIVE'}">
                                                     <span class="badge badge-public">공개</span>
