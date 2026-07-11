@@ -169,6 +169,10 @@
     <select id="reportCount" resultType="int">
         select count(*)
         from report
+        where 1=1
+        <if test="_parameter != 0">
+            and member_id = #{member_id}
+        </if>
     </select>
 
     <select id="reportListPage" parameterType="map" resultType="report">
@@ -180,6 +184,10 @@
             m.profile_img
         from report r
         join member m on r.member_id = m.member_id
+        where 1=1 
+        <if test="member_id != null and member_id != 0">
+            and r.member_id = #{member_id}
+        </if>
         order by r.report_id desc
         limit #{offset}, #{size}
     </select>
@@ -196,7 +204,7 @@
     </select>
 
     <!-- 회원 관리 신고내역 간단 조회 -->
-    <select id="adminReportList" resultType="adminmember">
+    <select id="adminReportList" resultType="report">
         select reason, created_date
         from report
         where member_id = #{member_id}

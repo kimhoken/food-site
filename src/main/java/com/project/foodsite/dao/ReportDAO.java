@@ -32,7 +32,7 @@ public interface ReportDAO {
 
     int updateSameMemberSameTargetReportStatusWarning(ReportVO vo);
 
-    int reportCount();
+    int reportCount( int member_id );
 
     List<ReportVO> reportListPage(Map<String, Object> map);
 
