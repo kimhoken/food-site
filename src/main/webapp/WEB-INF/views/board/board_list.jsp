@@ -179,7 +179,12 @@
                 }
 
                 function setModal(dto, card){
-                    setImg("model-img","/upload/review/"+dto.recipe_thumbnail, card);
+
+                    const imagePath = dto.thumbnail ? "/upload/review/" + dto.thumbnail 
+                                                    : "/upload/recipe/" + dto.recipe_thumbnail;
+
+
+                    setImg("model-img", imagePath, card);
                     setText("recipetitle",dto.recipe_title, card);
                     setText("title",dto.title, card);
                     setText("content", dto.content, card);
@@ -347,7 +352,7 @@
                                         <img src="/upload/review/${review.thumbnail}" alt="후기 이미지">
                                     </c:when>
                                     <c:otherwise>
-                                        <img src="/images/no_image.png" alt="이미지 없음">
+                                        <img src="/upload/recipe/${review.recipe_thumbnail}" alt="레시피 이미지">
                                     </c:otherwise>
                                 </c:choose>
                             </div>

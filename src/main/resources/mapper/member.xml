@@ -24,7 +24,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             and nickname = #{nickname}
         </if> 
 
-
     </select>        
 
     
@@ -49,13 +48,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             parameterType="String"
             resultType="member">
         select * from member
-        where provider = #{provider} and
-        provider_id = #{provider_id}
+        where provider = #{provider}
+        and provider_id = #{provider_id}
     </select>
 
     <update id="userUpdate" parameterType="member">
         update member set nickname = #{nickname}, email = #{email}, status = #{status}, 
-                          profile_img = #{filename}, name = #{name}, member_intro = #{member_intro}, role = #{role},
+                          profile_img = COALESCE(#{filename}, #{profile_img}), 
+                          name = #{name}, member_intro = #{member_intro}, role = #{role},
                 suspend_start = CASE 
                                   WHEN #{status} = 'SUSPEND' THEN NOW()
                                 ELSE NULL 
