@@ -27,7 +27,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             m.nickname
         FROM comment c
         LEFT JOIN member m ON c.member_id = m.member_id
-        WHERE c.recipe_id = #{value}
+        WHERE c.recipe_id = #{value} 
+        AND c.status = 'ACTIVE'
         ORDER BY c.comment_id
     </select>
 
@@ -46,6 +47,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         FROM comment c
         LEFT JOIN member m ON c.member_id = m.member_id
         WHERE c.board_id = #{value}
+        AND c.status = 'ACTIVE'
         ORDER BY c.comment_id
     </select>
 
