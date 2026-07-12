@@ -1,0 +1,59 @@
+name: Deploy Spring Boot
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+
+      - name: Grant Gradle permission
+        run: chmod +x gradlew
+
+      - name: Build JAR
+        run: ./gradlew clean bootJar
+
+      - name: Find JAR file
+        run: |
+          JAR_FILE=$(find build/libs -name "*.jar" ! -name "*-plain.jar" | head -n 1)
+          cp "$JAR_FILE" app.jar
+
+      - name: Copy JAR to EC2
+        uses: appleboy/scp-action@v1
+        with:
+          host: ${{ secrets.EC2_HOSTS }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEYS }}
+          source: app.jar
+          target: /home/ubuntu/app
+
+      - name: Restart application
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.EC2_HOSTS }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEYS }}
+          script: |
+            cd /home/ubuntu/app
+
+            pkill -f 'java -jar app.jar' || true
+
+            nohup java -jar app.jar \
+              --spring.config.additional-location=file:/home/ubuntu/app/application.properties \
+              > app.log 2>&1 &
+
+            sleep 5
+            tail -n 30 app.log
