@@ -11,6 +11,7 @@
         JOIN member m 
         ON b.member_id = m.member_id 
         WHERE b.board_type = 'COMMUNITY'
+        AND b.status = 'ACTIVE'
     </select>
 
     <!-- 검색 -->
@@ -117,7 +118,7 @@
             )
         </if>
         <if test="status != null and status != '' ">
-            and status = #{status}
+            and b.status = #{status}
         </if>
 
         <choose>
@@ -222,6 +223,7 @@
         from board b
         join member m on b.member_id = m.member_id
         where b.board_type = 'COMMUNITY'
+        AND b.status = 'ACTIVE'
         order by b.board_id desc
         limit #{offset}, #{size}
     </select>

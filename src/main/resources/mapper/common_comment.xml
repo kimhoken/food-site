@@ -27,7 +27,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             m.nickname
         FROM comment c
         LEFT JOIN member m ON c.member_id = m.member_id
-        WHERE c.recipe_id = #{value}
+        WHERE c.recipe_id = #{value} 
+        AND c.status = 'ACTIVE'
         ORDER BY c.comment_id
     </select>
 
@@ -46,6 +47,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         FROM comment c
         LEFT JOIN member m ON c.member_id = m.member_id
         WHERE c.board_id = #{value}
+        AND c.status = 'ACTIVE'
         ORDER BY c.comment_id
     </select>
 
@@ -75,6 +77,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         FROM comment c
         LEFT JOIN member m ON c.member_id = m.member_id
         WHERE c.recipe_id = #{recipe_id}
+        AND c.status = 'ACTIVE'
         ORDER BY c.comment_id
         LIMIT #{size} OFFSET #{offset}
     </select>
@@ -84,6 +87,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         SELECT COUNT(*)
         FROM comment
         WHERE recipe_id = #{value}
+        AND status = 'ACTIVE'
     </select>
 
     <!-- 커뮤니티 댓글 페이징 조회 -->
@@ -101,6 +105,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         FROM comment c
         LEFT JOIN member m ON c.member_id = m.member_id
         WHERE c.board_id = #{board_id}
+        AND c.status = 'ACTIVE'
         ORDER BY c.comment_id
         LIMIT #{size} OFFSET #{offset}
     </select>
@@ -110,6 +115,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         SELECT COUNT(*)
         FROM comment
         WHERE board_id = #{value}
+        AND status = 'ACTIVE'
     </select>
 
 </mapper>

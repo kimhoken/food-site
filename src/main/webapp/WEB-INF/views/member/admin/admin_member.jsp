@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin_member.css" />
 
     <script>
+        //  회원 상세 정보 모달 함수
         function member_view(member_id) {
             fetch("/admin/member/info", {
                 method: "post",
@@ -22,10 +23,14 @@
                     document.querySelector(".ma-btn-report").onclick =
                         () => memberReport(dto.member_id);
 
+                    document.querySelector(".ma-btn-rank").onclick = 
+                        () => memberrank(dto.member_id, dto.role);    
+
                     document.querySelector(".ma-detail-panel").classList.add("active");
                 });
         }
 
+        // 모달 함수 정보 넣는 과정
         function filemember(dto) {
             setImg("model-img", "/upload/profile/" + dto.profile_img);
             setText("name", dto.name);
@@ -38,8 +43,8 @@
             setText("recipe", dto.recipe_count);
             setText("comment", dto.comment_count);
             setText("bookmark", dto.bookmark_count);
-            setText("like", dto.like_count);
-            setText("up-report", "신고 내역 구현 예정");
+            
+            setList("up-report", dto.reportList );
 
             if (dto.status === "ACTIVE") {
                 document.querySelector(".model-status").textContent = "정상";
@@ -71,8 +76,10 @@
             }
         }
 
-        function memberStop(id) {
-            if (!confirm("회원 상태를 변경하시겠습니까?")) {
+        function memberStop( id) {
+            
+            if(!confirm("회원 상태를 변경하시겠습니까?")){
+                alert("회원 변경이 취소 되었습니다.");
                 return;
             }
 
@@ -93,7 +100,46 @@
         }
 
         function memberReport(id) {
-            alert("신고 내역 기능은 구현 예정입니다. 회원 번호: " + id);
+            location.href="/report/admin/list.do?member_id="+id;
+        }
+
+        function memberrank( id, role ){
+
+            const target = role === "ADMIN" ? "USER": "ADMIN";
+            const actiontext = target === "ADMIN" ? "관리자 승급" : "일반 회원 강등";
+
+            
+
+            const input = prompt( actiontext + "를 진행하려면 " + actiontext +"을 입력 하세요" );
+
+            if (!input === actiontext) {
+                alert("입력값이 달라서 취소 되었습니다.")
+                return;
+            }
+
+            
+
+            fetch("/admin/member/role",{
+                method:"post",
+                headers:{ "Content-Type": "application/x-www-form-urlencoded" },
+                body:"member_id=" + id + "&role="+role
+            }).then( res => res.json() )
+            .then( data => {
+                if( data.msg ) {
+                    alert(data.msg);
+                    return;
+                }
+
+                if( data.result > 0 ) {
+                    alert(actiontext+" 되었습니다.");
+                } else if( data.result = 0  ) {
+                    alert( actiontext + "되었습니다.");
+                } else {
+                    alert("오류 발생");
+                }
+            })
+            
+
         }
 
         function closeMemberDetail() {
@@ -243,12 +289,9 @@
 
                 <dt>북마크</dt>
                 <dd id="model-bookmark" class="model-bookmark"></dd>
-
-                <dt>좋아요</dt>
-                <dd id="model-like" class="model-like"></dd>
-
+                
                 <dt>신고 내역</dt>
-                <dd id="model-up-report" class="model-up-report"></dd>
+                <ul id="model-up-report" class="model-up-report"></ul>
             </dl>
 
             <div class="ma-action">

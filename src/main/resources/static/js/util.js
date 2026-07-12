@@ -62,3 +62,21 @@ function setA(id, path, rootElement){
     a.href = path ?? '#';
 }
 
+function setList( id, list){
+    const target = document.getElementById("model-"+id);
+    
+    target.innerHTML = "";
+
+    if(!list || list.length == 0){
+        target.innerHTML = "신고내역이 없습니다.";
+        return;
+    }
+
+    list.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = `${item.created_date}  ${item.reason}`;
+        target.appendChild(li);
+    })
+
+}
+

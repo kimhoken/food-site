@@ -17,6 +17,19 @@
                     document.querySelector('form[action="/admin/board"]').submit();
                 }
 
+                function statusText(status) {
+                    if (status === "ACTIVE") {
+                        return "\uACF5\uAC1C";
+                    }
+                    if (status === "HIDDEN") {
+                        return "\uBE44\uACF5\uAC1C";
+                    }
+                    if (status === "DELETE") {
+                        return "\uC0AD\uC81C";
+                    }
+                    return status || "";
+                }
+
                 function board_view(board_id) {
                     fetch("/admin/board/view", {
                         method: 'post',
@@ -49,7 +62,8 @@
                     setText("comment", dto.comment_count);
                     setText("created", dto.created_date);
                     setText("update", dto.updated_date);
-                    setText("status", dto.status);
+                    setText("status", statusText(dto.status));
+
                     document.querySelector(".bd-btn-hidden").value = '공개 전환';
                     document.querySelector(".bd-btn-delete").value = '삭제';
 
@@ -119,9 +133,9 @@
                             <select name="sort" onchange="searchboard()">
 
                                 <option value="">정렬</option>
-                                <option value="latest">최신순</option>
-                                <option value="oldest">오래된순</option>
-                                <option value="view">조회순</option>
+                                <option value="latest" ${adminboard.sort eq 'latest' ? 'selected' : ''}>최신순</option>
+                                <option value="oldest" ${adminboard.sort eq 'oldest' ? 'selected' : ''}>오래된순</option>
+                                <option value="view" ${adminboard.sort eq 'view' ? 'selected' : ''}>조회순</option>
 
                             </select>
 
@@ -139,15 +153,21 @@
                             <c:forEach var="board" items="${list}">
 
                                 <tr onclick="board_view('${board.board_id}')">
-                                    <td>
-                                        <img src="/upload/board/#" />
+                                    <td>                                        
                                         <span>${board.title}</span>
                                     </td>
                                     <td>${board.nickname}</td>
                                     <td>${board.comment_count}</td>
                                     <td>${board.view_count}</td>
                                     <td>${board.created_date}</td>
-                                    <td>${board.status}</td>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${board.status eq 'ACTIVE'}">&#44277;&#44060;</c:when>
+                                            <c:when test="${board.status eq 'HIDDEN'}">&#48708;&#44277;&#44060;</c:when>
+                                            <c:when test="${board.status eq 'DELETE'}">&#49325;&#51228;</c:when>
+                                            <c:otherwise>${board.status}</c:otherwise>
+                                        </c:choose>
+                                    </td>
                                 </tr>
 
                             </c:forEach>

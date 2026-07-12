@@ -49,36 +49,37 @@
         </if>
 
         <if test="status != null and status != '' ">
-            and status = #{status}
+            and r.status = #{status}
         </if>
 
     </select>
 
     <!-- 관리자 페이지 레시피 후기 조회 (검색 및 카테고리) -->
     <select id="ReviewSearch" parameterType="adminreview" resultType="adminreview">
-        select r.*, m.nickname, re.title AS main_title
+        select r.*, m.nickname, re.title AS main_title, re.thumbnail AS recipe_thumbnail
         from review r
         join member m on r.member_id = m.member_id
         join recipe re on r.recipe_id = re.recipe_id
         where 1=1
+        
         <if test="keyword != null and keyword != ''">
         and (m.nickname like #{keyword}
             or re.title like #{keyword} )
         </if>
 
         <if test="status != null and status != '' ">
-            and status = #{status}
+            and r.status = #{status}
         </if>
 
         <choose>
             <when test="sort == 'oldest'">
-                order by b.created_date asc
+                order by r.created_at asc
             </when>
             <when test="sort == 'latest'">
-                order by b.created_date desc
+                order by r.created_at desc
             </when>
             <when test="sort == 'view'">
-                order by b.view_count desc
+                order by r.view_count desc
             </when>
         </choose>
         
@@ -90,7 +91,7 @@
     <!-- 관리자 페이지 레시피 후기 상세정보 조회 -->
     <select id="adminReviewDetail" parameterType="adminreview" resultType="adminreview">
 
-        select re.*, m.nickname
+        select re.*, m.nickname, r.thumbnail AS recipe_thumbnail
         from review re
         join member m on re.member_id = m.member_id
         left join recipe r on re.recipe_id = r.recipe_id
@@ -129,6 +130,7 @@
               )
     </insert>
     
+    <!-- 후기 상세 조회 -->
     <select id="selectreview" resultType="reviewdetail">
         select re.*, 
                m.nickname,
@@ -139,20 +141,23 @@
         from review re
         join member m on m.member_id = re.member_id
         join recipe r on r.recipe_id = re.recipe_id
-        join img i on re.review_id = i.review_id
+        left join img i on re.review_id = i.review_id
         where re.review_id = #{review_id}       
     </select>
 
+    <!-- 후기 삭제 -->
     <delete id="deletereview">
         delete from review
         where review_id =#{review_id}
     </delete>
 
+    <!-- 후기 정보 업데이트 -->
     <update id="reviewUpdate">
-        update review set title = #{title}, content = #{content}, rating = #{rating}, updated_at = now()
+        update review set title = #{title}, content = #{content}, rating = #{rating}, updated_at = now(), thumbnail = #{thumbnail}
         where review_id = #{review_id}
     </update>
    
+   <!-- 후기 조회수 증가 -->
     <select id="reviewCount" parameterType="map" resultType="int">
         select count(*)
         from review r
@@ -160,12 +165,15 @@
         where 1=1
     </select>
 
+    <!-- 후기 페이징 및 카테고리 정렬 -->
     <select id="reviewPage" parameterType="map" resultType="review">
         select
             r.*,
-            m.nickname
+            m.nickname,
+            re.thumbnail as recipe_thumbnail
         from review r
         join member m on r.member_id = m.member_id
+        join recipe re on r.recipe_id = re.recipe_id
         where 1=1
 
         <choose>

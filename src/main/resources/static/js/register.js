@@ -1,10 +1,10 @@
 let id_vailed = false;
-let pwd_vailed = true;
+let pwd_vailed = false;
 let email_vailed = false;
-let nickname_vailed = true;
+let nickname_vailed = false;
 
 
-window.onload = function () {
+window.addEventListener( "load", function () {
 
     let nicknames = document.getElementById("nickname");
     nicknames.value = nickname;
@@ -14,7 +14,8 @@ window.onload = function () {
     let social_button = document.getElementById("soical_button");
     let social_row = document.getElementById("soical_row");
 
-
+    
+    //소셜 회원가입 설정
     if (provider != null && provider !== "") {
         emails.readOnly = true;
         emails.value = email;
@@ -28,7 +29,7 @@ window.onload = function () {
 
     let unvisual = document.getElementById("unvisual");
     unvisual.style.display = "none";
-}
+}); 
 
 
 let email_authnumer;
@@ -124,6 +125,7 @@ function pwd_checks() {
 
 //회원 가입 함수
 function send(f) {
+    console.log(provider);
 
     if (!id_vailed) {
         alert("아이디 중복 검사가 필요합니다.");
@@ -145,7 +147,6 @@ function send(f) {
         f.name.focus();
         return;
     }
-
 
 
     if (email == "") {
@@ -174,6 +175,12 @@ function send(f) {
 //이메일 인증번호 전송 함수
 function mailcheck(f) {
     let email = f.email.value;
+    
+    if(email === ""){
+        alert("이메일 입력하세요!!");
+        f.email.focus();
+        return;
+    }
 
     fetch("/mail_check.do", {
         method: 'post',
@@ -234,7 +241,7 @@ function nick() {
 
 }
 
-
+// 비밀번호 입력시 보이게 안보이게 설정
 function viewpwd() {
 
     let pwd = document.getElementById("pwd");

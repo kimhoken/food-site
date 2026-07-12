@@ -217,11 +217,13 @@
 
     </update>
 
-
-    <select id="reportCount"
-            resultType="int">
-        SELECT COUNT(*)
-        FROM report
+    <select id="reportCount" resultType="int">
+        select count(*)
+        from report
+        where 1=1
+        <if test="_parameter != 0">
+            and member_id = #{member_id}
+        </if>
     </select>
 
     <select id="reportListPage"

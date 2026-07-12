@@ -36,14 +36,14 @@
             document.querySelector(".cm-btn-delete").value = "삭제";
 
             if (dto.status === "ACTIVE") {
-                status = "공개";
+                status = "\uACF5\uAC1C";
             } else if (dto.status === "HIDDEN") {
-                status = "비공개";
+                status = "\uBE44\uACF5\uAC1C";
                 document.querySelector(".cm-btn-hidden").value = "공개 전환";
             }
 
             if (dto.status === "DELETE") {
-                status = "삭제";
+                status = "\uC0AD\uC81C";
                 document.querySelector(".cm-btn-delete").value = "복원";
             }
 
@@ -57,6 +57,9 @@
             setText("status", status);
 
             document.querySelector(".ma-detail-panel").classList.add("active");
+
+           
+
         }
 
         function commenthidden() {
@@ -122,17 +125,16 @@
 
                         <select name="status" onchange="searchcomment()">
                             <option value="">상태</option>
-                            <option value="public">공개</option>
-                            <option value="hidden">숨김</option>
-                            <option value="delete">삭제</option>
+                            <option value="ACTIVE" ${admincomment.status eq 'ACTIVE' ? 'selected' : ''}>공개</option>
+                            <option value="HIDDEN" ${admincomment.status eq 'HIDDEN' ? 'selected' : ''}>숨김</option>
+                            <option value="DELETE" ${admincomment.status eq 'DELETE' ? 'selected' : ''}>삭제</option>
                         </select>
 
                         <select name="sort" onchange="searchcomment()">
                             <option value="">정렬</option>
-                            <option value="latest">최신순</option>
-                            <option value="oldest">오래된순</option>
-                            <option value="status">상태순</option>
-                        </select>
+                            <option value="latest" ${admincomment.sort eq 'latest' ? 'selected' : ''}>최신순</option>
+                            <option value="oldest" ${admincomment.sort eq 'oldest' ? 'selected' : ''}>오래된순</option>
+                        </select>    
                     </div>
 
                     <table>
@@ -163,9 +165,10 @@
                                 <td>${comment.rating}</td>
                                 <td>
                                     <c:choose>
-                                        <c:when test="${comment.status eq 'ACTIVE'}">공개</c:when>
-                                        <c:when test="${comment.status eq 'HIDDEN'}">비공개</c:when>
-                                        <c:when test="${comment.status eq 'DELETE'}">삭제</c:when>
+                                        <c:when test="${comment.status eq 'ACTIVE'}">&#44277;&#44060;</c:when>
+                                        <c:when test="${comment.status eq 'HIDDEN'}">&#48708;&#44277;&#44060;</c:when>
+                                        <c:when test="${comment.status eq 'DELETE'}">&#49325;&#51228;</c:when>
+                                        <c:otherwise>${comment.status}</c:otherwise>
                                     </c:choose>
                                 </td>
                             </tr>

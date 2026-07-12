@@ -18,6 +18,19 @@
                     document.querySelector('form[action="/admin/review"]').submit();
                 }
 
+                function statusText(status) {
+                    if (status === "ACTIVE") {
+                        return "공개";
+                    }
+                    if (status === "HIDDEN") {
+                        return "비공개";
+                    }
+                    if (status === "DELETE") {
+                        return "삭제";
+                    }
+                    return status || "";
+                }
+
                 function review_view(review_id) {
                     fetch("/admin/review/view", {
                         method: 'post',
@@ -42,23 +55,30 @@
                 }
 
                 function filereview(dto) {
-                    setImg("model-image","/upload/review/"+dto.image);
+
+                    const imagePath = dto.thumbnail ? "/upload/review/" + dto.thumbnail 
+                                                    : "/upload/recipe/" + dto.recipe_thumbnail;
+
+                    setImg("model-image", imagePath);
                     setText("title", dto.title);
                     setText("user", dto.nickname);
                     setText("content", dto.content);                
                     setText("created", dto.created_at);
-                    setText("status", dto.status);
+                    setText("status", statusText(dto.status));
                     setText("rating", dto.rating);
                     setText("view", dto.view_count);
 
+                    document.querySelector(".model-status").value = "공개";
                     document.querySelector(".re-btn-hidden").value = '공개 전환';
                     document.querySelector(".re-btn-delete").value = '삭제';
 
                     if (dto.status === 'HIDDEN') {
+                        document.querySelector(".model-status").value = "비공개";
                         document.querySelector(".re-btn-hidden").value = '비공개 전환'
                     }
 
                     if (dto.status === 'DELETE') {
+                        document.querySelector(".model-status").value = "삭제";
                         document.querySelector(".re-btn-delete").value = '복원'
                     }
                 }
@@ -115,19 +135,28 @@
                 <form action="/admin/review" method="get">
 
                     <div>
+                        
                         <div>
                             <h3>레시피 후기 관리 페이지</h3>
                             <small>회원들의 레시피 후기을 관리 할수 있습니다.</small>
                         </div>
+
                         <div>
                             <input type="text" placeholder="게시글, 작성자를 입력하세요" name="keyword"
                                 onkeydown="entersearch(event)" />
 
                             <select name="sort" onchange="searchreview()">
-                                <option value="">정렬</option>
-                                <option value="asc">오름차순</option>
-                                <option value="desc">내림차순</option>
-                                <option value="view">조회수순</option>
+                                <option value="" >정렬</option>
+                                <option value="oldest" ${adminreview.sort eq 'oldest' ? 'selected' : '' }>오름차순</option>
+                                <option value="latest" ${adminreview.sort eq 'latest' ? 'selected' : '' }>내림차순</option>
+                                <option value="view" ${adminreview.sort eq 'view' ? 'selected' : '' }>조회수순</option>
+                            </select>
+
+                            <select name="status" onchange="searchreview()">
+                                <option value="">상태</option>
+                                <option value="ACTIVE" ${adminreview.status eq 'ACTIVE' ? 'selected' : ''}>공개</option>
+                                <option value="HIDDEN" ${adminreview.status eq 'HIDDEN' ? 'selected' : ''}>숨김</option>
+                                <option value="DELETE" ${adminreview.status eq 'DELETE' ? 'selected' : ''}>삭제</option>
                             </select>
 
 
@@ -151,7 +180,17 @@
                                 <tr onclick="review_view('${review.review_id}')">
 
                                     <td>
-                                        <img src="/upload/review/${review.image}" />
+                                        <c:choose>
+
+                                            <c:when test="${not empty review.thumbnail}">
+                                                <img src="/upload/review/${review.thumbnail}" />
+                                            </c:when>
+
+                                            <c:otherwise>
+                                                <img src="/upload/recipe/${review.recipe_thumbnail}" />
+                                            </c:otherwise>
+
+                                        </c:choose>
                                         <span>${review.main_title}</span>
                                     </td>
 
@@ -159,7 +198,14 @@
                                     <td>${review.rating}</td>
                                     <td>${review.nickname}</td>
                                     <td>${review.created_at}</td>
-                                    <td>${review.status}</td>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${review.status eq 'ACTIVE'}">공개</c:when>
+                                            <c:when test="${review.status eq 'HIDDEN'}">비공개</c:when>
+                                            <c:when test="${review.status eq 'DELETE'}">삭제</c:when>
+                                            <c:otherwise>${review.status}</c:otherwise>
+                                        </c:choose>
+                                    </td>
 
                                 </tr>
 

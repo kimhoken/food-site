@@ -43,7 +43,7 @@ public class AdminBoardController {
         model.addAttribute("list", list);
         model.addAttribute("totalcount", totalcount );
         model.addAttribute("paging", paging);
-        model.addAttribute("admincomment", Board);
+        model.addAttribute("adminboard", Board);
 
     }
 

@@ -32,9 +32,13 @@ public interface ReportDAO {
 
     int updateSameMemberSameTargetReportStatusWarning(ReportVO vo);
 
-    int reportCount();
+    int reportCount( int member_id );
 
     List<Map<String, Object>> reportListPage(Map<String, Object> map);
 
     int reportDelete(int report_id);
+
+    int reportTotal();
+
+    List<ReportVO> adminReportList( int member_id );
 }

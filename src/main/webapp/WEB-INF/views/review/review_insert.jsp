@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
     <link rel="stylesheet" href="/css/review.css" />
     <script>
+
         function review_send(f) {
             let rating = f.rating.value;
             let title = f.title.value;
@@ -42,6 +43,7 @@
                 })
         }
 
+        // 이미지 변경 함수
         document.addEventListener("DOMContentLoaded", () => {
             const fileInput = document.getElementById("reviewPhotos");
             const previewBox = document.getElementById("previewBox");
@@ -63,38 +65,54 @@
                 });
             }
         })
+
     </script>
 </head>
 
 <body>
+
     <main class="review-write-page">
+
         <div class="review-write-head">
+
             <span class="review-write-kicker">레시피 후기</span>
             <h3>레시피 후기 등록</h3>
             <small>직접 만들어본 경험을 사진과 함께 공유해보세요.</small>
+
         </div>
 
         <form class="review-write-form" enctype="multipart/form-data" method="post">
+
             <input type="hidden" name="recipe_id" value="${param.recipe_id}" />
 
             <div class="review-write-layout">
                 <aside class="review-recipe-card">
+
                     <c:choose>
+
                         <c:when test="${not empty recipe.thumbnail}">
                             <img src="/upload/recipe/${recipe.thumbnail}" alt="${recipe.title}" />
                         </c:when>
+
                         <c:otherwise>
                             <img src="/images/no_image.png" alt="이미지 없음" />
                         </c:otherwise>
+
                     </c:choose>
 
                     <div class="review-recipe-info">
+
                         <span class="review-recipe-label">후기를 남길 레시피</span>
                         <h4>${recipe.title}</h4>
+
                         <div class="review-recipe-meta">
+
                             <span>${empty recipe.category_name ? '카테고리 없음' : recipe.category_name}</span>
                             <span>${recipe.cooking_time}</span>
+                            <span>${recipe.difficulty}</span>
+
                         </div>
+
                     </div>
                 </aside>
 
@@ -113,21 +131,34 @@
                 </div>
 
                 <div class="review-field">
+
                     <label>후기 제목 <span>*</span></label>
                     <input type="text" name="title" placeholder="후기 제목 입력" />
+
                 </div>
 
+
                 <div class="review-field">
+
                     <label>후기 내용 <span>*</span></label>
-                    <textarea name="content" placeholder="레시피를 만들다가 느낌 감정을 공유해 주세요"></textarea>
+                    <textarea name="content"
+                              placeholder="레시피를 만들다가 느낌 감정을 공유해 주세요"></textarea>
+
                 </div>
 
                 <div class="review-field">
+
                     <label>후기 사진</label>
                     <label class="review-file-label" for="reviewPhotos">사진 선택</label>
-                    <input class="review-file-input" type="file" id="reviewPhotos" name="photo" multiple />
+                    <input class="review-file-input" 
+                           type="file" 
+                           id="reviewPhotos" 
+                           name="photo" 
+                           multiple />
                     <div id="previewBox" class="preview-box"></div>
+
                 </div>
+
             </div>
 
             <div class="review-write-actions">

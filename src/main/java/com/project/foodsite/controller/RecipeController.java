@@ -78,10 +78,6 @@ public class RecipeController {
             Collections.sort(recipeList, (e1, e2) -> {
                 return e2.getView_count() - e1.getView_count();
             });
-        } else if (sort.equals("like")) {
-            Collections.sort(recipeList, (e1, e2) -> {
-                return e2.getLike_count() - e1.getLike_count();
-            });
         } else {
             // 등록일자가 같을 경우 이름순으로 정렬
             Collections.sort(recipeList, (e1, e2) -> {
@@ -92,8 +88,8 @@ public class RecipeController {
             });
         }
 
-        int offSet = searchDTO.getOffset();
-        int start = 1;
+        int offSet = searchDTO.getOffset() - 1;
+        int start = 0;
         List<RecipeVO> resultList = new LinkedList<>();
 
         /*
@@ -124,7 +120,7 @@ public class RecipeController {
             }
         }
 
-        if (offSet != 9) {
+        if (offSet != 8) {
             start = offSet - 8;
         }
         /*

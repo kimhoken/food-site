@@ -43,6 +43,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </choose>
         LIMIT #{size} OFFSET #{offset}
     </select>
+    
     <!-- 관리자 댓글 총 갯수 조회 -->
     <select id="commentCount" parameterType="admincomment">
         select count(c.comment_id) 

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.project.foodsite.common.AdminUtil;
 import com.project.foodsite.common.Paging;
 import com.project.foodsite.dao.MemberDAO;
+import com.project.foodsite.dao.ReportDAO;
 import com.project.foodsite.vo.MemberVO;
 import com.project.foodsite.dto.AdminMemberDTO;
 
@@ -26,6 +27,7 @@ public class AdminMemberContorller {
     private final HttpSession httpSession;
     private final AdminUtil adminUtil;
     private final MemberDAO memberDAO;
+    private final ReportDAO reportDAO;
 
     // 회원 페이징 함수
     private void memberPaging(Model model, AdminMemberDTO admin){
@@ -68,8 +70,11 @@ public class AdminMemberContorller {
     @PostMapping("/admin/member/info")
     @ResponseBody
     public AdminMemberDTO memberDetail(AdminMemberDTO admin){     
+        AdminMemberDTO member = memberDAO.memberDetail(admin.getMember_id());
 
-        return memberDAO.memberDetail(admin.getMember_id());
+        member.setReportList( reportDAO.adminReportList(admin.getMember_id()) );
+
+        return member;
 
     }
 
@@ -99,7 +104,43 @@ public class AdminMemberContorller {
     } 
 
     // 회원 등급 변경(관리자 => 일반 회원/ 일반회원 => 관리자)
-    
+    @PostMapping("/admin/member/role")
+    @ResponseBody
+    public Map<String,Object> memberrole( MemberVO vo ){
+
+        MemberVO user = memberDAO.getUserByMemberId(vo.getMember_id());
+
+        MemberVO loginuser = (MemberVO)httpSession.getAttribute("user");
+        
+        Map<String,Object> map = new HashMap<>();
+        
+        if( loginuser.getMember_id() == user.getMember_id() ){
+
+            map.put("msg","자기 자신의 권한은 설정 할수 없습니다.");
+
+            return map;
+        }
+
+        if("ADMIN".equals(user.getRole())){
+
+            user.setRole("USER");
+            
+
+        } else {
+
+            user.setRole("ADMIN");
+
+        }
+
+        int res = memberDAO.userUpdate(user);
+        
+
+        map.put("result", res);
+        map.put("role", user.getRole());
+        
+        return map;
+
+    }
     
 
 }

@@ -10,35 +10,43 @@
             </div>
 
             <div class="summary-grid">
+
                 <div class="summary-card green">
                     <p>전체 회원 수</p>
                     <strong>${userTotal}</strong>
                     <span>인원수</span>
                 </div>
+
                 <div class="summary-card orange">
                     <p>전체 레시피</p>
                     <strong>${recipeTotal}</strong>
                     <span>레시피 건수</span>
                 </div>
+
                 <div class="summary-card blue">
                     <p>문의대기</p>
                     <strong>${inquiryTotal}</strong>
                     <span> 건수</span>
                 </div>
+
                 <div class="summary-card red">
                     <p>신고 대기</p>
-                    <strong>12</strong>
+                    <strong>${reportTotal}</strong>
                     <span>건수</span>
                 </div>
+
             </div>
         </section>
 
         <section class="admin-content-grid">
+
             <div class="recent-recipe-box">
+
                 <div class="box-title">
                     <h3>최근 등록 레시피</h3>
                     <span onclick="location.href='/admin/recipe'">더보기</span>
                 </div>
+
                 <table class="admin-table">
                     <tr>
                         <th>번호</th>
@@ -52,17 +60,17 @@
                         <tr onclick="location.href='recipe_detail.do?recipe_id=${recipe.recipe_id}'">
                             <td>${recipe.rank_num}</td>
                             <td><img src="/upload/recipe/${recipe.thumbnail}" width="85px" height="85px"/>
-                                ${recipe.title}</td>
+                                <p>${recipe.title}</p></td>
                             <td>${recipe.nickname}</td>
                             <td>${recipe.created_date}</td>
                             <td>
-                                <c:if test="${recipe.status eq 'public'}">
+                                <c:if test="${recipe.status eq 'ACTIVE'}">
                                     공개
                                 </c:if>
-                                <c:if test="${recipe.status eq 'private'}">
+                                <c:if test="${recipe.status eq 'HIDDEN'}">
                                     비공개
                                 </c:if>
-                                <c:if test="${recipe.status eq 'delete'}">
+                                <c:if test="${recipe.status eq 'DELETE'}">
                                     삭제
                                 </c:if>
                             </td>
@@ -93,8 +101,8 @@
 
                 <div class="admin-alert-box">
                     <h4>운영 알림</h4>
-                    <p>답변 대기 문의 <strong>24건</strong></p>
-                    <p>처리 대기 신고 <strong>7건</strong></p>
+                    <p>답변 대기 문의 <strong>${inquiryTotal}건</strong></p>
+                    <p>처리 대기 신고 <strong>${reportTotal}건</strong></p>
                 </div>
             </div>
         </section>

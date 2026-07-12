@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Alias("adminreview")
 public class AdminReviewDTO extends  SearchDTO{
     private Date created_at, updated_at;
-    private String title, content, image, main_title, nickname;
+    private String title, content, thumbnail, recipe_thumbnail, main_title, nickname;
     private int view_count, review_id;
     private double rating;
 
