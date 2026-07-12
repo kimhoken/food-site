@@ -5,28 +5,31 @@
     <script>
         let selcomment;
 
+        // 검색어 입력 후 언터키 누르면 검색
         function entersearch(e) {
             if (e.key === "Enter") {
                 searchcomment();
             }
         }
 
+        // 현재 검색/필터 조건으로 목록 조회 폼을 제출
         function searchcomment() {
             document.querySelector('form[action="/admin/comment"]').submit();
         }
 
+        // 댓글 클릭시 상세 정보 조회
         function comment_view(comment_id) {
             fetch("/admin/comment/view", {
                 method: "post",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: "comment_id=" + comment_id
             }).then(res => res.json())
-                .then(dto => {
-                    console.log(dto);
+                .then(dto => {                    
                     setComment(dto);
                 });
         }
 
+        // 댓글 모달 정보 입력
         function setComment(dto) {
             let status = "";
 
@@ -36,14 +39,14 @@
             document.querySelector(".cm-btn-delete").value = "삭제";
 
             if (dto.status === "ACTIVE") {
-                status = "\uACF5\uAC1C";
+                status = "공개";
             } else if (dto.status === "HIDDEN") {
-                status = "\uBE44\uACF5\uAC1C";
+                status = "비공개";
                 document.querySelector(".cm-btn-hidden").value = "공개 전환";
             }
 
             if (dto.status === "DELETE") {
-                status = "\uC0AD\uC81C";
+                status = "삭제";
                 document.querySelector(".cm-btn-delete").value = "복원";
             }
 
@@ -62,6 +65,7 @@
 
         }
 
+        // 댓글 공개/비공개 설정
         function commenthidden() {
             if (!confirm("댓글 공개 상태를 변경하시겠습니까?")) {
                 return;
@@ -83,6 +87,7 @@
                 });
         }
 
+        // 댓글 삭제/복원
         function commentdelete() {
             if (!confirm("댓글을 삭제 또는 복원하시겠습니까?")) {
                 return;
@@ -104,6 +109,7 @@
                 });
         }
 
+        // 상세 모달 닫기
         function closeCommentDetail() {
             document.querySelector(".ma-detail-panel").classList.remove("active");
         }
@@ -137,6 +143,7 @@
                         </select>    
                     </div>
 
+                    <!-- 댓글 목록 출력 -->
                     <table>
                         <tr>
                             <th>게시글</th>
@@ -188,6 +195,7 @@
             </div>
         </div>
 
+        <!-- 댓글 모달 부분 -->
         <div class="ma-detail-panel">
             <div class="ma-detail-header">
                 <h3>댓글 상세</h3>

@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/css/review.css" />
     <script>
 
+        // 평점과 제목을 검증한 뒤 후기 등록 요청을 전송
         function review_send(f) {
             let rating = f.rating.value;
             let title = f.title.value;
@@ -43,21 +44,24 @@
                 })
         }
 
-        // 이미지 변경 함수
+        // 화면 로드 후 첨부 이미지 미리보기 이벤트를 등록
         document.addEventListener("DOMContentLoaded", () => {
             const fileInput = document.getElementById("reviewPhotos");
             const previewBox = document.getElementById("previewBox");
 
             if (previewBox) {
+                // 기존 미리보기 영역을 초기화
                 previewBox.innerHTML = "";
             }
 
             if (fileInput && previewBox) {
+                // 새로 선택한 이미지 파일들을 미리보기로 표시
                 fileInput.addEventListener("change", function () {
                     previewBox.innerHTML = "";
 
                     Array.from(this.files).forEach(file => {
                         const img = document.createElement("img");
+                        // 선택한 이미지 파일을 임시 URL로 만들어 미리보기 이미지에 적용
                         img.src = URL.createObjectURL(file);
                         img.className = "preview-img";
                         previewBox.appendChild(img);
@@ -86,6 +90,7 @@
             <input type="hidden" name="recipe_id" value="${param.recipe_id}" />
 
             <div class="review-write-layout">
+                <%-- 후기 작성 대상 레시피 요약 영역 --%>
                 <aside class="review-recipe-card">
 
                     <c:choose>
@@ -116,6 +121,7 @@
                     </div>
                 </aside>
 
+                <%-- 별점 선택 영역 --%>
                 <div class="review-field review-rating-field">
                     <label>평점 <span>*</span></label>
                     <input type="hidden" name="rating" id="rating" value="0">
@@ -130,6 +136,7 @@
                     </div>
                 </div>
 
+                <%-- 후기 제목 입력 영역 --%>
                 <div class="review-field">
 
                     <label>후기 제목 <span>*</span></label>
@@ -138,6 +145,7 @@
                 </div>
 
 
+                <%-- 후기 내용 입력 영역 --%>
                 <div class="review-field">
 
                     <label>후기 내용 <span>*</span></label>
@@ -146,6 +154,7 @@
 
                 </div>
 
+                <%-- 후기 이미지 첨부 및 미리보기 영역 --%>
                 <div class="review-field">
 
                     <label>후기 사진</label>
@@ -161,6 +170,7 @@
 
             </div>
 
+            <%-- 후기 등록/취소 버튼 영역 --%>
             <div class="review-write-actions">
                 <input class="review-btn review-btn-sub" type="button" value="취소" onclick="history.back()" />
                 <input class="review-btn review-btn-main" type="button" value="후기 등록" onclick="review_send(this.form)" />
@@ -170,9 +180,11 @@
 </body>
 
 <script>
+    // 별점 요소와 결과 표시 영역을 가져옴
     const ratingStars = [...document.getElementsByClassName("rating__star")];
     const ratingResult = document.querySelector(".rating__result");
 
+    // 선택한 별점 값을 화면과 hidden input에 반영
     function printRatingResult(result, num = 0) {
         result.textContent = num;
         document.getElementById("rating").value = num;
@@ -180,6 +192,7 @@
 
     printRatingResult(ratingResult);
 
+    // 별 클릭 이벤트를 등록하고 선택된 별 개수를 갱신
     function executeRating(stars, result) {
         const starClassActive = "rating__star fas fa-star";
         const starClassUnactive = "rating__star far fa-star";

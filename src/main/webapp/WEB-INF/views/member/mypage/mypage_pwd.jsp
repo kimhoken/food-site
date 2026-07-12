@@ -3,6 +3,7 @@
 
 <head>
     <link rel="stylesheet" href="css/mypage_account.css"/>
+    <script src="/js/mypage_pwd.js"></script>
 </head>
 
 <section class="pwd-page">
@@ -52,7 +53,7 @@
                         </div>
 
                         <div class="pwd-btn-area">
-                            <input type="button" class="pwd-main-btn" value="비밀번호 재설정" onclick="send(this.form)" />
+                            <input type="button" class="pwd-main-btn" value="비밀번호 재설정" onclick="password_reset(this.form)" />
                         </div>
 
                     </form>

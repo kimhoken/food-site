@@ -4,6 +4,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.project.foodsite.dao.ActivityDAO">
+
+<!-- 회원 최근 활동내역 5개 조회 -->
 <select id="userActivity" resultType="activity">
     SELECT *
     FROM v_member_activity

@@ -140,6 +140,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         WHERE r.title LIKE #{pattern} OR f.food_name LIKE #{pattern}
     </select>
 
+    <!-- 관리자 페이지 최근 레시피 5개 조회  -->
     <select id="recentlyrecipe" resultType="recipe">
         SELECT ROW_NUMBER() OVER (ORDER BY r.created_date DESC) AS rank_num, r.*, m.nickname
         FROM recipe r
@@ -149,7 +150,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         LIMIT 5;
     </select>
 
-    <!-- 추후 수정예정 임시 레시피 페이징 갯수 조회 -->
+    <!-- 관리자 레시피 페이징 갯수 조회 -->
     <select id="RecipeCount" parameterType="adminrecipe">
         SELECT count(*) from recipe r
         join member m on r.member_id = m.member_id
@@ -175,8 +176,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </if> 
 
     </select>
-    
-    <!-- 뷰 생성한 걸로 바꿈 -->
+        
+    <!-- 레시피 관리 페이지 정보 조회 -->
     <select id="RecipeList" parameterType="adminrecipe" resultType="recipe">
         SELECT
             r.*,           
@@ -209,6 +210,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         LIMIT #{size} OFFSET #{offset}
     </select>
 
+    <!-- 레시피 관리 페이지 레시피 상세 조회 -->
     <select id="selectrecipe" resultType="recipe">
         select r.*, c.category_name, f.food_name
         from recipe_view r
@@ -217,12 +219,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where r.recipe_id = #{recipe_id}
     </select>
 
+    <!-- 레시피 상태(공개/비공개/삭제) 변경 -->
     <update id="updateStatus" parameterType="recipe">
-        update recipe set status = #{status} where recipe_id = #{recipe_id} 
+        update recipe 
+        set status = #{status} 
+        where recipe_id = #{recipe_id} 
     </update>
 
+    <!-- 레시피 추천 상태로 변경 -->
     <update id="updateRecipe" parameterType="recipe">
-        update recipe set recommend = #{recommend} where recipe_id = #{recipe_id}
+        update recipe 
+        set recommend = #{recommend} 
+        where recipe_id = #{recipe_id}
     </update>
 
     <!-- 추천 레시피 리스트 불러오기-->
@@ -234,7 +242,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         order by r.created_date desc, r.recipe_id desc
         LIMIT 10
     </select>
-
+    
     <resultMap id="RecipeDetailMap" type="RecipeDetailDTO">
         
         <id property="recipeId" column="recipe_id" />

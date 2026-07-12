@@ -26,7 +26,8 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequiredArgsConstructor
 public class AdminController {
-
+    
+    // 파일 저장 경로 세팅 
     @Value("${file.upload.path}")
     private String uploadPath;
 

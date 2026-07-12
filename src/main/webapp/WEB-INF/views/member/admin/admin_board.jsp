@@ -3,8 +3,10 @@
 
         <head>
             <script>
+
                 let selboard;
 
+                // 검색어 입력 후 언터키 누르면 검색
                 function entersearch(e) {
 
                     if (e.key === "Enter") {
@@ -13,10 +15,12 @@
 
                 }
 
+                // 현재 검색/필터 조건으로 목록 조회 폼을 제출
                 function searchboard() {
                     document.querySelector('form[action="/admin/board"]').submit();
                 }
 
+                // 상태 코드를 화면에 표시할 한글 문구로 변환
                 function statusText(status) {
                     if (status === "ACTIVE") {
                         return "\uACF5\uAC1C";
@@ -30,6 +34,7 @@
                     return status || "";
                 }
 
+                // 상세 패널을 닫고 선택 상태를 해제
                 function board_view(board_id) {
                     fetch("/admin/board/view", {
                         method: 'post',
@@ -53,6 +58,7 @@
                         })
                 }
 
+                // 상세 모달에 데이터 채움
                 function fileboard(dto) {
                     setText("title", dto.title);
                     setText("user", dto.nickname);
@@ -64,9 +70,10 @@
                     setText("update", dto.updated_date);
                     setText("status", statusText(dto.status));
 
+                    // 상태에 따라 상태 출력( 'ACTIVE' 면 공개)
                     document.querySelector(".bd-btn-hidden").value = '공개 전환';
                     document.querySelector(".bd-btn-delete").value = '삭제';
-
+                    
                     if (dto.status === 'HIDDEN') {
                         document.querySelector(".bd-btn-hidden").value = '비공개 전환'
                     }
@@ -76,6 +83,7 @@
                     }
                 }
 
+                // 게시글 공개/비공개 변환
                 function boardhidden() {                    
                     fetch("/admin/board/hidden", {
                         method: 'post',
@@ -94,6 +102,7 @@
                         })
                 }
 
+                // 게시글 삭제/복원
                 function boarddelete() {
                     fetch("/admin/board/delete", {
                         method: 'post',
@@ -112,6 +121,7 @@
                         })
                 }
 
+                // 상세 모달 닫기 함수
                 function closeBoardDetail() {
                     document.querySelector(".bd-detail-panel").classList.remove("active");
                 }
@@ -141,6 +151,7 @@
 
                         </div>
 
+                        <!-- 게시글 목록 출력 -->
                         <table>
                             <tr>
                                 <th>제목</th>
@@ -185,6 +196,8 @@
                     </form>
 
                 </div>
+                
+                <!-- 상세 모달 출력 -->
                 <div class="bd-detail-panel">
                     <div class="bd-detail-header">
                         <button type="button" class="ra-close" onclick="closeBoardDetail()">x</button>

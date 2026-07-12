@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequiredArgsConstructor
 public class AdminCommentController {
+
     private final HttpSession httpSession;
     private final CommentDAO commentDAO;
     private final AdminUtil adminUtil;
@@ -73,6 +74,7 @@ public class AdminCommentController {
 
     }
     
+    // 댓글 공개/비공개 처리
     @PostMapping("/admin/comment/hidden")
     @ResponseBody
     public Map<String,Object> hiddencomment(int comment_id){
@@ -94,7 +96,7 @@ public class AdminCommentController {
         return map;
     }
        
-    
+    // 댓글 삭제/복원
     @PostMapping("/admin/comment/delete")
     @ResponseBody
     public Map<String,Object> deletecomment(int comment_id){

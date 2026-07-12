@@ -18,13 +18,13 @@
 
                 function statusText(status) {
                     if (status === "ACTIVE") {
-                        return "\uACF5\uAC1C";
+                        return "공개";
                     }
                     if (status === "HIDDEN") {
-                        return "\uBE44\uACF5\uAC1C";
+                        return "비공개";
                     }
                     if (status === "DELETE") {
-                        return "\uC0AD\uC81C";
+                        return "삭제";
                     }
                     return status || "";
                 }
@@ -113,10 +113,11 @@
 
                 // 레시피 삭제 및 복원 함수
                 function recipedel() {
-                    if (!confirm("정말로 삭제 하시겠습니까?")) {
 
+                    if (!confirm("정말로 삭제 하시겠습니까?")) {
                         return;
                     }
+
                     fetch("/admin/recipedel", {
                         method: 'post',
                         headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -179,6 +180,7 @@
                 function recipemodify(){
                     location.href="/recipe_update.do?recipeId="+recipedetailrecipe;
                 }
+                
             </script>
         </head>
         <section class="ra-wrap">

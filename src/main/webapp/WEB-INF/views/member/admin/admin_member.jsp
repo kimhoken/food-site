@@ -66,16 +66,19 @@
             }
         }
 
+        // 회원 페이지 폼으로 보내는 기능
         function searchmember() {
             document.querySelector('form[action="/admin/member"]').submit();
         }
 
+        // 엔터 검색 기능
         function entersearch(e) {
             if (e.key === "Enter") {
                 searchmember();
             }
         }
 
+        // 회원 정지/정지 해제
         function memberStop( id) {
             
             if(!confirm("회원 상태를 변경하시겠습니까?")){
@@ -99,10 +102,12 @@
                 });
         }
 
+        // 회원 신고내역 페이지 이동 함수
         function memberReport(id) {
             location.href="/report/admin/list.do?member_id="+id;
         }
 
+        // 회원 관리자 승급 변경 
         function memberrank( id, role ){
 
             const target = role === "ADMIN" ? "USER": "ADMIN";
@@ -115,9 +120,7 @@
             if (!input === actiontext) {
                 alert("입력값이 달라서 취소 되었습니다.")
                 return;
-            }
-
-            
+            }        
 
             fetch("/admin/member/role",{
                 method:"post",
@@ -142,22 +145,29 @@
 
         }
 
+        // 상세 모달 닫기
         function closeMemberDetail() {
             document.querySelector(".ma-detail-panel").classList.remove("active");
         }
+
     </script>
 </head>
 
 <section class="ma-container admin-member-page">
+
     <div class="ma-wrap">
+
         <div class="ma-header">
             <h3 class="ma-title">회원 관리</h3>
             <small class="ma-subtitle">전체 회원 목록과 상세 정보를 관리할 수 있습니다.</small>
         </div>
 
         <div class="ma-content">
+
             <div class="ma-list-panel">
+
                 <form action="/admin/member" method="get">
+
                     <div class="ma-filter">
                         <input type="text" class="ma-search" name="keyword" placeholder="아이디, 닉네임, 이메일 검색"
                             onkeydown="entersearch(event)" />
@@ -176,6 +186,7 @@
                         </select>
                     </div>
 
+                    <!-- 회원 목록 출력 -->
                     <table class="ma-table">
                         <tr>
                             <th>프로필</th>
@@ -248,6 +259,7 @@
             </div>
         </div>
 
+        <!-- 회원 상세 모달  -->
         <div class="ma-detail-panel">
             <div class="ma-detail-header">
                 <h3>프로필</h3>

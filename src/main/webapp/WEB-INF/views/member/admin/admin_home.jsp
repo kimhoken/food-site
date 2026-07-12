@@ -2,6 +2,7 @@
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
         <section class="admin-home">
+
             <div class="admin-title-box">
                 <h2>
                     관리자 대시보드
@@ -36,6 +37,7 @@
                 </div>
 
             </div>
+
         </section>
 
         <section class="admin-content-grid">
@@ -57,19 +59,25 @@
                     </tr>
                     <!-- forEach로 최근 등록된 레시피 출력  -->
                     <c:forEach var="recipe" items="${list}">
+
                         <tr onclick="location.href='recipe_detail.do?recipe_id=${recipe.recipe_id}'">
+
                             <td>${recipe.rank_num}</td>
-                            <td><img src="/upload/recipe/${recipe.thumbnail}" width="85px" height="85px"/>
-                                <p>${recipe.title}</p></td>
+                            <td>
+                                <img src="/upload/recipe/${recipe.thumbnail}" width="85px" height="85px"/>
+                                <p>${recipe.title}</p>
+                            </td>
                             <td>${recipe.nickname}</td>
                             <td>${recipe.created_date}</td>
                             <td>
                                 <c:if test="${recipe.status eq 'ACTIVE'}">
                                     공개
                                 </c:if>
+
                                 <c:if test="${recipe.status eq 'HIDDEN'}">
                                     비공개
                                 </c:if>
+
                                 <c:if test="${recipe.status eq 'DELETE'}">
                                     삭제
                                 </c:if>
@@ -85,18 +93,23 @@
 
                 <h3>빠른 관리</h3>
                 <div class="quick-menu">
+
                     <a href="/admin/member">회원 관리
                         <small>회원 목록 및 관리</small>
                     </a>
+
                     <a href="/admin/recipe">레시피 관리
                         <small>레시피 등록 및 관리</small>
                     </a>
+
                     <a href="/admin/inquiry">문의 관리
                         <small> 문의 확인 및 답변</small>
                     </a>
+
                     <a href="/report/admin/list.do">신고 관리
                         <small>신고 확인 및 처리</small>
                     </a>
+
                 </div>
 
                 <div class="admin-alert-box">
@@ -104,5 +117,6 @@
                     <p>답변 대기 문의 <strong>${inquiryTotal}건</strong></p>
                     <p>처리 대기 신고 <strong>${reportTotal}건</strong></p>
                 </div>
+                
             </div>
         </section>
