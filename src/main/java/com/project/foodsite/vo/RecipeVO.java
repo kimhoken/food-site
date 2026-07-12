@@ -18,7 +18,6 @@ public class RecipeVO {
     private String title;
     private String thumbnail;  //이미지
     private String cooking_time;
-    private String difficulty;
     private int view_count; //조회수
     private int like_count;
     private double rating; //별점(평점)

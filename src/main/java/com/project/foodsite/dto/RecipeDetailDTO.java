@@ -20,7 +20,6 @@ public class RecipeDetailDTO {
     private String recipeTitle;
     private String thumbnail;
     private String cookingTime;
-    private String difficulty;
     private int viewCount;
     private int likeCount;
     private String status;

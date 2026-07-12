@@ -256,7 +256,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="nickName" column="nickname" />
         <result property="memberId" column="memberId"/>
         <result property="thumbnail" column="thumbnail" />
-        <result property="difficulty" column="difficulty" />
         <result property="status" column="status" />
 
         <collection property="ingredientList" ofType="ingredient">
@@ -282,7 +281,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="getRecipe" resultMap="RecipeDetailMap">
         SELECT 
             r.recipe_id, r.title, r.food_id, r.cooking_time, r.view_count,  
-            r.created_date, r.updated_date, r.thumbnail, r.difficulty, r.status,
+            r.created_date, r.updated_date, r.thumbnail, r.status,
             m.nickname, 
             m.member_id AS memberId, m.nickname AS nickName,
             i.ingredient_id, i.ingredient_name, i.quantity, i.unit, i.type,
