@@ -23,6 +23,7 @@
 
             f.submit();
         }
+        // 첨부 이미지를 원본 크기의 모달로 표시
         function openImageModal(src) {
             document.getElementById("imageModal").style.display = "flex";
             document.getElementById("modalImage").src = src;
@@ -81,6 +82,7 @@
                 </tr>
             </c:if>
 
+            <!-- 회원 문의와 비회원 문의의 작성자 정보를 구분하여 출력 -->
             <tr>
                 <th>작성자</th>
                 <td>
@@ -102,6 +104,7 @@
                 </td>
             </tr>
 
+            <!-- 문의 처리 상태에 따라 답변 완료 또는 대기로 표시 -->
             <tr>
                 <th>답변상태</th>
                 <td>
@@ -116,6 +119,7 @@
                 </td>
             </tr>
 
+            <!-- 비회원 문의에 발급된 조회 코드가 있을 때만 출력 -->
             <c:if test="${not empty vo.inquiry_code}">
                 <tr>
                     <th>문의코드</th>
@@ -124,6 +128,7 @@
             </c:if>
         </table>
 
+        <!-- 첨부 이미지 확대 모달 -->
         <div id="imageModal" class="image-modal" onclick="closeImageModal()">
             <div class="image-modal-box" onclick="event.stopPropagation()">
                 <button type="button" class="image-modal-close" onclick="closeImageModal()">

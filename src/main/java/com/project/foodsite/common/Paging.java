@@ -7,6 +7,7 @@ public class Paging {
     
     private int page, size, totalcount, totalpage, startpage, endpage, offset;
 
+    // 한 번에 화면에 보여줄 페이지 번호 개수
     private int blocksize =5;
 
     private boolean prev, next;
@@ -16,13 +17,20 @@ public class Paging {
         this.size = size;
         this.totalcount = totalcount;
         
+        // 전달받은 값을 기준으로 페이징 정보 계산
         pagingcal();        
 
     }
 
     public void pagingcal(){
+
+        // 페이지가 0 이하일 경우 첫 페이지로 설정
         page= page <= 0 ? 1: page;
+
+        // 페이지당 출력 개수가 0 이하일 경우 기본값 10으로 설정
         size = size <=0 ? 10 : size;
+        
+        // 전체 데이터 개수가 음수일 경우 0으로 설정
         totalcount = totalcount < 0 ? 0 : totalcount;
 
         

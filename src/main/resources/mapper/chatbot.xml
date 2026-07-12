@@ -4,6 +4,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.project.foodsite.dao.ChatbotDAO">
 	
+    <!-- 사용 중인 최상위 챗봇 메뉴 조회 -->
     <select id="selectParent" resultType="chatbot">
         select id, parent_id, question, 
             answer, depth, sort_order, use_yn 
@@ -11,6 +12,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             where parent_id is null and use_yn = 'Y'
     </select>
 
+    <!-- 선택한 상위 메뉴에 포함된 하위 질문 조회 -->
     <select id="selectSub" parameterType="int" resultType="chatbot">
         select id, parent_id,
             question, answer, 

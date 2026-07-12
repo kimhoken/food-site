@@ -32,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class InquiryController {
 
+    // application.properties에 설정한 파일 업로드 경로
     @Value("${file.upload.path}")
     private String uploadPath;
 
@@ -39,6 +40,7 @@ public class InquiryController {
     private final ImgDAO imgDao;
     private final pwdSecurity pwdSecurity;
 
+    // 문의 작성 페이지 이동
     @GetMapping("/inquiry")
     public String inquiryform(HttpServletRequest request, HttpSession session) {
 
@@ -51,6 +53,7 @@ public class InquiryController {
         return "inquiry/inquiryForm";
     }
 
+    // 문의 등록
     @PostMapping("/inquiry")
     public String insertInquiry(
             InquiryVO vo,
@@ -60,21 +63,27 @@ public class InquiryController {
 
         MemberVO user = (MemberVO) session.getAttribute("user");
 
+        // 문의 등록 시 기본 처리 상태를 미답변 상태로 설정
         vo.setStatus("n");
 
         if (user != null) {
+            // 회원 문의는 로그인한 회원 번호 저장
             vo.setMember_id(user.getMember_id());
 
+            // 회원 문의이므로 비회원 정보는 저장하지 않음
             vo.setGuest_name(null);
             vo.setGuest_email(null);
             vo.setGuest_password(null);
         } else {
+
+            // 비회원 문의 비밀번호는 암호화 후 저장
             String encPwd = pwdSecurity.pwdEncoding(vo.getGuest_password());
             vo.setGuest_password(encPwd);
         }
 
         inquiryDao.insertInquiry(vo);
 
+        // 문의 ID를 이용해 비회원 확인용 고유 코드 생성
         String inquiryCode = createInquiryCode(vo.getInquiry_id());
 
         vo.setInquiry_code(inquiryCode);
@@ -86,6 +95,8 @@ public class InquiryController {
             // String savePath = "/Users/shinyeyoung/upload/";
 
             File dir = new File(uploadPath);
+
+            // 업로드 폴더가 없으면 자동 생성
             if (!dir.exists()) {
                 dir.mkdirs();
             }
@@ -98,6 +109,7 @@ public class InquiryController {
 
                 String filename = image.getOriginalFilename();
 
+                //파일 중복 방지
                 long time = System.currentTimeMillis();
                 filename = time + "_" + filename;
 
@@ -123,14 +135,17 @@ public class InquiryController {
         return "redirect:/main_list.do";
     }
 
+    // 비회원 문의 비밀번호 확인 페이지
     @GetMapping("/guest/inquiry/check")
     public String guestInquiryPasswordForm(
             @RequestParam("code") String inquiry_code,
             Model model
     ) {
 
+        // 문의 확인 코드로 문의 조회
         InquiryVO vo = inquiryDao.guestInquiryCode(inquiry_code); 
 
+        // 문의 코드와 일치하는 문의가 없는 경우
         if (vo == null) { 
             model.addAttribute("msg", "존재하지 않는 문의입니다."); 
             return "inquiry/guestInquiryPasswordForm"; 
@@ -145,6 +160,8 @@ public class InquiryController {
         // 비회원 문의 확인 기간 7일
         //LocalDateTime expireDate = createdDate.plusDays(7); 
 
+
+        // 문의 확인 기간이 지난 경우 만료 처리
         if (LocalDateTime.now().isAfter(expireDate)) { 
             model.addAttribute("expired", "yes"); 
             return "inquiry/guestInquiryPasswordForm"; 
@@ -154,6 +171,7 @@ public class InquiryController {
         return "inquiry/guestInquiryPasswordForm";
     }
 
+    // 비회원 문의 비밀번호 검증
     @PostMapping("/guest/inquiry/check")
     public String guestInquiryCheck(
             @RequestParam("inquiry_code") String inquiry_code,
@@ -163,6 +181,7 @@ public class InquiryController {
 
         InquiryVO vo = inquiryDao.guestInquiryCode(inquiry_code);
 
+        // 존재하지 않는 문의 코드인 경우
         if (vo == null) {
 
             model.addAttribute("msg", "존재하지 않는 문의입니다.");
@@ -187,6 +206,7 @@ public class InquiryController {
         return "inquiry/guestInquiryDetail";
     }
 
+    // 랜덤 문자열 생성
     private String createToken() {
         SecureRandom secureRandom = new SecureRandom();
 
@@ -198,10 +218,12 @@ public class InquiryController {
                 .encodeToString(bytes);
     }
 
+    // 비회원 문의 확인용 고유 코드 생성
     private String createInquiryCode(Integer inquiryId) {
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         String token = createToken();
 
+        // 날짜, 문의 번호, 랜덤 토큰을 조합
         return "INQ-" + date + "-" + inquiryId + "-" + token;
     }
 }

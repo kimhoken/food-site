@@ -19,6 +19,7 @@
                 <p>회원 및 비회원 문의 내역을 확인하고 답변을 관리합니다.</p>
             </div>
 
+            <!-- 답변 상태, 정렬, 문의 유형을 기준으로 목록 필터링 -->
             <form action="/admin/inquiry" method="get" class="inquiry-filter-box">
 
                 <div class="filter-left">
@@ -81,6 +82,7 @@
                                 </a>
                             </td>
 
+                            <!-- 회원 문의와 비회원 문의의 작성자 표시 구분 -->
                             <td>
                                 <c:choose>
                                     <c:when test="${not empty vo.member_id}">
@@ -96,6 +98,7 @@
                                 <fmt:formatDate value="${vo.created_date}" pattern="yyyy-MM-dd"/>
                             </td>
 
+                            <!-- 문의 처리 상태에 따라 다른 상태 배지 표시 -->
                             <td>
                                 <c:choose>
                                     <c:when test="${vo.status eq 'y'}">
@@ -117,6 +120,7 @@
                     전체 ${totalcount}건
                 </div>
 
+                <!-- 페이지 이동 시 현재 필터와 정렬 조건 유지 -->
                 <div class="paging-box">
 
 

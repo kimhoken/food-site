@@ -6,6 +6,7 @@
 <head>
     <link rel="stylesheet" href="/css/report.css">
 
+    <%-- 신고 대상 ID가 하나도 없으면 신고 페이지 접근 차단 --%>
     <c:if test="${empty param.board_id and empty param.comment_id and empty param.recipe_id and empty param.review_id}">
         <script>
             alert("신고 대상이 없습니다.");
@@ -17,6 +18,7 @@
 <body>
 <c:choose>
 
+    <%-- 로그인하지 않은 사용자는 신고 기능 이용 불가 --%>
     <c:when test="${empty sessionScope.user}">
         <script>
             alert("로그인 후 이용해주세요.");
@@ -34,6 +36,7 @@
                     <p>부적절한 게시물이나 댓글을 신고할 수 있습니다.</p>
                 </div>
 
+                <%-- 신고 내용을 서버로 전송하는 폼 --%>
                 <form action="/report/insert.do"
                         method="post"
                         class="report-form"
@@ -41,6 +44,7 @@
 
                     <input type="hidden" name="target_type" value="${report.target_type}">
 
+                    <%-- 신고 대상별 식별 번호 전달 --%>
                     <input type="hidden" name="board_id" value="${param.board_id}">
                     <input type="hidden" name="comment_id" value="${param.comment_id}">
                     <input type="hidden" name="recipe_id" value="${param.recipe_id}">
@@ -133,6 +137,7 @@
             </div>
         </div>
 
+        <%-- 신고 대상 댓글 내용을 확인하는 모달창 --%>
         <div id="commentModal" class="comment-modal">
             <div class="comment-modal-box">
 

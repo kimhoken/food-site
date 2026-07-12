@@ -36,6 +36,7 @@
                     return;
                 }
 
+                // 비회원 문의인 경우 이름, 이메일, 비밀번호 추가 검증
                 if (f.guest_name) {
                     const guestName = f.guest_name.value.trim();
                     const guestEmail = f.guest_email.value.trim();
@@ -82,6 +83,7 @@
                     }
                 }
 
+                // 개인정보 수집 동의 여부 확인
                 const agree = document.getElementById("agree");
 
                 if (!agree.checked) {
@@ -106,6 +108,7 @@
                 f.submit();
             }
 
+            // 개인정보 수집 동의 모달 열기
             function openAgreeModal() {
                 const agree = document.getElementById("agree");
                 const modalAgree = document.getElementById("modalAgree");
@@ -118,6 +121,7 @@
                 document.getElementById("agreeModal").style.display = "none";
             }
 
+            // 모달에서 동의 시 메인 체크박스와 동기화
             function agreeAndCloseModal() {
                 document.getElementById("agree").checked = true;
                 document.getElementById("modalAgree").checked = true;
@@ -136,6 +140,7 @@
                     renderPreview();
                 });
 
+                // 선택한 이미지 미리보기 생성
                 window.renderPreview = function () {
                     previewList.innerHTML = "";
 
@@ -157,6 +162,7 @@
                     imageInput.files = dataTransfer.files;
                 };
 
+                // 선택한 이미지 삭제 후 목록 갱신
                 window.removeFile = function (index) {
                     files.splice(index, 1);
                     renderPreview();
@@ -194,6 +200,7 @@
                         </td>
                     </tr>
 
+                    <!-- 로그인 여부에 따라 회원 또는 비회원 입력 폼 표시 -->
                     <c:if test="${not empty sessionScope.user}">
                         <tr>
                             <th>이름</th>
@@ -276,6 +283,7 @@
             </form>
         </div>
 
+        <!-- 개인정보 수집 및 이용 안내 모달 -->
         <div id="agreeModal" class="agree-modal">
             <div class="agree-modal-content">
                 <button type="button" class="close-btn" onclick="closeAgreeModal()">✕</button>

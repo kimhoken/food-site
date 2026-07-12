@@ -44,6 +44,7 @@
                 <td class="content-box">${vo.content}</td>
             </tr>
 
+            <!-- 첨부 이미지가 존재하는 경우에만 출력 -->
             <c:if test="${not empty imgList}">
                 <tr>
                     <th>첨부이미지</th>
@@ -70,6 +71,7 @@
                 </td>
             </tr>
 
+            <!-- 문의 처리 상태에 따라 답변 완료 또는 대기로 표시 -->
             <tr>
                 <th>답변상태</th>
                 <td>
@@ -93,6 +95,7 @@
                 </td>
             </tr>
 
+             <!-- 답변이 없을 경우 안내 문구 출력 -->
             <tr>
                 <th>관리자 답변</th>
 
@@ -144,6 +147,7 @@
 </div>
 
 </body>
+<!-- 첨부 이미지 확대 모달 -->
 <div id="imageModal" class="image-modal" onclick="closeImageModal()">
     <span class="image-modal-close">&times;</span>
     <img id="modalImage" class="image-modal-content">

@@ -15,11 +15,13 @@
                     location.href = "notice_delete.do?notice_id=${notice.notice_id}";
                 }
             }
+            // 클릭한 공지 이미지를 모달창에 확대 표시
             function openImageModal(src) {
                 document.getElementById("imageModal").style.display = "flex";
                 document.getElementById("modalImage").src = src;
             }
 
+            // 이미지 모달창을 닫고 기존 이미지 경로 초기화
             function closeImageModal() {
                 document.getElementById("imageModal").style.display = "none";
                 document.getElementById("modalImage").src = "";
@@ -57,6 +59,7 @@
                     <c:if test="${not empty img and not empty img.image_list}">
                         <div class="detail-img-box">
 
+                            <%-- 쉼표로 저장된 이미지 파일명을 나누어 반복 출력 --%>
                            <c:forEach var="fileName" items="${fn:split(img.image_list, ',')}">
                                 <div class="detail-img-item"
                                     onclick="openImageModal('/upload/${fileName}')">
@@ -73,6 +76,7 @@
                 </div>
 
                 <div class="detail-btn-area">
+                    <%-- 관리자만 수정 및 삭제 버튼 사용 가능 --%>
                     <c:if test="${sessionScope.user.role eq 'ADMIN'}">
                         <input type="button"
                             class="edit-btn"
@@ -94,6 +98,7 @@
             </section>
 
         </main>
+        <%-- 공지 이미지 확대 확인용 모달창 --%>
         <div id="imageModal" class="image-modal" onclick="closeImageModal()">
             <button type="button" class="image-modal-close" onclick="closeImageModal()">×</button>
             <img id="modalImage" src="" alt="확대 이미지" onclick="event.stopPropagation()">

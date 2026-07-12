@@ -87,8 +87,10 @@ public class MailSendService {
     // 관리자가 비회원 문의에 답변 완료했을 때 보내는 메일
     public void sendInquiryAnswerEmail( String email, String inquiryCode, String titleText, String type, String createdDate) {
 
+        // 발신자 이메일 주소
         String setForm = "kimhk441@naver.com";
 
+        // 비회원이 문의 답변을 확인할 수 있는 주소
         String inquiryUrl = "http://localhost:5000/guest/inquiry/check?code=" + inquiryCode;
 
         String title = "오늘은 뭐 먹지? 문의 답변이 등록되었습니다.";
