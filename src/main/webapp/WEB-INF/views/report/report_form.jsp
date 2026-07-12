@@ -34,7 +34,10 @@
                     <p>부적절한 게시물이나 댓글을 신고할 수 있습니다.</p>
                 </div>
 
-                <form action="/report/insert.do" method="post" class="report-form">
+                <form action="/report/insert.do"
+                        method="post"
+                        class="report-form"
+                        onsubmit="return submitReport();">
 
                     <input type="hidden" name="target_type" value="${report.target_type}">
 

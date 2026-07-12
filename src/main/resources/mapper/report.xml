@@ -15,7 +15,10 @@
         WHERE board_id = #{board_id}
     </select>
 
-    <select id="selectRecipeForReport" parameterType="int" resultType="report">
+
+    <select id="selectRecipeForReport"
+            parameterType="int"
+            resultType="report">
         SELECT
             recipe_id,
             title AS report_title
@@ -23,7 +26,10 @@
         WHERE recipe_id = #{recipe_id}
     </select>
 
-    <select id="selectReviewForReport" parameterType="int" resultType="report">
+
+    <select id="selectReviewForReport"
+            parameterType="int"
+            resultType="report">
         SELECT
             review_id,
             title AS report_title
@@ -31,17 +37,24 @@
         WHERE review_id = #{review_id}
     </select>
 
-    <select id="selectCommentForReport" parameterType="int" resultType="report">
+
+    <select id="selectCommentForReport"
+            parameterType="int"
+            resultType="report">
         SELECT
             c.comment_id,
             c.content AS detail,
             m.nickname
         FROM comment c
-        LEFT JOIN member m ON c.member_id = m.member_id
+        LEFT JOIN member m
+            ON c.member_id = m.member_id
         WHERE c.comment_id = #{comment_id}
     </select>
 
-    <insert id="reportInsert" parameterType="report">
+
+    <insert id="reportInsert"
+            parameterType="report">
+
         INSERT INTO report (
             target_type,
             reason,
@@ -68,9 +81,12 @@
             #{recipe_id},
             #{review_id}
         )
+
     </insert>
 
-    <select id="reportList" resultType="report">
+
+    <select id="reportList"
+            resultType="report">
         SELECT
             r.*,
             m.name,
@@ -78,18 +94,27 @@
             m.email,
             m.profile_img
         FROM report r
-        LEFT JOIN member m ON r.member_id = m.member_id
+        LEFT JOIN member m
+            ON r.member_id = m.member_id
         ORDER BY r.report_id DESC
     </select>
 
-    <select id="selectReportOne" parameterType="int" resultType="report">
+
+    <select id="selectReportOne"
+            parameterType="int"
+            resultType="report">
         SELECT *
         FROM report
         WHERE report_id = #{report_id}
     </select>
 
-    <select id="selectReportedMemberId" parameterType="report" resultType="int">
+
+    <select id="selectReportedMemberId"
+            parameterType="report"
+            resultType="int">
+
         <choose>
+
             <when test="review_id != null">
                 SELECT member_id
                 FROM review
@@ -113,35 +138,56 @@
                 FROM board
                 WHERE board_id = #{board_id}
             </when>
+
         </choose>
+
     </select>
 
-    <update id="updateMemberReportCount" parameterType="int">
+
+    <update id="updateMemberReportCount"
+            parameterType="int">
+
         UPDATE member
         SET report_count = IFNULL(report_count, 0) + 1,
+
             status = CASE
-                        WHEN IFNULL(report_count, 0) + 1 >=3 THEN 'SUSPEND'
+                        WHEN IFNULL(report_count, 0) + 1 >= 3
+                            THEN 'SUSPEND'
                         ELSE status
                      END,
+
             suspend_start = CASE
-                        WHEN IFNULL(report_count, 0) + 1 >=3 THEN NOW()
+                        WHEN IFNULL(report_count, 0) + 1 >= 3
+                            THEN NOW()
                         ELSE suspend_start
                      END,
+
             suspend_end = CASE
-                        WHEN IFNULL(report_count, 0) + 1 >=3 THEN DATE_ADD(NOW(), INTERVAL 2 MINUTE)
+                        WHEN IFNULL(report_count, 0) + 1 >= 3
+                            THEN DATE_ADD(NOW(), INTERVAL 2 MINUTE)
                         ELSE suspend_end
                      END
+
         WHERE member_id = #{member_id}
+
     </update>
 
-    <update id="updateReportStatusWarning" parameterType="int">
+
+    <update id="updateReportStatusWarning"
+            parameterType="int">
+
         UPDATE report
         SET status = '경고처리',
             processed_date = NOW()
         WHERE report_id = #{report_id}
+
     </update>
 
-    <select id="sameMemberSameTargetPendingReportCount" parameterType="report" resultType="int">
+
+    <select id="sameMemberSameTargetPendingReportCount"
+            parameterType="report"
+            resultType="int">
+
         SELECT COUNT(*)
         FROM report
         WHERE status = '처리대기'
@@ -151,9 +197,13 @@
           AND IFNULL(comment_id, 0) = IFNULL(#{comment_id}, 0)
           AND IFNULL(recipe_id, 0) = IFNULL(#{recipe_id}, 0)
           AND IFNULL(review_id, 0) = IFNULL(#{review_id}, 0)
+
     </select>
 
-    <update id="updateSameMemberSameTargetReportStatusWarning" parameterType="report">
+
+    <update id="updateSameMemberSameTargetReportStatusWarning"
+            parameterType="report">
+
         UPDATE report
         SET status = '경고처리',
             processed_date = NOW()
@@ -164,6 +214,7 @@
           AND IFNULL(comment_id, 0) = IFNULL(#{comment_id}, 0)
           AND IFNULL(recipe_id, 0) = IFNULL(#{recipe_id}, 0)
           AND IFNULL(review_id, 0) = IFNULL(#{review_id}, 0)
+
     </update>
 
     <select id="reportCount" resultType="int">
@@ -175,42 +226,87 @@
         </if>
     </select>
 
-    <select id="reportListPage" parameterType="map" resultType="report">
-        select
+    <select id="reportListPage"
+            parameterType="map"
+            resultType="map">
+
+        SELECT
             r.*,
-            m.name,
-            m.nickname,
-            m.email,
-            m.profile_img
-        from report r
-        join member m on r.member_id = m.member_id
-        where 1=1 
-        <if test="member_id != null and member_id != 0">
-            and r.member_id = #{member_id}
-        </if>
-        order by r.report_id desc
-        limit #{offset}, #{size}
+
+            /* 신고자 정보 */
+            reporter.name,
+            reporter.nickname,
+            reporter.email,
+            reporter.profile_img,
+
+            /* 실제 신고 대상 원문 */
+            CASE
+                WHEN r.review_id IS NOT NULL
+                    THEN rv.content
+
+                WHEN r.comment_id IS NOT NULL
+                    THEN c.content
+
+                ELSE NULL
+            END AS target_content,
+
+            /* 실제 댓글/후기 작성자 */
+            CASE
+                WHEN r.review_id IS NOT NULL
+                    THEN review_writer.nickname
+
+                WHEN r.comment_id IS NOT NULL
+                    THEN comment_writer.nickname
+
+                ELSE NULL
+            END AS target_writer,
+
+            /* 실제 댓글/후기 작성일 */
+            CASE
+                WHEN r.review_id IS NOT NULL
+                    THEN rv.created_at
+
+                WHEN r.comment_id IS NOT NULL
+                    THEN c.created_date
+
+                ELSE NULL
+            END AS target_created_date
+
+        FROM report r
+
+        /* 신고한 회원 */
+        JOIN member reporter
+            ON r.member_id = reporter.member_id
+
+        /* 신고된 댓글 */
+        LEFT JOIN comment c
+            ON r.comment_id = c.comment_id
+
+        /* 신고된 댓글 작성자 */
+        LEFT JOIN member comment_writer
+            ON c.member_id = comment_writer.member_id
+
+        /* 신고된 후기 */
+        LEFT JOIN review rv
+            ON r.review_id = rv.review_id
+
+        /* 신고된 후기 작성자 */
+        LEFT JOIN member review_writer
+            ON rv.member_id = review_writer.member_id
+
+        ORDER BY r.report_id DESC
+
+        LIMIT #{offset}, #{size}
+
     </select>
-    
-    <delete id="reportDelete" parameterType="int">
-        delete from report
-        where report_id = #{report_id}
+
+
+    <delete id="reportDelete"
+            parameterType="int">
+
+        DELETE FROM report
+        WHERE report_id = #{report_id}
+
     </delete>
-
-    <select id="reportTotal">
-        select count(report_id)
-        from report
-        where status = '처리대기'
-    </select>
-
-    <!-- 회원 관리 신고내역 간단 조회 -->
-    <select id="adminReportList" resultType="report">
-        select reason, created_date
-        from report
-        where member_id = #{member_id}
-        order by created_date desc
-        limit 3
-    </select>
-
 
 </mapper>

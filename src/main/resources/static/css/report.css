@@ -268,3 +268,73 @@ body {
 .comment-modal-footer button:hover {
     background: #222;
 }
+/* =========================================
+   댓글 / 후기 모달 열기 버튼
+========================================= */
+
+.target-modal-btn {
+    border: none;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+/* =========================================
+   신고 대상 댓글 / 후기 모달
+========================================= */
+
+.target-content-modal-box {
+    width: 520px;
+    max-width: calc(100% - 40px);
+    max-height: 80vh;
+    padding: 32px 34px 28px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 14px 45px rgba(0, 0, 0, 0.18);
+    overflow-y: auto;
+}
+
+.target-content-modal-box h3 {
+    margin: 0 0 24px;
+    padding-bottom: 16px;
+    font-size: 22px;
+    font-weight: 800;
+    color: #263024;
+    border-bottom: 1px solid #e2e6dc;
+}
+
+.target-content-info {
+    padding: 18px 20px;
+    background: #f7f8f4;
+    border: 1px solid #e0e4da;
+    border-radius: 10px;
+}
+
+.target-content-title {
+    margin-top: 22px;
+    margin-bottom: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #4b5546;
+}
+
+.target-content-box {
+    min-height: 130px;
+    padding: 18px 20px;
+    font-size: 15px;
+    line-height: 1.8;
+    color: #333333;
+    white-space: pre-wrap;
+    word-break: break-word;
+    background: #ffffff;
+    border: 1px solid #d9ded2;
+    border-radius: 10px;
+}
+/* 추가: 댓글 / 후기 모달 버튼을 기존 링크처럼 표시 */
+.target-modal-btn {
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: none;
+    font-family: inherit;
+    cursor: pointer;
+}

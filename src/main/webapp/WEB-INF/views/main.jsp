@@ -16,7 +16,8 @@
         <script src="/js/chatbot.js"></script>
         <script src="${pageContext.request.contextPath}/js/alarm.js"></script>
         <script>
-    document.addEventListener("DOMContentLoaded", function () {
+        
+        document.addEventListener("DOMContentLoaded", function () {
 
         // 실제 슬라이드는 3장, 앞뒤로 복제본 1장씩 붙어서 총 5개
         const totalSlides = 3;
@@ -51,39 +52,6 @@
             }
         }
 
-            function goRecipeSearch(keyword) {
-                const searchKeyword = keyword ? keyword.trim() : "";
-
-                if (searchKeyword === "") {
-                    return;
-                }
-
-                const form = document.createElement("form");
-                form.method = "post";
-                form.action = "${pageContext.request.contextPath}/search_recipe.do";
-
-                const inputSearch = document.createElement("input");
-                inputSearch.type = "hidden";
-                inputSearch.name = "search";
-                inputSearch.value = searchKeyword;
-
-                const inputSelect = document.createElement("input");
-                inputSelect.type = "hidden";
-                inputSelect.name = "select";
-                inputSelect.value = "recipe";
-
-                const inputFromCategory = document.createElement("input");
-                inputFromCategory.type = "hidden";
-                inputFromCategory.name = "fromCategory";
-                inputFromCategory.value = "Y";
-
-                form.appendChild(inputSearch);
-                form.appendChild(inputSelect);
-                form.appendChild(inputFromCategory);
-
-                document.body.appendChild(form);
-                form.submit();
-            }
         function updateDots(realIndex) {
             for (let i = 0; i < dots.length; i++) {
                 dots[i].classList.remove("active");
@@ -191,6 +159,7 @@
             .replaceAll("'", "&#039;");
     }
 
+    /* ============================  카테고리 검색은 검색기록에 저장하지 않음 ============================ */
     function goRecipeSearch(keyword) {
         const searchKeyword = keyword ? keyword.trim() : "";
 
@@ -198,22 +167,29 @@
             return;
         }
 
-        const searchInput =
-            document.querySelector("input[name='search_text']") ||
-            document.querySelector("input[name='keyword']") ||
-            document.querySelector("input[name='search']");
+        const form = document.createElement("form");
 
-        if (searchInput) {
-            const searchForm = searchInput.closest("form");
+        form.method = "post";
+        form.action = "${pageContext.request.contextPath}/search_recipe.do";
 
-            searchInput.value = searchKeyword;
+        // 검색어
+        const searchInput = document.createElement("input");
+        searchInput.type = "hidden";
+        searchInput.name = "search";
+        searchInput.value = searchKeyword;
 
-            if (searchForm) {
-                searchForm.submit();
-                return;
-            }
-        }
-        location.href = "${pageContext.request.contextPath}/recipe_list.do?search_text=" + encodeURIComponent(searchKeyword);
+
+        // 카테고리에서 실행한 검색임을 표시
+        const categoryInput = document.createElement("input");
+        categoryInput.type = "hidden";
+        categoryInput.name = "fromCategory";
+        categoryInput.value = "Y";
+
+        form.appendChild(searchInput);
+        form.appendChild(categoryInput);
+
+        document.body.appendChild(form);
+        form.submit();
     }
 
     function selectCategory(category) {
@@ -494,6 +470,12 @@
 </script>
     </head>
     <body>
+        <!--  신고 완료 알림 -->
+        <c:if test="${not empty reportMessage}">
+            <script>
+                alert("<c:out value='${reportMessage}'/>");
+            </script>
+        </c:if>
 
         <!-- 메인 배너 슬라이드 -->
         <div class="banner-wrap">

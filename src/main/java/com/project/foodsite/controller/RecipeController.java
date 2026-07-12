@@ -162,7 +162,11 @@ public class RecipeController {
      * @return jsp
      */
     @PostMapping("/search_recipe.do")
-    public String recipeSearch(Model model, String search, HttpServletRequest req, String select, String fromCategory) {
+    public String recipeSearch(
+        Model model,
+        String search,
+        HttpServletRequest req,
+        String fromCategory) {
         // 검색어를 입력받아 유사 검색 후 결과 리턴
         // 일반 검색일 때만 최근검색어/검색어 테이블에 저장
         // 카테고리 클릭 검색은 fromCategory=Y로 들어오므로 검색기록에 저장하지 않음
@@ -230,19 +234,13 @@ public class RecipeController {
             // 세션에 값을 새로 저장
             session.setAttribute("searchQueue", searchQueue);
             session.setAttribute("searchWord", search);
-            session.setAttribute("select", select);
 
             // 검색 로그 갱신
             log.getSearchLog();
         }
 
-        // 검색 결과 조회는 카테고리 클릭이어도 무조건 실행
-        if ("review".equals(select)) {
-            model.addAttribute("list", boardDAO.search(search));
-            return "board/board_list";
-        } else {
-            model.addAttribute("recipeList", recipeDao.search(search));
-        }
+        // 후기 검색 기능 제거, 레시피 검색만 실행
+        model.addAttribute("recipeList", recipeDao.search(search));
 
         return "recipe/recipe_list";
     }

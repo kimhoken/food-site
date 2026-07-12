@@ -34,7 +34,7 @@ public interface ReportDAO {
 
     int reportCount( int member_id );
 
-    List<ReportVO> reportListPage(Map<String, Object> map);
+    List<Map<String, Object>> reportListPage(Map<String, Object> map);
 
     int reportDelete(int report_id);
 
