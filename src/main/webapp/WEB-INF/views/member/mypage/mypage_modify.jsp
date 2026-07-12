@@ -52,9 +52,11 @@
                 <h2 class="update-title">회원 정보 수정</h2>
 
                 <form action="/mypage_update.do" method="post" enctype="multipart/form-data">
+                    
                     <input type="hidden" id="filechange" value="no" name="filechange" />
                     <input type="hidden" id="status" value="${profileuser.status}" name="status"/>
                     <input type="hidden" name="role" value="${profileuser.role}"/>
+
                     <!-- 프로필 이미지 -->
                     <div class="update-row profile-rows">
                         <div class="update-label">프로필</div>
@@ -62,15 +64,20 @@
                             <c:choose>
                                 
                                 <c:when test="${profileuser.profile_img ne 'no_file.png'}">
-                                    <img src="/upload/profile/${profileuser.profile_img}" class="profile-preview">
+                                    <img src="/upload/profile/${profileuser.profile_img}" 
+                                         class="profile-preview">
                                 </c:when>
 
                                 <c:otherwise>
                                     <img src="/images/no_file.png" class="profile-preview"/>
                                 </c:otherwise>
+
                             </c:choose>
-                            <input type="file" id="photo" name="photo" class="file-input" />
-                            <input type="button" value="기존이미지 삭제" class="img-delete-btn" onclick="status()" />
+
+                            <input type="file" id="photo" 
+                                   name="photo" class="file-input" />
+                            <input type="button" value="기존이미지 삭제" 
+                                   class="img-delete-btn" onclick="status()" />
                         </div>
                     </div>
 
@@ -78,7 +85,8 @@
                     <div class="update-row">
                         <div class="update-label">이름</div>
                         <div class="update-control">
-                            <input type="text" value="${profileuser.name}" name="name" class="update-input" readonly>
+                            <input type="text" value="${profileuser.name}" name="name" 
+                                   class="update-input" readonly>
                         </div>
                     </div>
 
@@ -87,7 +95,8 @@
                         <div class="update-row">
                             <div class="update-label">아이디</div>
                             <div class="update-control">
-                                <input type="text" value="${profileuser.login_id}" class="update-input" readonly>
+                                <input type="text" value="${profileuser.login_id}" 
+                                       class="update-input" readonly>
                             </div>
                         </div>
                     </c:if>
@@ -120,8 +129,9 @@
                         </div>
                     </div>
 
-                    <div class="update-btn-area"> <input type="button" value="수정하기" class="update-btn"
-                            onclick="updateMember(this.form)">
+                    <div class="update-btn-area">
+                        <input type="button" value="수정하기" class="update-btn"
+                               onclick="updateMember(this.form)">
                         <input type="button" value="취소" class="cancel-btn" onclick="history.back()">
                     </div>
 

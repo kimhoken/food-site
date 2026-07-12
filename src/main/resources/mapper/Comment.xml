@@ -5,6 +5,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 <mapper namespace="com.project.foodsite.dao.CommentDAO">
 
+<!-- 회원 활동내역 최신 댓글 5개 조회 -->
 <select id="userComment" resultType="comment">
     SELECT c.*,
            r.thumbnail AS thumbnail

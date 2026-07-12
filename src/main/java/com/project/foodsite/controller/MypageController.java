@@ -42,7 +42,7 @@ public class MypageController {
     private final InquiryDAO inquiryDAO; 
     private final ImgDAO imgDAO;
     
-
+    // 페이징 공통 함수 처리 
     private Paging applyPaging(MypageDTO mypageDTO, int totalcount, Model model){
         if(mypageDTO.getPage() == 0){
             mypageDTO.setPage(1);
@@ -65,6 +65,7 @@ public class MypageController {
         return paging;
     }
 
+    // 회원 레시피 페이징
     private void userRecipePaging( MypageDTO mypageDTO , Model model){
         
         int totalcount = recipeDAO.countUserRecipe( mypageDTO );
@@ -74,7 +75,7 @@ public class MypageController {
 
         model.addAttribute("list", list);
     }
-
+    // 회원 댓글 페이징
     private void userCommentPaging( MypageDTO mypageDTO, Model model){
         
         int totalcount = commentDAO.countUserComment(mypageDTO);
@@ -85,6 +86,7 @@ public class MypageController {
         model.addAttribute("list", list);
     }
 
+     // 회원 북마크 페이징
     private void userBookmarkPaging(MypageDTO mypageDTO, Model model){
         
         int totalcount = bookmarkDAO.countUserBookmark(mypageDTO);
@@ -193,6 +195,7 @@ public class MypageController {
         model.addAttribute("bookmarkCount", bookmarkDAO.countUserBookmark(mypageDTO));
     }
     
+    // 다른 회원 페이지 조회
     @GetMapping("/user/{member_id}")
     public String viewUser(@PathVariable int member_id, Model model, MypageDTO mypageDTO ){
 
@@ -235,6 +238,7 @@ public class MypageController {
         return "member/mypage/mypage_profile";
     }   
 
+    // 마이 페이지 함수 
     @GetMapping("/mypage.do")
     public String gomypage(
             Model model,
@@ -280,6 +284,7 @@ public class MypageController {
         return "member/mypage";
     }
    
+    //  회원 정보 수정 메서드
     @PostMapping("/mypage_update.do")
     public String update(MemberVO vo, String filechange) throws Exception{
 
@@ -319,6 +324,7 @@ public class MypageController {
         }
     }
 
+    // 회원 비밀번호 변경 확인 메서드
     @PostMapping("/userpwdcheck.do")
     @ResponseBody
     public String userpwdcheck(String currpwd){
@@ -332,6 +338,7 @@ public class MypageController {
         return "no";
     }
 
+    // 비밀번호 제설정 메서드
     @PostMapping("/resetpwdpage.do")
     @ResponseBody
     public String userrestpassword(String password){
@@ -354,6 +361,7 @@ public class MypageController {
         }
     }
 
+    // 회원 탈퇴 메서드
     @PostMapping("/secessionUser.do")
     @ResponseBody
     public String secessionuser(MemberVO vo){
@@ -382,6 +390,7 @@ public class MypageController {
             return "no";
         }        
     }
+    
     @GetMapping("/terms.do")
     public String terms() {
         return "etc/terms";

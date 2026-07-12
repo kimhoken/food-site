@@ -8,6 +8,7 @@
                 <h3 class="info-title">회원 정보</h3>
 
                 <div class="info-list">
+                    
                     <div class="info-row">
                         <span class="info-label">이름</span>
                         <div class="info-value">${profileuser.name}</div>

@@ -12,14 +12,14 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Value("${file.upload.path}")
     private String uploadPath;
-
+    
+    // 파일 저장 경로 세팅 함수
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry)    {
 
         String path = Paths.get(uploadPath).toUri().toString(); 
-        registry.addResourceHandler("/upload/**")
-                 //.addResourceLocations("file:///Users/shinyeyoung/upload/");
-                .addResourceLocations(path); //윈도우
+        registry.addResourceHandler("/upload/**")                
+                .addResourceLocations(path); 
     
     }
 }

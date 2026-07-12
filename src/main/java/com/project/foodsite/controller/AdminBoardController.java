@@ -22,10 +22,12 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequiredArgsConstructor
 public class AdminBoardController {
+
     private final HttpSession httpSession;
     private final BoardDAO boardDAO;
     private final AdminUtil adminUtil;
 
+    // 게시글 페이징
     private void BoardPaging(Model model, AdminBoardDTO Board ){
         if(Board.getPage() <= 0){
             Board.setPage(1);
@@ -47,6 +49,7 @@ public class AdminBoardController {
 
     }
 
+    // 관리자 게시글 페이지
     @GetMapping("/admin/board")
     public String boardpage(Model model, AdminBoardDTO Board){
         
@@ -61,6 +64,7 @@ public class AdminBoardController {
         return "member/adminpage";
     }
 
+    // 게시글 상세 조회
     @PostMapping("/admin/board/view")
     @ResponseBody
     public AdminBoardDTO board_view(int board_id){
@@ -68,6 +72,7 @@ public class AdminBoardController {
         return boardDAO.adminBoardDetail(board_id);
     }
 
+    // 게시글 공개/비공개 설정
     @PostMapping("/admin/board/hidden")
     @ResponseBody
     public Map<String,Object> boardHidden( int board_id ) {
@@ -91,6 +96,7 @@ public class AdminBoardController {
 
     }
 
+    // 게시글 삭제/ 복원
     @PostMapping("/admin/board/delete")
     @ResponseBody
     public Map<String,Object> boardDelete(int board_id){

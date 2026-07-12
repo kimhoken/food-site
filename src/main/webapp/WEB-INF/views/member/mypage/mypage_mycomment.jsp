@@ -13,8 +13,7 @@
                     <select onchange="location.href='/mypage.do?menu=comment&sort='+ this.value">
                         <option value="recently">최신순</option>
                         <option value="asc">오름차순</option>
-                        <option value="desc">내림차순</option>
-                        <option value="likes">좋아요순</option>
+                        <option value="desc">내림차순</option>                        
                     </select>
                     
                 </div>
@@ -23,7 +22,7 @@
                     <div>작성한 댓글이 존재하지 않습니다.</div>
                 </c:if>
 
-                <!-- foreach문으로 돌릴 예정 -->
+                <!-- foreach문 댓글 목록 조회 -->
                 <c:forEach var="comment" items="${list}">
 
                     <div class="activity-row">

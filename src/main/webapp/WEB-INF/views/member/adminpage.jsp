@@ -15,31 +15,10 @@
             <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin_mypage.css" />
 
             <script src="/js/util.js"></script>
+            <script src="/js/logout.js"></script>
 
             <script>
-
-                const logout = () => {
-                    if (confirm("로그아웃 하시겠습니까?")) {
-                        fetch("/logout.do", {
-                            method: "post",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({
-                                id: "${user.member_id}"
-                            })
-                        })
-                            .then(res => res.json())
-                            .then(data => {
-                                if (data.result == "success") {
-                                    alert("로그아웃 되었습니다.")
-                                    location.href = "/main_list.do";
-                                }
-                            })
-                    }
-                }
-
-
-
-                
+                                
                 // 관리자 정보 드롭 업/다운 시켜주는 기능
                 document.addEventListener("DOMContentLoaded", () => {
                     const profileName = document.querySelector(".profile-name");
@@ -88,7 +67,7 @@
                         <div class="profile-mini">
                             <div class="profile-img">
                                 <c:choose>
-
+                                    <!-- 회원 이미지 없을때 no_file.png로 나타나게 했음 -->
                                     <c:when test="${profileuser.profile_img eq 'no_file.png'}">
                                         <img src="/images/no_file.png" width="85px" height="85px" />
                                     </c:when>
@@ -101,6 +80,8 @@
                                 </c:choose>
 
                             </div>
+
+                            <!-- 내정보 드롭 부분 -->
                             <ul class="profile-menu">
                                 <li class="profile-name">
                                     <button type="button" class="profile-trigger" aria-expanded="false">
@@ -119,6 +100,7 @@
                                     </ul>
                                 </li>
                             </ul>
+
                             <p>맛있는 하루 되세요!</p>
                         </div>
 
@@ -165,6 +147,7 @@
                                     <a class="admin-menu ${menu eq 'status' ? 'active'  :''}" href="/admin/board">
                                         게시글 관리</a>
                                 </li>
+
                                 <li>
                                     <a class="admin-menu ${menu eq 'status' ? 'active'  :''}" href="/admin/comment">
                                         댓글 관리</a>
@@ -187,6 +170,7 @@
 
                     </aside>
 
+                    <!-- 오른쪽 페이지 왼쪽 페이지에 선택된 부분 출력 -->
                     <main class="admin-main">
                         <div class="admin-container">
                             <jsp:include page="${contentPage}" />

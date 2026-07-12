@@ -22,6 +22,7 @@ public class BookmarkController {
     private final BookmarkDAO bookmarkDAO;
     private final HttpSession httpSession;
 
+    // 북마크 등록/ 해제
     @PostMapping("/bookmark/set")
     @ResponseBody
     public Map<String,Object> bookmark_set(int recipe_id){        

@@ -26,24 +26,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     </select>        
 
-    
+    <!-- 회원 가입 -->
     <insert id="userInsert" parameterType="member">
-        insert into member (login_id, password, nickname, email, role, status, report_count, created_date, profile_img, login_type, provider, provider_id,name)         
-        values (#{login_id}, #{password}, #{nickname}, #{email}, #{role}, #{status}, 0, sysdate(), #{filename}, #{login_type}, #{provider}, #{provider_id}, #{name})
+
+        insert into member
+        (login_id, password, nickname, email, role, status,
+         report_count, created_date, profile_img, login_type, provider, provider_id,name)         
+        values 
+        (#{login_id}, #{password}, #{nickname}, #{email}, #{role}, #{status},
+         0, sysdate(), #{filename}, #{login_type}, #{provider}, #{provider_id}, #{name})
+
     </insert>
 
-        
+    <!-- 회원 번호로 회원 정보 조회 -->
     <select id="getUserByMemberId"
             parameterType="int"
             resultType = "member">
         select * from member where member_id = #{member_id}
     </select>   
 
+    <!-- 비밀번호 재설정 -->
     <update id="userPwdUpdate" parameterType="member">
         update member set password = #{password}
         where member_id = #{member_id}
     </update>    
 
+    <!-- 소셜로그인 회원 정보 조회 -->
     <select id="getSocialUser"
             parameterType="String"
             resultType="member">
@@ -52,6 +60,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         and provider_id = #{provider_id}
     </select>
 
+    <!-- 회원 정보 수정 -->
     <update id="userUpdate" parameterType="member">
         update member set nickname = #{nickname}, email = #{email}, status = #{status}, 
                           profile_img = COALESCE(#{filename}, #{profile_img}), 
@@ -67,11 +76,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where member_id = #{member_id}
     </update>
 
+    <!-- 회원 탈퇴 -->
     <update id="secessionUser" parameterType="member">
-        update member set login_id = #{login_id}, password = #{password}, status =#{status}, nickname = #{nickname}, email=#{email}, profile_img = #{profile_img}, name = #{name}, member_intro = #{member_intro} 
+        update member set login_id = #{login_id}, password = #{password}, 
+        status =#{status}, nickname = #{nickname}, email=#{email}, profile_img = #{profile_img}, 
+        name = #{name}, member_intro = #{member_intro} 
+
         where member_id = #{member_id}
     </update>
 
+    <!-- 회원관리 페이징 갯수 (카테고리/ 상태/ 검색) -->
     <select id="memberCount">
         select count(*) 
         from member
@@ -96,6 +110,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     </select>
 
+    <!-- 회원 관리 페이지 회원 리스트 조회(카테고리/ 상태/ 검색) -->
     <select id="MemberSearch" parameterType="adminmember" resultType="member">
         select name, member_id, login_id, nickname, email, role, status, provider, profile_img, created_date
         from member
@@ -123,6 +138,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     </select>
    
+    <!-- 회원 관리 페이지 상세 정보 조회 -->
     <select id="memberDetail" resultType="adminmember">
         select m.member_id, m.profile_img, m.name, m.nickname, m.login_id, m.email, m.role,
                m.member_intro, m.report_count, m.status,
@@ -140,6 +156,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where m.member_id = #{member_id}
     </select>
 
+    <!-- 회원 정지 해제  -->
     <update id="relaseSuspend">
         update member set 
             status = 'ACTIVE',

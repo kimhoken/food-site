@@ -99,6 +99,7 @@
         </if>
 
     </select>
+    
     <!-- 게시글 상태, 키워드로 인해 검색되는 함수 (페이징 포함) -->
     <select id="BoardSearch" parameterType="adminboard" resultType="adminboard" >
         select b.*, m.nickname, 
@@ -136,6 +137,7 @@
         limit #{size} offset #{offset}
     </select>
 
+    <!-- 관리자 게시글 상세보기 -->
     <select id="adminBoardDetail" parameterType="adminboard" resultType="adminboard">
         
         select b.*,
@@ -151,6 +153,7 @@
         
     </select>
 
+    <!-- 게시글 공개/비공개/삭제 처리 -->
     <update id="boardStatus" parameterType="adminboard">
         update board set status = #{status}
         where board_id = #{board_id}

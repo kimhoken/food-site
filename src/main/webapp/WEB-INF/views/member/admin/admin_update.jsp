@@ -17,13 +17,14 @@
 
                 }
 
+                // 화면 로드후 프로필 이미지 변경 미리보기 이벤트 등록
                 document.addEventListener("DOMContentLoaded", () => {
 
                     const photo = document.getElementById("photo");
                     const preview = document.querySelector(".profile-preview");
                     const filechange = document.getElementById("filechange");
 
-
+                    // 새 이미지 선택 시 미리보기와 파일 변경 상태 갱신
                     document.getElementById("photo").addEventListener("change", function () {
 
                         const file = this.files[0];
@@ -36,8 +37,8 @@
 
                     })
 
-
                 })
+                
             </script>
 
         </head>
@@ -57,10 +58,12 @@
                     <input type="hidden" id="filechange" value="no" name="filechange" />
                     <input type="hidden" id="status" value="${profileuser.status}" name="status"/>
                     <input type="hidden" name="role" value="${profileuser.role}"/>
+
                     <!-- 프로필 이미지 -->
                     <div class="update-row profile-rows">
                         <div class="update-label">프로필</div>
                         <div class="update-control profile-control">
+
                             <c:choose>
                                 
                                 <c:when test="${profileuser.profile_img ne 'no_file.png'}">
@@ -70,18 +73,23 @@
                                 <c:otherwise>
                                     <img src="/images/no_file.png" class="profile-preview"/>
                                 </c:otherwise>
+
                             </c:choose>
+
                             <input type="file" id="photo" name="photo" class="file-input" />
                             <input type="button" value="기존이미지 삭제" class="img-delete-btn" onclick="status()" />
+                        
                         </div>
                     </div>
 
                     <!-- 이름 -->
                     <div class="update-row">
+
                         <div class="update-label">이름</div>
                         <div class="update-control">
                             <input type="text" value="${profileuser.name}" name="name" class="update-input" readonly>
                         </div>
+
                     </div>
 
                     <!-- 아이디 -->
@@ -115,15 +123,18 @@
 
                     <!-- 소개글 -->
                     <div class="update-row">
+
                         <div class="update-label">소개글</div>
                         <div class="update-control">
                             <textarea name="member_intro" class="update-textarea" maxlength="500"
                                 placeholder="자신을 소개해보세요.">${profileuser.member_intro}</textarea>
                         </div>
+
                     </div>
 
-                    <div class="update-btn-area"> <input type="button" value="수정하기" class="update-btn"
-                            onclick="updateMember(this.form)">
+                    <div class="update-btn-area">
+                        <input type="button" value="수정하기" class="update-btn"
+                               onclick="updateMember(this.form)">
                         <input type="button" value="취소" class="cancel-btn" onclick="history.back()">
                     </div>
 

@@ -6,6 +6,7 @@
             <script>
                 let selreview;
 
+                //엔터시 검색
                 function entersearch(e) {
 
                     if (e.key === "Enter") {
@@ -14,10 +15,12 @@
 
                 }
 
+                // 검색시 폼으로 전송
                 function searchreview() {
                     document.querySelector('form[action="/admin/review"]').submit();
                 }
 
+                // 상태 설정 함수
                 function statusText(status) {
                     if (status === "ACTIVE") {
                         return "공개";
@@ -29,9 +32,11 @@
                         return "삭제";
                     }
                     return status || "";
-                }
+                }   
 
+                //  후기 상세 보기 
                 function review_view(review_id) {
+
                     fetch("/admin/review/view", {
                         method: 'post',
                         headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -54,6 +59,7 @@
                         })
                 }
 
+                // 후기 모달 설정
                 function filereview(dto) {
 
                     const imagePath = dto.thumbnail ? "/upload/review/" + dto.thumbnail 
@@ -83,6 +89,7 @@
                     }
                 }
 
+                // 후기 상태 ( 공개/비공개 ) 변경 
                 function reviewhidden() {                    
                     fetch("/admin/review/hidden", {
                         method: 'post',
@@ -101,7 +108,9 @@
                         })
                 }
 
+                // 후기 삭제 / 복원 기능 
                 function reviewdelete() {
+
                     fetch("/admin/review/delete", {
                         method: 'post',
                         headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -119,6 +128,7 @@
                         })
                 }
 
+                // 상세 모달 닫기
                 function closeReviewDetail() {
                     document.querySelector(".ma-detail-panel").classList.remove("active");
                 }
@@ -233,6 +243,7 @@
 
                 </form>
 
+                <!-- 상세 모달 부분 -->
                 <div class="ma-detail-panel">
                     <div class="ma-detail-header">
                         <button type="button" class="ra-close" onclick="closeReviewDetail()">x</button>

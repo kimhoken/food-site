@@ -309,6 +309,7 @@
 
     </delete>
 
+    <!-- 관리자 대시보드 신고 대기수 출력 -->
     <select id="reportTotal">
         select count(*)
         from report

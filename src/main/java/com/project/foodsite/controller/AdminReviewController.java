@@ -26,6 +26,7 @@ public class AdminReviewController {
     private final ReviewDAO reviewDAO;
     private final AdminUtil adminUtil;
 
+    // 후기 페이징 함수
     private void ReviewPaging(Model model,AdminReviewDTO Review){
 
         if(Review.getPage() <= 0){
@@ -48,6 +49,7 @@ public class AdminReviewController {
 
     }
 
+    // 관리자 후기 관리 페이지
     @GetMapping("/admin/review")
     public String recipecommentpage(Model model, AdminReviewDTO Review){
 
@@ -62,7 +64,7 @@ public class AdminReviewController {
         return "member/adminpage";
     }
 
-
+    // 후기 상세정보 조회
     @PostMapping("/admin/review/view")
     @ResponseBody
     public AdminReviewDTO reviewDetail(int review_id){
@@ -71,6 +73,7 @@ public class AdminReviewController {
 
     }
 
+    // 후기 공개/비공개 처리
     @PostMapping("/admin/review/hidden")
     @ResponseBody
     public Map<String,Object> reviewHidden(int review_id){
@@ -94,7 +97,7 @@ public class AdminReviewController {
 
     }
 
-
+    // 후기 삭제/복원
     @PostMapping("/admin/review/delete")
     @ResponseBody
     public Map<String,Object> boardDelete(int review_id){
