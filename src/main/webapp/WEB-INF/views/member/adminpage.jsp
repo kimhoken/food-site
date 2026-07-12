@@ -66,8 +66,9 @@
 
                         <div class="profile-mini">
                             <div class="profile-img">
+                                <!-- 회원 이미지 없을때 no_file.png로 나타나게 했음 -->
                                 <c:choose>
-                                    <!-- 회원 이미지 없을때 no_file.png로 나타나게 했음 -->
+                                    
                                     <c:when test="${profileuser.profile_img eq 'no_file.png'}">
                                         <img src="/images/no_file.png" width="85px" height="85px" />
                                     </c:when>
