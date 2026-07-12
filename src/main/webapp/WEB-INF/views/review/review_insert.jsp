@@ -94,7 +94,6 @@
                         <div class="review-recipe-meta">
                             <span>${empty recipe.category_name ? '카테고리 없음' : recipe.category_name}</span>
                             <span>${recipe.cooking_time}</span>
-                            <span>${recipe.difficulty}</span>
                         </div>
                     </div>
                 </aside>

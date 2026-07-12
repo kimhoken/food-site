@@ -626,3 +626,33 @@ body{
 .recipe-review-btn:hover{
     background:#5a7e4d;
 }
+/* 댓글 페이징 */
+.comment-paging {
+    max-width: 800px;
+    margin: -30px auto 40px;
+    padding: 0 40px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+/* 댓글 페이징 링크 */
+.comment-paging a {
+    margin: 0 8px;
+    color: #222;
+    text-decoration: none;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    transition: color 0.2s ease;
+}
+
+/* 현재 페이지 */
+.comment-paging a.active {
+    color: #222;
+    font-weight: 700;
+}
+
+/* 마우스 올렸을 때 */
+.comment-paging a:hover {
+    color: #5a7e4d;
+}

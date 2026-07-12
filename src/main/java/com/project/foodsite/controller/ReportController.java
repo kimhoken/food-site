@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.project.foodsite.common.Paging;
 import com.project.foodsite.dao.ReportDAO;
@@ -56,11 +57,18 @@ public class ReportController {
     }
 
     @PostMapping("/report/insert.do")
-    public String reportInsert(ReportVO vo) {
+    public String reportInsert(
+            ReportVO vo,
+            RedirectAttributes redirectAttributes) {
 
         MemberVO user = (MemberVO) session.getAttribute("user");
 
         if (user == null) {
+            redirectAttributes.addFlashAttribute(
+                    "reportMessage",
+                    "로그인 후 이용해주세요."
+            );
+
             return "redirect:/login.do";
         }
 
@@ -73,18 +81,38 @@ public class ReportController {
                 vo.getReview_id() == null;
 
         if (noTarget) {
+            redirectAttributes.addFlashAttribute(
+                    "reportMessage",
+                    "신고 대상이 없습니다."
+            );
+
             return "redirect:/main_list.do";
         }
 
         setTargetType(vo);
 
-        reportDao.reportInsert(vo);
+        int result = reportDao.reportInsert(vo);
 
-        int count = reportDao.sameMemberSameTargetPendingReportCount(vo);
+        if (result > 0) {
 
-        if (count >= 3) {
-            reportDao.updateMemberReportCount(vo.getMember_id());
-            reportDao.updateSameMemberSameTargetReportStatusWarning(vo);
+            int count =
+                    reportDao.sameMemberSameTargetPendingReportCount(vo);
+
+            if (count >= 3) {
+                reportDao.updateMemberReportCount(vo.getMember_id());
+                reportDao.updateSameMemberSameTargetReportStatusWarning(vo);
+            }
+
+            redirectAttributes.addFlashAttribute(
+                    "reportMessage",
+                    "신고되었습니다."
+            );
+
+        } else {
+            redirectAttributes.addFlashAttribute(
+                    "reportMessage",
+                    "신고 처리에 실패했습니다."
+            );
         }
 
         return "redirect:/main_list.do";
@@ -111,17 +139,20 @@ public class ReportController {
         map.put("offset", paging.getOffset());
         map.put("size", paging.getSize());
 
-        List<ReportVO> list = reportDao.reportListPage(map);
+        List<Map<String, Object>> list =
+                reportDao.reportListPage(map);
 
         model.addAttribute("list", list);
         model.addAttribute("paging", paging);
 
         model.addAttribute("menu", "report");
-        model.addAttribute("contentPage", "/WEB-INF/views/report/report_adminList.jsp");
+        model.addAttribute(
+                "contentPage",
+                "/WEB-INF/views/report/report_adminList.jsp"
+        );
 
         return "member/adminpage";
     }
-
     @PostMapping("/report/admin/warning.do")
     public String reportWarning(ReportVO vo) {
 

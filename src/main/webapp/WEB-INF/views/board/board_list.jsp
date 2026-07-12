@@ -179,7 +179,7 @@
                 }
 
                 function setModal(dto, card){
-                    setImg("model-img","/upload/review/"+dto.recipe_thumbnail, card);
+                    setImg("model-img","/upload/recipe/"+dto.recipe_thumbnail, card);
                     setText("recipetitle",dto.recipe_title, card);
                     setText("title",dto.title, card);
                     setText("content", dto.content, card);

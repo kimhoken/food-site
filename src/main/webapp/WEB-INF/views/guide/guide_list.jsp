@@ -15,10 +15,12 @@
             <script src="/js/chatbot.js"></script>
             <script>
                 // 키친가이드 들어오면 자동 '전체보기' 
-                window.onload = function() {
+                // window.onload = function() {
+                //     showTab('all');
+                // };
+                document.addEventListener("DOMContentLoaded", () => {
                     showTab('all');
-                };
-
+                })
                 function showTab(tabName) {
                     document.querySelectorAll(".tab-btn").forEach(function(btn) {
                         btn.classList.remove("active");

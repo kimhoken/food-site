@@ -17,7 +17,7 @@
             window.onload = ()=>{
                 const sort = '${sort}';
                 let select = document.getElementById("sort");
-                let arr = ["latest", "name", "view", "like" ];
+                let arr = ["latest", "name", "view"];
 
                 for(let i=0 ; i<arr.length ; i++){
                     if(arr[i] == sort){
@@ -126,11 +126,20 @@
                 <!-- 오른쪽 -->
                 <section class="recipe-area">
                     <div class="recipe-header">                                                                            
-                        <select class="sort-select" name="sort" id="sort" onChange="send()">                                                                                                                              
-                            <option value="latest">최신순</option>                                                                                                        
-                            <option value="name">가나다순</option>
-                            <option value="view">조회수순</option>
-                            <option value="like">좋아요순</option>
+                        <select class="sort-select" name="sort" id="sort" onchange="send()">
+
+                            <option value="latest" ${empty param.sort || param.sort eq 'latest' ? 'selected' : ''}>
+                                최신순
+                            </option>
+
+                            <option value="name" ${param.sort eq 'name' ? 'selected' : ''}>
+                                가나다순
+                            </option>
+
+                            <option value="view" ${param.sort eq 'view' ? 'selected' : ''}>
+                                조회수순
+                            </option>
+
                         </select>
                     </div>
                     <div class="today-recommend-header">
