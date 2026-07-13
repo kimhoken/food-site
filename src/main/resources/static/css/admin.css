@@ -21,7 +21,7 @@ body {
 
 .admin-left {
     width: 250px;
-    background: #fffdf8;
+    background: #fff;
     border-right: 1px solid #eee6d8;
     padding: 28px 35px;
     flex-shrink: 0;
