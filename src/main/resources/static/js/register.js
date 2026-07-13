@@ -21,6 +21,7 @@ window.addEventListener( "load", function () {
         emails.value = email;
         email_vailed = true;
         id_vailed = true;
+        pwd_vailed = true;
         names.value = name;
         social_button.style.display = "none";
         social_row.style.display = "none";
