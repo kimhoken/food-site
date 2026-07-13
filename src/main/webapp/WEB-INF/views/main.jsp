@@ -159,7 +159,7 @@
             .replaceAll("'", "&#039;");
     }
 
-    /* ============================  카테고리 검색은 검색기록에 저장하지 않음 ============================ */
+    /* 메인 카테고리에서 선택한 음식명으로 레시피 검색 */
     function goRecipeSearch(keyword) {
         const searchKeyword = keyword ? keyword.trim() : "";
 
@@ -172,7 +172,7 @@
         form.method = "post";
         form.action = "${pageContext.request.contextPath}/search_recipe.do";
 
-        // 검색어
+        // 선택한 음식명을 검색어로 전달
         const searchInput = document.createElement("input");
         searchInput.type = "hidden";
         searchInput.name = "search";

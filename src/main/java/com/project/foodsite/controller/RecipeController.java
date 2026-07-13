@@ -198,7 +198,7 @@ public class RecipeController {
                     }
                 }
 
-                // 맵에서 value가 search랑 같은 값이 없을 경우
+                // 처음 검색한 검색어일 때만 검색 통계에 저장
                 if (flag) {
                     searchLogDAO.insertKeyWord(search);
                     map.computeIfAbsent(req.getRemoteAddr(), k -> new ArrayList<>()).add(search);
@@ -213,7 +213,7 @@ public class RecipeController {
             Queue<String> searchQueue = (Queue<String>) session.getAttribute("searchQueue") == null ? new LinkedList<>()
                     : (Queue<String>) session.getAttribute("searchQueue");
 
-            // 겹치는 단어를 큐의 맨 뒤로 보냄
+            // 같은 검색어가 존재하면 제거 후 가장 최근 위치로 이동
             for (String val : searchQueue) {
                 if (val.equals(search)) {
                     searchQueue.remove(search);
@@ -221,8 +221,8 @@ public class RecipeController {
                 }
             }
 
+            // 최근 검색어가 5개 이상이면 가장 오래된 검색어 삭제
             if (searchQueue.size() >= 5) {
-                // 크기가 5 이상이면 가장 먼저 검색한 검색어 삭제
                 searchQueue.poll();
             }
 
@@ -290,7 +290,9 @@ public class RecipeController {
         session.setMaxInactiveInterval(3600);
         
         int commentSize = 5;
+        // 현재 레시피에 등록된 전체 댓글 개수 조회
         int commentTotalCount = commonCommentDAO.recipeCommentCount(recipe_id);
+        // 현재 페이지, 출력 개수, 전체 댓글 수로 페이징 계산
         Paging commentPaging = new Paging(commentPage, commentSize, commentTotalCount);
 
         Map<String, Object> commentMap = new HashMap<>();

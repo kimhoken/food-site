@@ -23,6 +23,7 @@
 
     <body>
 
+        <!-- 비회원 문의 확인 기간이 만료된 경우 메인으로 이동 -->
         <c:if test="${expired eq 'yes'}">
             <script>
                 alert("비회원 문의 확인 기간이 만료되었습니다."); 
@@ -43,6 +44,7 @@
                     </p>
                 </div>
 
+                <!-- 비밀번호 불일치 등의 오류 메시지 출력 -->
                 <c:if test="${not empty msg}">
                     <div class="error-msg">${msg}</div>
                 </c:if>
@@ -51,6 +53,7 @@
                       method="post"
                       class="password-form">
 
+                    <!-- 조회할 비회원 문의의 고유 코드 전달 -->
                     <input type="hidden"
                            name="inquiry_code"
                            value="${inquiry_code}">

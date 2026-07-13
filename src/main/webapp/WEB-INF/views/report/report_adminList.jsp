@@ -7,6 +7,7 @@
 <script>
    
     function openUserModal(reportId) {
+        
         const name =
             document.getElementById("userName-" + reportId);
 
@@ -19,6 +20,7 @@
         const profileImg =
             document.getElementById("userProfileImg-" + reportId);
 
+        // 이름,닉네임,이메일이 존재하면 출력하고, 없으면 "-" 표시
         document.getElementById("modalName").innerText =
             name && name.innerText.trim() !== ""
                 ? name.innerText.trim()
@@ -34,12 +36,15 @@
                 ? email.innerText.trim()
                 : "-";
 
+        // 회원 정보 모달에 표시할 프로필 이미지 태그
         const modalProfileImg =
             document.getElementById("modalProfileImg");
 
         const fileName =
             profileImg ? profileImg.innerText.trim() : "";
 
+        // 등록된 프로필 이미지가 있으면 업로드 경로 사용,
+        // 없으면 기본 프로필 이미지 사용
         if (
             fileName !== "" &&
             fileName !== "null" &&
@@ -59,7 +64,10 @@
         document.getElementById("userModal").style.display = "none";
     }
 
+    // 신고 제목 버튼 클릭 시 신고 상세 내용을 모달에 표시
     function openReportDetailModal(reportId) {
+
+        // 선택한 신고 번호에 해당하는 신고 정보를 가져옴
         const target =
             document.getElementById("reportTarget-" + reportId);
 
@@ -111,6 +119,7 @@
         ).style.display = "none";
     }
 
+    // 신고된 댓글 또는 후기의 원문을 모달에 표시
     function openTargetContentModal(reportId) {
         const type =
             document.getElementById("targetType-" + reportId);
@@ -180,7 +189,8 @@
     });
 </script>
 
-
+<!-- 비로그인 상태이거나 ADMIN 권한이 아닌 경우
+    관리자 신고 관리 페이지 접근 차단 -->
 <c:if test="${empty sessionScope.user or sessionScope.user.role ne 'ADMIN'}">
     <script>
         alert("관리자만 이용 가능한 페이지입니다.");
@@ -188,7 +198,7 @@
     </script>
 </c:if>
 
-
+<!-- 관리자 로그인 상태일 때만 신고 관리 화면 출력 -->
 <c:if test="${not empty sessionScope.user and sessionScope.user.role eq 'ADMIN'}">
 
     <div class="report-admin-page">
@@ -339,6 +349,8 @@
                                     </span>
 
 
+                                    <!-- 신고 대상 원문의 작성일
+                                        LocalDateTime의 T 문자를 공백으로 변경 -->
                                     <span id="targetDate-${vo.report_id}"
                                           style="display:none;">
                                         ${fn:replace(vo.target_created_date, 'T', ' ')}
@@ -451,6 +463,7 @@
 
                             <td class="action-td">
 
+                                 <!-- 신고 대상 작성자에게 경고 1회 부여 -->
                                 <form action="/report/admin/warning.do"
                                       method="post"
                                       class="warning-form">
@@ -505,6 +518,7 @@
 
             </table>
 
+            <!-- 신고 목록 페이징 -->
             <div class="report-page-box">
 
                 <c:if test="${paging.prev}">

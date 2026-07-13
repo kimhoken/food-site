@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/css/notice_update.css">
 
     <script>
+        // 새로 선택한 이미지 파일들을 따로 저장
         let selectedFiles = []; 
 
         function updateSend(f) {
@@ -32,6 +33,7 @@
             f.submit();
         }
 
+        // 기존에 등록된 이미지 삭제 처리
         function removeOldImage(btn, fileName) {
             const form = document.getElementById("noticeUpdateForm");
 
@@ -42,6 +44,7 @@
 
             form.appendChild(input);
 
+            // 화면에서 해당 이미지 미리보기 제거
             btn.closest(".img-item").remove();
         }
 
@@ -66,11 +69,15 @@
                 btn.type = "button";
                 btn.className = "img-remove-btn";
                 btn.innerText = "×";
+
+                // 선택한 새 이미지 목록에서 해당 파일 삭제
                 btn.onclick = function() {
                     removeNewFile(index);
                 };
 
                 const img = document.createElement("img");
+
+                // 브라우저에서 선택한 파일의 임시 미리보기 주소 생성
                 img.src = URL.createObjectURL(file);
                 img.alt = "추가 이미지";
 
@@ -130,10 +137,15 @@
                 <div class="form-group">
                     <label>이미지</label>
 
+                    <%-- 기존 등록 이미지가 있을 때만 출력 --%>
                     <c:if test="${not empty img and not empty img.image_list}">
                         <div class="current-img-box">
+
+                            <%-- 쉼표로 저장된 이미지 파일명을 나누어 반복 출력 --%>
                             <c:forEach var="fileName" items="${fn:split(img.image_list, ',')}">
                                 <div class="img-item">
+
+                                    <%-- 기존 이미지 삭제 버튼 --%>
                                     <button type="button"
                                             class="img-remove-btn"
                                             onclick="removeOldImage(this, '${fileName}')">×</button>
@@ -147,6 +159,7 @@
                     <div id="preview-list"></div>
 
                     <div class="file-box">
+                        <%-- 여러 이미지 파일 선택 가능 --%>
                         <input type="file" name="images"  id="images"  multiple accept="image/*" onchange="changeImages(this)"> 
                     </div>
                 </div>
