@@ -21,8 +21,8 @@ public class MailSendService {
     private final JavaMailSender javaMailSender;
     private int authNumber;    
     private String token;
-    private final String siteurl = "http://localhost:5000/resetpwd.do?token=";
-
+    private final String siteurl = "http://3.36.121.202/resetpwd.do?token=";
+    
     public MailSendService(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
         
@@ -91,7 +91,7 @@ public class MailSendService {
         String setForm = "kimhk441@naver.com";
 
         // 비회원이 문의 답변을 확인할 수 있는 주소
-        String inquiryUrl = "http://localhost:5000/guest/inquiry/check?code=" + inquiryCode;
+        String inquiryUrl = "http://3.36.121.202/guest/inquiry/check?code=" + inquiryCode;
 
         String title = "오늘은 뭐 먹지? 문의 답변이 등록되었습니다.";
 

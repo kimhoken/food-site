@@ -316,8 +316,7 @@
                         </c:if>
 
                     </div>
-            </div>
-            <!-- 9. 승연추가-->
+            </div>            
             <!-- 최근 레시피 후기 -->
             <div class="review-area" id="reviewArea" style="display:none;">
                 <div class="review-filter-wrap">
