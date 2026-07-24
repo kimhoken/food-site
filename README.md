@@ -10,6 +10,7 @@
 개발 인원	5명 (팀 프로젝트)
 개발 환경	Spring Boot, MyBatis, JSP, MySQL
 배포 환경	AWS EC2, AWS RDS, Nginx, GitHub Actions
+
 🛠 기술 스택
 Backend
 Java 17
@@ -37,6 +38,7 @@ GitHub
 IntelliJ IDEA
 DBeaver
 Figma
+
 🏗 시스템 아키텍처
 
 (시스템 아키텍처 이미지 삽입)
@@ -75,6 +77,7 @@ Bookmark	북마크
 Report	신고
 Inquiry	문의
 Img	다중 이미지
+
 ✨ 주요 기능
 일반 로그인 및 OAuth2(구글, 카카오, 네이버) 로그인
 이메일 인증을 통한 회원가입 및 계정 관리
@@ -88,10 +91,11 @@ Img	다중 이미지
 회원, 레시피, 문의 및 신고 관리
 AWS EC2 · RDS · Nginx 기반 서비스 배포
 GitHub Actions를 활용한 CI/CD 자동 배포
+
 📸 실행 화면
 메인 페이지
 
-(이미지)
+![메인페이지](./images/mainpage.png)
 
 로그인
 
@@ -99,15 +103,15 @@ GitHub Actions를 활용한 CI/CD 자동 배포
 
 레시피 상세
 
-(이미지)
+![레시피 상세](./images/recipedetail.png)
 
 마이페이지
 
-(이미지)
+![마이페이지](./images/mypage.png)
 
 관리자 페이지
 
-(이미지)
+![관리자 페이지](./images/adminpage.png)
 
 🚀 CI/CD
 
@@ -201,12 +205,14 @@ client_max_body_size 100M;
 결과
 다중 이미지 정상 업로드
 웹 서버와 애플리케이션 설정을 함께 고려하는 경험을 얻음
+
 📖 프로젝트를 통해 배운 점
 Spring Security와 OAuth2를 활용한 인증 및 권한 처리 구조를 경험했습니다.
 MyBatis와 DTO를 활용하여 유지보수성을 고려한 코드 구조를 설계했습니다.
 AWS EC2, RDS, Nginx를 이용해 실제 서비스 배포 환경을 구축했습니다.
 GitHub Actions를 활용하여 CI/CD 자동 배포 환경을 구성했습니다.
 Git Flow와 Pull Request 기반 협업을 경험하며 팀 프로젝트 개발 프로세스를 익혔습니다.
+
 🔗 관련 링크
 GitHub : https://github.com/kimhoken/food-recipe-site
 배포 주소 : (추가 예정)
