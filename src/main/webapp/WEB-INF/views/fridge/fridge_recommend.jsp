@@ -41,11 +41,12 @@
             <div class="recipe-grid">
                 <c:forEach var="recipe" items="${list}" varStatus="status">
                     <div class="recipe-card">
-                        <%-- /recipe_detail.do?id=${recipe.recipe_id} --%>
-                        <a href="#">
+                        
+                        <a href="recipe_detail.do?recipe_id=${recipe.recipe_id}">
+                            
                             <div class="recipe-img">
-                                <%-- 실제 이미지가 들어갈 때 주석 해제하고 사용 --%>
-                                <%-- <img src="/upload/images/${recipe.thumbnail}" alt="레시피 썸네일 이미지"> --%>
+                                
+                                 <img src="/upload/recipe/${recipe.thumbnail}" alt="레시피 썸네일 이미지"> 
                             </div>
                             <%-- 순위 뱃지 적용 --%>
                             <div class="rank-badge">${status.index + 1}</div>
