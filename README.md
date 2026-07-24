@@ -99,7 +99,7 @@ GitHub Actions를 활용한 CI/CD 자동 배포
 
 로그인
 
-(이미지)
+![로그인](./images/login.png)
 
 레시피 상세
 
